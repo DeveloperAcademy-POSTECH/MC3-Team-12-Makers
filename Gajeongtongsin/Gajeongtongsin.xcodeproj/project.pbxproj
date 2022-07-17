@@ -36,6 +36,7 @@
 		359583A228829D93002B6873 /* TestK.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A128829D93002B6873 /* TestK.swift */; };
 		359583A428829D99002B6873 /* TestU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A328829D99002B6873 /* TestU.swift */; };
 		359583A82882A6F7002B6873 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A72882A6F7002B6873 /* Constants.swift */; };
+		359583AA28840415002B6873 /* TestJ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A928840415002B6873 /* TestJ.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		359583A128829D93002B6873 /* TestK.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestK.swift; sourceTree = "<group>"; };
 		359583A328829D99002B6873 /* TestU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestU.swift; sourceTree = "<group>"; };
 		359583A72882A6F7002B6873 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		359583A928840415002B6873 /* TestJ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestJ.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 		35171D1128828E6C0059F297 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				359583A928840415002B6873 /* TestJ.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -462,6 +465,7 @@
 				3595839328829C82002B6873 /* TestD.swift in Sources */,
 				35958379288297B9002B6873 /* SendingViewController.swift in Sources */,
 				3595837F2882980C002B6873 /* StartViewController.swift in Sources */,
+				359583AA28840415002B6873 /* TestJ.swift in Sources */,
 				3595839B28829CA1002B6873 /* TestI.swift in Sources */,
 				35958362288291D8002B6873 /* TabBarViewController.swift in Sources */,
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
