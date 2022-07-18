@@ -37,6 +37,7 @@
 		359583A428829D99002B6873 /* TestU.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A328829D99002B6873 /* TestU.swift */; };
 		359583A82882A6F7002B6873 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A72882A6F7002B6873 /* Constants.swift */; };
 		359583AA28840415002B6873 /* TestJ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A928840415002B6873 /* TestJ.swift */; };
+		C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFBFC2885DC86009A1563 /* ParentUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		359583A328829D99002B6873 /* TestU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestU.swift; sourceTree = "<group>"; };
 		359583A72882A6F7002B6873 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		359583A928840415002B6873 /* TestJ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestJ.swift; sourceTree = "<group>"; };
+		C0DFFBFC2885DC86009A1563 /* ParentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 			isa = PBXGroup;
 			children = (
 				359583A928840415002B6873 /* TestJ.swift */,
+				C0DFFBFC2885DC86009A1563 /* ParentUser.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -471,6 +474,7 @@
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
 				3595839728829C8E002B6873 /* TestG.swift in Sources */,
 				35171D0028828C930059F297 /* SceneDelegate.swift in Sources */,
+				C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */,
 				359583A428829D99002B6873 /* TestU.swift in Sources */,
 				3595838F28829C74002B6873 /* TestB.swift in Sources */,
 				3595839128829C7B002B6873 /* TestC.swift in Sources */,
