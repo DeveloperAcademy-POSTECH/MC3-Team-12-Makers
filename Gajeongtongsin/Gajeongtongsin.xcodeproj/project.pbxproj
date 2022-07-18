@@ -39,6 +39,8 @@
 		359583AA28840415002B6873 /* TestJ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A928840415002B6873 /* TestJ.swift */; };
 		C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFBFC2885DC86009A1563 /* ParentUser.swift */; };
 		C0DFFC032885DE32009A1563 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC022885DE32009A1563 /* Message.swift */; };
+		C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC042885DF05009A1563 /* Schedule.swift */; };
+		C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +78,8 @@
 		359583A928840415002B6873 /* TestJ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestJ.swift; sourceTree = "<group>"; };
 		C0DFFBFC2885DC86009A1563 /* ParentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentUser.swift; sourceTree = "<group>"; };
 		C0DFFC022885DE32009A1563 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		C0DFFC042885DF05009A1563 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
+		C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleInfo.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -121,6 +125,8 @@
 				359583A928840415002B6873 /* TestJ.swift */,
 				C0DFFBFC2885DC86009A1563 /* ParentUser.swift */,
 				C0DFFC022885DE32009A1563 /* Message.swift */,
+				C0DFFC042885DF05009A1563 /* Schedule.swift */,
+				C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -460,6 +466,8 @@
 				3595838528829A82002B6873 /* ImageLiteral.swift in Sources */,
 				3595838B28829C2C002B6873 /* Test2.swift in Sources */,
 				3595839928829C94002B6873 /* TestH.swift in Sources */,
+				C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */,
+				C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */,
 				3595838928829C1D002B6873 /* Test.swift in Sources */,
 				3595839E28829D80002B6873 /* ProfileViewController.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
