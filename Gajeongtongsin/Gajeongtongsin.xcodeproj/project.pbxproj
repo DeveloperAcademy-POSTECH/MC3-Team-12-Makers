@@ -41,6 +41,7 @@
 		C0DFFC032885DE32009A1563 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC022885DE32009A1563 /* Message.swift */; };
 		C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC042885DF05009A1563 /* Schedule.swift */; };
 		C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */; };
+		C0DFFC092885E1A0009A1563 /* TeacherUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC082885E1A0009A1563 /* TeacherUser.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -80,6 +81,7 @@
 		C0DFFC022885DE32009A1563 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		C0DFFC042885DF05009A1563 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleInfo.swift; sourceTree = "<group>"; };
+		C0DFFC082885E1A0009A1563 /* TeacherUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherUser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -127,6 +129,7 @@
 				C0DFFC022885DE32009A1563 /* Message.swift */,
 				C0DFFC042885DF05009A1563 /* Schedule.swift */,
 				C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */,
+				C0DFFC082885E1A0009A1563 /* TeacherUser.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -484,6 +487,7 @@
 				35958362288291D8002B6873 /* TabBarViewController.swift in Sources */,
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
 				3595839728829C8E002B6873 /* TestG.swift in Sources */,
+				C0DFFC092885E1A0009A1563 /* TeacherUser.swift in Sources */,
 				35171D0028828C930059F297 /* SceneDelegate.swift in Sources */,
 				C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */,
 				359583A428829D99002B6873 /* TestU.swift in Sources */,
