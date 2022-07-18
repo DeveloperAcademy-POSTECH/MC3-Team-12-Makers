@@ -38,6 +38,7 @@
 		359583A82882A6F7002B6873 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A72882A6F7002B6873 /* Constants.swift */; };
 		359583AA28840415002B6873 /* TestJ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A928840415002B6873 /* TestJ.swift */; };
 		C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFBFC2885DC86009A1563 /* ParentUser.swift */; };
+		C0DFFC032885DE32009A1563 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC022885DE32009A1563 /* Message.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -74,6 +75,7 @@
 		359583A72882A6F7002B6873 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		359583A928840415002B6873 /* TestJ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestJ.swift; sourceTree = "<group>"; };
 		C0DFFBFC2885DC86009A1563 /* ParentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentUser.swift; sourceTree = "<group>"; };
+		C0DFFC022885DE32009A1563 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 			children = (
 				359583A928840415002B6873 /* TestJ.swift */,
 				C0DFFBFC2885DC86009A1563 /* ParentUser.swift */,
+				C0DFFC022885DE32009A1563 /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				3595838F28829C74002B6873 /* TestB.swift in Sources */,
 				3595839128829C7B002B6873 /* TestC.swift in Sources */,
 				35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */,
+				C0DFFC032885DE32009A1563 /* Message.swift in Sources */,
 				3595837D288297E7002B6873 /* ReceivingViewController.swift in Sources */,
 				359583A82882A6F7002B6873 /* Constants.swift in Sources */,
 			);
