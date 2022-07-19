@@ -20,9 +20,11 @@ class BaseViewController: UIViewController {
     // MARK: - Funcs
         // 레이아웃
      func render() {
+         
     }
         // UI구성
     func configUI() {
+        
     }
 
 }
