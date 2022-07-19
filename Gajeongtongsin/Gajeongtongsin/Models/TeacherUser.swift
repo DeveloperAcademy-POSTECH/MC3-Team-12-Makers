@@ -8,6 +8,6 @@
 import Foundation
 struct TeacherUser {
     let teacherName: String             //교사이름
-    let parentUserId: [String]          //교사가 담당해야할 학부모
+    let parentUserIds: [String]          //교사가 담당해야할 학부모
     //let parentUsers: [ParentUser]     //이게 맞지 않나...?
 }
