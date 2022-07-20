@@ -25,9 +25,12 @@ enum NotificationType: Int {
     
     var notificationMessage: String {
         switch self {
-        case .emergency: return "긴급 상담 요청입니다. 빠른 시간 내에 학부모님께 연락주세요!"
-        case .reservation: return "전화상담 예약 요청입니다."
-        case .message: return "쪽지가 도착했습니다."
+        case .emergency:
+            return "긴급 상담 요청입니다. 빠른 시간 내에 학부모님께 연락주세요!"
+        case .reservation:
+            return "전화상담 예약 요청입니다."
+        case .message:
+            return "쪽지가 도착했습니다."
         }
     }
     
