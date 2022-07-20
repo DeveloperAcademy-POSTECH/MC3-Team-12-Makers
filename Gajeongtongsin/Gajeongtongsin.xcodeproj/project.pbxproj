@@ -11,6 +11,7 @@
 		35171D0028828C930059F297 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35171CFF28828C930059F297 /* SceneDelegate.swift */; };
 		35171D0728828C930059F297 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35171D0628828C930059F297 /* Assets.xcassets */; };
 		35171D0A28828C930059F297 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35171D0828828C930059F297 /* LaunchScreen.storyboard */; };
+		3558AB3928868D2800539C66 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3558AB3828868D2800539C66 /* Notification.swift */; };
 		35958362288291D8002B6873 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958361288291D8002B6873 /* TabBarViewController.swift */; };
 		359583732882956C002B6873 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583722882956C002B6873 /* BaseViewController.swift */; };
 		35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958374288295D9002B6873 /* BaseTableViewCell.swift */; };
@@ -52,6 +53,7 @@
 		35171D0628828C930059F297 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		35171D0928828C930059F297 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35171D0B28828C930059F297 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3558AB3828868D2800539C66 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
 		35958361288291D8002B6873 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		359583722882956C002B6873 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		35958374288295D9002B6873 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 				C0DFFC042885DF05009A1563 /* Schedule.swift */,
 				C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */,
 				C0DFFC082885E1A0009A1563 /* TeacherUser.swift */,
+				3558AB3828868D2800539C66 /* Notification.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -484,6 +487,7 @@
 				3595839528829C89002B6873 /* TestF.swift in Sources */,
 				3595837B288297D1002B6873 /* ReservationViewController.swift in Sources */,
 				3595839328829C82002B6873 /* TestD.swift in Sources */,
+				3558AB3928868D2800539C66 /* Notification.swift in Sources */,
 				35958379288297B9002B6873 /* SendingViewController.swift in Sources */,
 				3595837F2882980C002B6873 /* StartViewController.swift in Sources */,
 				359583AA28840415002B6873 /* TestJ.swift in Sources */,
