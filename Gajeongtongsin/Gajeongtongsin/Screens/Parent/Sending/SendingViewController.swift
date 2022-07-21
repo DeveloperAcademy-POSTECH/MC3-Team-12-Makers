@@ -74,7 +74,7 @@ class SendingViewController: BaseViewController {
     //사유 입력하는 Text Field View
     //TODO: -
     //Text Field 내 여백 padding 값 조절, 글자수 제한, 박스 외부 클릭했을 때 커서와 키보드 사라지게 등등
-    let textFieldForReason: UITextField = {
+    private let textFieldForReason: UITextField = {
         let textF = UITextField()
 //        textF.isHidden = true
         textF.text = "기본텍스트입니다"
