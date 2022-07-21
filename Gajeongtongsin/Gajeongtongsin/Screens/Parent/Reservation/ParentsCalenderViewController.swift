@@ -21,6 +21,7 @@ class ParentsCalenderViewController: BaseViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false //필수 !!
         return collectionView
     }()
+
     
     // 신청버튼
     private let subBtn: UIButton = {
