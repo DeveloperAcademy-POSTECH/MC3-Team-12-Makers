@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseCalenderViewCell: UICollectionViewCell{
+class BaseCollectionViewCell: UICollectionViewCell{
 
     // MARK: - Init
     

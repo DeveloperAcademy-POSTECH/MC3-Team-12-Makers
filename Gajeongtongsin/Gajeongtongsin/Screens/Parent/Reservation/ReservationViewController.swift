@@ -9,11 +9,12 @@ import UIKit
 
 class ReservationViewController: BaseViewController {
     
-    var choicedCells = [Bool](repeating: false, count:30) //복수선택 및 선택취소를 위한 array
-    var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
+    //MARK: - Properties
+    private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
+    private var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
 
-    //MARK: 캘린더뷰
-    let calenderView:  UICollectionView = {
+    // 캘린더뷰
+    private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(CalenderViewCell.self, forCellWithReuseIdentifier: CalenderViewCell.identifier)
@@ -21,7 +22,7 @@ class ReservationViewController: BaseViewController {
         return collectionView
     }()
     
-    //MARK: 신청버튼
+    // 신청버튼
     private let subBtn: UIButton = {
         let button = UIButton()
         button.setTitle("신청하기", for: .normal)
@@ -39,15 +40,15 @@ class ReservationViewController: BaseViewController {
         subBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
     }
     
-    @objc //신청하기 누르면 리로드 & 신청시간 인덱스 subIdx에 저장 / print
-    func onTapButton() {
+    //신청하기 누르면 리로드 & 신청시간 인덱스 subIdx에 저장 / print
+    @objc func onTapButton() {
         for i in 0...choicedCells.count-1 {
             if choicedCells[i] {
                 subIdx.append(i)
             }
         }
         print(subIdx)
-        choicedCells = [Bool](repeating: false, count:30)
+        choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
 
@@ -92,9 +93,9 @@ extension ReservationViewController: UICollectionViewDelegate{
         //선택한 슬롯 개수 카운터
         let truCnt = choicedCells.filter({$0 == true}).count
 
-        //갯수 3개로 제한 및 선택 토글
-        if truCnt<3 && !choicedCells[indexPath[1]] {
-            choicedCells[indexPath[1]].toggle()
+        //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
+        if truCnt<3 && !choicedCells[indexPath.item] {
+            choicedCells[indexPath.item].toggle()
             cell?.backgroundColor = .blue
         }else if truCnt<=3 && choicedCells[indexPath[1]]{
             choicedCells[indexPath[1]].toggle()
@@ -107,7 +108,7 @@ extension ReservationViewController: UICollectionViewDataSource{
     
     //캘린더 아이템 수, 5일*6단위 = 30
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 30
+        return choicedCells.count
     }
  }
 

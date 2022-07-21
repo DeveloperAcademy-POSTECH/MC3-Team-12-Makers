@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		04610D9328868C5E00CCCB2D /* BaseCalenderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D9228868C5E00CCCB2D /* BaseCalenderViewCell.swift */; };
+		04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */; };
 		04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D942886A28C00CCCB2D /* CalenderViewCell.swift */; };
 		35171CFE28828C930059F297 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35171CFD28828C930059F297 /* AppDelegate.swift */; };
 		35171D0028828C930059F297 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35171CFF28828C930059F297 /* SceneDelegate.swift */; };
@@ -41,7 +41,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		04610D9228868C5E00CCCB2D /* BaseCalenderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCalenderViewCell.swift; sourceTree = "<group>"; };
+		04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		04610D942886A28C00CCCB2D /* CalenderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewCell.swift; sourceTree = "<group>"; };
 		35171CFA28828C930059F297 /* Gajeongtongsin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gajeongtongsin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35171CFD28828C930059F297 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -204,7 +204,7 @@
 			children = (
 				359583722882956C002B6873 /* BaseViewController.swift */,
 				35958374288295D9002B6873 /* BaseTableViewCell.swift */,
-				04610D9228868C5E00CCCB2D /* BaseCalenderViewCell.swift */,
+				04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */,
 			);
 			path = Base;
 			sourceTree = "<group>";
@@ -473,7 +473,7 @@
 				3595839B28829CA1002B6873 /* TestI.swift in Sources */,
 				35958362288291D8002B6873 /* TabBarViewController.swift in Sources */,
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
-				04610D9328868C5E00CCCB2D /* BaseCalenderViewCell.swift in Sources */,
+				04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */,
 				35171D0028828C930059F297 /* SceneDelegate.swift in Sources */,
 				359583A428829D99002B6873 /* TestU.swift in Sources */,
 				3595838F28829C74002B6873 /* TestB.swift in Sources */,
