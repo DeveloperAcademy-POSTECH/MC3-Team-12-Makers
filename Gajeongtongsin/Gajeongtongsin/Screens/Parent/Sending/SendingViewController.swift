@@ -9,10 +9,6 @@ import UIKit
 
 class SendingViewController: BaseViewController {
     
-    var typed: MessageType = .absence
-    var opacityInt: Float = 0.0
-    var button = UIButton()
-    
     //MARK: - Properties
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
     private let textLabelPurpose: UILabel = {
@@ -41,17 +37,12 @@ class SendingViewController: BaseViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-    // MARK: - Properties
-    // & Funcs (Message Type 선택 후 Date picker 다르게 노출)
-
 
     //TODO: -
     //메시지 버튼 내 text와 image 간격 조정, 사이 구분선 삽입
     private let messageTypeButton: UIButton = {
-        var button = UIButton()
+        let button = UIButton()
         button.setTitle("용건 선택", for: .normal)
-        button.setTitle("결석", for: .selected)
         button.setTitleColor(UIColor.black, for: .normal)
         button.backgroundColor = .secondarySystemFill
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
