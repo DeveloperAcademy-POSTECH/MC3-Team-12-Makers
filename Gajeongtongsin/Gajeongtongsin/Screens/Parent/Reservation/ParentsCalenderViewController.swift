@@ -12,6 +12,7 @@ class ParentsCalenderViewController: BaseViewController {
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
     private var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
+    private var subDate: [String] = []
 
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -41,14 +42,84 @@ class ParentsCalenderViewController: BaseViewController {
         subBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
     }
     
-    //신청하기 누르면 리로드 & 신청시간 인덱스 subIdx에 저장 / print
+    //날자 계산을 위한 상수 (근데 왜 let 선언하면 오류가 뜰까?)
+    var interval: Double {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM-dd-e-EEEE"    //e는 1~7(sun~sat)
+
+        let day = formatter.string(from:Date())
+        let today = day.components(separatedBy: "-")
+        let interval = Double(today[2])
+//        let startDay = Date(timeIntervalSinceNow: (86400 * (9-interval!))) //e: 1~7 이므로 7+2(월요일 보정)-interval = 다음주 월요일
+//        let startDayString = formatter.string(from: startDay).components(separatedBy: "-") //다음주 월요일 date
+        return interval!
+    }
+    
+    //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
         
         subIdx = choicedCells.enumerated().compactMap { (idx, element) -> Int? in
             element ? idx : nil
         }
         
-        print(subIdx)
+        var subSchedule: [ScheduleInfo] = []
+        
+        for idx in subIdx {
+            var dateCalculate: Date
+            var consultingDateList: [String]
+            var consultingDate: String
+            var startTime: String = ""
+            
+//혹시몰라 리펙터 전 코드 남겨둔거, 안봐도됨
+//            switch idx%5 {
+//            case 0:
+//                consultingDate = "월요일"
+//            case 1:
+//                consultingDate = "화요일"
+//            case 2:
+//                consultingDate = "수요일"
+//            case 3:
+//                consultingDate = "목요일"
+//            case 4:
+//                consultingDate = "금요일"
+//            default:
+//                consultingDate = "밀장군"
+//            }
+            
+            let formatter = DateFormatter()
+            formatter.dateFormat = "MMM-dd-e-EEEE"
+            dateCalculate = Date(timeIntervalSinceNow: (86400 * (Double(9+idx%5)-interval))) //다음주 월요일부터 계산, idx가 곧 e (MMM-DD-e-EEEE)
+            consultingDateList = formatter.string(from: dateCalculate).components(separatedBy: "-") //Date -> [String]
+            consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
+            
+            switch idx/5 {
+            case 0..<1:
+                startTime = "14:00"
+            case 1..<2:
+                startTime = "14:30"
+            case 2..<3:
+                startTime = "15:00"
+            case 3..<4:
+                startTime = "15:30"
+            case 4..<5:
+                startTime = "16:00"
+            case 5..<6:
+                startTime = "16:30"
+            default:
+                startTime = "부니카"
+            }
+            
+            subSchedule.append(ScheduleInfo(consultingDate: consultingDate, startTime: startTime, isReserved: nil))
+        }
+        
+        let newSchedule: Schedule = Schedule(
+            reservedDate: "7월22일",
+            scheduleList: subSchedule,
+            content: "테스트")
+        
+        parentList[0].schedules.append(newSchedule)
+        
+        print(parentList[0].schedules[1])
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
@@ -72,7 +143,7 @@ class ParentsCalenderViewController: BaseViewController {
     }
 }
 
-//MARK: - extensions
+//MARK: - Extensions
 
 extension ParentsCalenderViewController: UICollectionViewDelegate{
      
