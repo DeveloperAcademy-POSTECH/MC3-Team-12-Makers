@@ -17,4 +17,5 @@ struct Message {
 enum MessageType {
     case absence
     case earlyLeave
+    case emergency
 }
