@@ -14,8 +14,8 @@ struct Message {
     let isCompleted: Bool      //task완료 여부(교사의 체크)
 }
 
-enum MessageType {
-    case absence
-    case earlyLeave
-    case emergency
+enum MessageType: String {
+    case absence = "결석"
+    case earlyLeave = "조퇴"
+    case emergency = "긴급"
 }
