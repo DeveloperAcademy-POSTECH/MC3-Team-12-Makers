@@ -10,6 +10,12 @@ import UIKit
 class SendingViewController: BaseViewController {
     
     //MARK: - Properties
+//    let messageFromParent: Message = {
+//        let msg = Message()
+//        msg.isCompleted = false
+//        msg.sentDate = Date()
+//    }()
+    
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
     private let textLabelPurpose: UILabel = {
         let label = UILabel()
@@ -57,6 +63,20 @@ class SendingViewController: BaseViewController {
         return button
     }()
     
+    //메시지 내용 전송 버튼
+    private let sendButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("전송", for: .normal)
+        button.setTitleColor(UIColor.white, for: .normal)
+        button.backgroundColor = .systemBlue
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        button.layer.borderWidth = 0
+        button.layer.borderColor = UIColor.systemBlue.cgColor
+        button.layer.cornerRadius = 10
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     //MARK: - Propoerties
     //Date 입력 관련
     //TODO: -
@@ -98,7 +118,7 @@ class SendingViewController: BaseViewController {
 
         view.addSubview(textLabelPurpose)
         textLabelPurpose.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        textLabelPurpose.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        textLabelPurpose.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         textLabelPurpose.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         
         view.addSubview(messageTypeButton)
@@ -128,6 +148,13 @@ class SendingViewController: BaseViewController {
         textFieldForReason.heightAnchor.constraint(equalToConstant: 40).isActive = true
         textFieldForReason.widthAnchor.constraint(equalToConstant: 350).isActive = true
         textFieldForReason.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        
+        view.addSubview(sendButton)
+        sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
+        sendButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
+        sendButton.widthAnchor.constraint(equalToConstant: 350).isActive = true
+        sendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+
     }
 
     override func configUI() {
@@ -147,7 +174,7 @@ class SendingViewController: BaseViewController {
 //                self.textLabelDate.isHidden = false
 //                self.datePicker.isHidden = false
                 self.datePicker.datePickerMode = .dateAndTime
-                print("조퇴 누름")
+                print("조퇴 누름")                
             })
         ])
         

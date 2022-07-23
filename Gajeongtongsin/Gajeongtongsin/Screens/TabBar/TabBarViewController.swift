@@ -38,7 +38,7 @@ class TabBarViewController: UITabBarController {
         switch role {
         case .parent:
              vc1 =  UINavigationController(rootViewController: ReservationViewController())
-             vc2 =  UINavigationController(rootViewController: SendingViewController())
+             vc2 =  UINavigationController(rootViewController: SentMessageListViewController())
              vc3 =  UINavigationController(rootViewController: ProfileViewController())
         case .teacher:
              vc1 =  UINavigationController(rootViewController: ConsultationViewController())
