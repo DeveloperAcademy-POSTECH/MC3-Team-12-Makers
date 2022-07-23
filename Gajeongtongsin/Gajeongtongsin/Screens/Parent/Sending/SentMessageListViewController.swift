@@ -9,7 +9,8 @@ import UIKit
 
 class SentMessageListViewController: BaseViewController {
     //MARK: - Properties
-    let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages}).filter({$0.type != .emergency})
+    let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages})
+//        .filter({$0.type != .emergency})
     
     private let viewTitle: UILabel = {
         let label = UILabel()
@@ -104,6 +105,4 @@ extension SentMessageListViewController: UITableViewDataSource {
         cell.imageView?.image = UIImage(systemName: "plus")
         return cell
     }
-    
-    
 }

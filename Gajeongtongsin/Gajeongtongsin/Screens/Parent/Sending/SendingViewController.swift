@@ -27,7 +27,7 @@ class SendingViewController: BaseViewController {
     }()
     private let textLabelDate: UILabel = {
         let label = UILabel()
-//        label.isHidden = true
+        label.isHidden = true
         label.text = "일시"
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.textColor = .black
@@ -36,7 +36,7 @@ class SendingViewController: BaseViewController {
     }()
     private let textLabelReason: UILabel = {
         let label = UILabel()
-//        label.isHidden = true
+        label.isHidden = true
         label.text = "사유"
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.textColor = .black
@@ -66,6 +66,7 @@ class SendingViewController: BaseViewController {
     //메시지 내용 전송 버튼
     private let sendButton: UIButton = {
         let button = UIButton()
+        button.isHidden = true
         button.setTitle("전송", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.backgroundColor = .systemBlue
@@ -77,26 +78,25 @@ class SendingViewController: BaseViewController {
         return button
     }()
     
-    //MARK: - Propoerties
     //Date 입력 관련
     //TODO: -
     //messagetype 에서 결석을 선택할 때와 조퇴를 선택할 때 pickermode 변경
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
-//        picker.isHidden = true
+        picker.isHidden = true
         picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ko-KR")
+        picker.minuteInterval = 15
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
     
-    //MARK: - Properties
     //사유 입력하는 Text Field View
     //TODO: -
     //Text Field 내 여백 padding 값 조절, 글자수 제한, 박스 외부 클릭했을 때 커서와 키보드 사라지게 등등
     private let textFieldForReason: UITextField = {
         let textF = UITextField()
-//        textF.isHidden = true
+        textF.isHidden = true
         textF.text = "기본텍스트입니다"
         textF.textColor = .black
         textF.font = .systemFont(ofSize: 17, weight: .medium)
@@ -110,8 +110,7 @@ class SendingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldForReason.delegate = self
-
-
+        sendButton.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
     }
     //MARK: - Funcs
     override func render() {
@@ -164,20 +163,45 @@ class SendingViewController: BaseViewController {
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
             UIAction(title: "결석", handler: { _ in
                 self.messageTypeButton.setTitle("결석", for: .normal)
-//                self.textLabelDate.isHidden = false
-//                self.datePicker.isHidden = false
+                self.textLabelDate.isHidden = false
+                self.datePicker.isHidden = false
                 self.datePicker.datePickerMode = .date
-                print("결석 누름")
+                self.textLabelReason.isHidden = false
+                self.textFieldForReason.isHidden = false
+                self.sendButton.isHidden = false
             }),
             UIAction(title: "조퇴", handler: { _ in
                 self.messageTypeButton.setTitle("조퇴", for: .normal)
-//                self.textLabelDate.isHidden = false
-//                self.datePicker.isHidden = false
+                self.textLabelDate.isHidden = false
+                self.datePicker.isHidden = false
                 self.datePicker.datePickerMode = .dateAndTime
-                print("조퇴 누름")                
+                self.textLabelReason.isHidden = false
+                self.textFieldForReason.isHidden = false
+                self.sendButton.isHidden = false
             })
         ])
         
+        //프로퍼티 옵저버 구현 고려 중 (날짜, 시간 값이 세팅되어야 사유 입력창 등장)
+//        var dateObserver: Date = datePicker.date {
+//            didSet {
+//                self.textLabelReason.isHidden = false
+//                self.textFieldForReason.isHidden = false
+//            }
+//        }
+    }
+    
+    func msgType() -> MessageType {
+        let msgType = messageTypeButton.currentTitle == "결석" ? MessageType.absence : MessageType.earlyLeave
+        return msgType
+    }
+  
+    @objc func sendMessage() {
+        let newMsg = Message(type: msgType(),
+                             sentDate: Date(),
+                             expectedDate: "\(datePicker.date)",
+                             content: textFieldForReason.text ?? "",
+                             isCompleted: false)
+        messageList1.append(newMsg)
     }
 }
 

@@ -9,7 +9,7 @@ import UIKit
 
 class sentMessageTableViewCell: BaseTableViewCell {
     
-    static let identifier = "ProfileTableViewCell"
+    static let identifier = "SentMessageTableViewCell"
     
     
     let messageInfo: UILabel = {
