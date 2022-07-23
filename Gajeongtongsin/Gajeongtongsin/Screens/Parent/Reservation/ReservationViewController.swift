@@ -14,7 +14,7 @@ class ReservationViewController: BaseViewController {
     private let viewTitle: UILabel = {
         let label = UILabel()
         label.text = "예약내역"
-        label.font = UIFont.systemFont(ofSize: 28)
+        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
