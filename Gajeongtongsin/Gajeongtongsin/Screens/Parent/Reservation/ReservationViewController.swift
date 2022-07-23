@@ -8,10 +8,21 @@
 import UIKit
 
 class ReservationViewController: BaseViewController {
+    //TODO: -
+    /// 신청내역 리스트 테이블뷰
 
+    private let viewTitle: UILabel = {
+        let label = UILabel()
+        label.text = "예약내역"
+        label.font = UIFont.systemFont(ofSize: 28)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
     private let textLabel: UILabel = {
         let label = UILabel()
-        label.text = "학부모님 상담예약 준비중입니다 😎"
+        label.text = "예정된 상담이 없어요 :)"
         label.font = UIFont.systemFont(ofSize: 20)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -20,23 +31,20 @@ class ReservationViewController: BaseViewController {
     
     private let button: UIButton = {
         let button = UIButton()
-        button.setTitle("상담예약 캘린더뷰 버튼", for: .normal)
+        button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.showsMenuAsPrimaryAction = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        button.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
     }
-    
 
-    @objc func onTapButton() {
-        let vc = ParentsCalenderViewController()
-        present(vc, animated: true)
-    }
     
     //MARK: - Funcs
     override func render() {
@@ -51,5 +59,18 @@ class ReservationViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .primaryBackground
+        
+        //신청버튼 메뉴에 따라 액션 분리
+        button.menu = UIMenu(options: .displayInline, children: [
+            UIAction(title: "상담예약", handler: { _ in
+                self.present(ParentsCalenderViewController(), animated: true)
+                print("상담예약")
+            }),
+            UIAction(title: "긴급신청", handler: { _ in
+
+                print("긴급신청")
+            })
+        ])
     }
+    
 }
