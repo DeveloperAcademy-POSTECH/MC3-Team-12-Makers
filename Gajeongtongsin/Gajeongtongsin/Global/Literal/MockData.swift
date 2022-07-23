@@ -31,17 +31,17 @@ var messageList3 = [
 var scheduleList1 = [
     Schedule(reservedDate: "8월1일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월23일", startTime: "14시00분", isReserved: nil),
-                ScheduleInfo(consultingDate: "7월23일", startTime: "14시30분", isReserved: nil),
-                ScheduleInfo(consultingDate: "7월23일", startTime: "15시00분", isReserved: nil)],
+                ScheduleInfo(consultingDate: "7월27일", startTime: "14시00분", isReserved: nil),
+                ScheduleInfo(consultingDate: "7월27일", startTime: "14시30분", isReserved: nil),
+                ScheduleInfo(consultingDate: "7월27일", startTime: "15시00분", isReserved: nil)],
              content: "김유쓰영어성적문의")
 ]
 
 var scheduleList2 = [
     Schedule(reservedDate: "8월2일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월23일", startTime: "15시30분", isReserved: nil),
-                ScheduleInfo(consultingDate: "7월24일", startTime: "16시00분", isReserved: nil),
+                ScheduleInfo(consultingDate: "7월27일", startTime: "15시30분", isReserved: nil),
+                ScheduleInfo(consultingDate: "7월26일", startTime: "16시00분", isReserved: nil),
                 ScheduleInfo(consultingDate: "7월25일", startTime: "16시30분", isReserved: nil)],
              content: "부니카수학성적문의")
 ]

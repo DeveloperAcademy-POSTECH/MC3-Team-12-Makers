@@ -70,22 +70,6 @@ class ParentsCalenderViewController: BaseViewController {
             var consultingDate: String
             var startTime: String = ""
             
-//혹시몰라 리펙터 전 코드 남겨둔거, 안봐도됨
-//            switch idx%5 {
-//            case 0:
-//                consultingDate = "월요일"
-//            case 1:
-//                consultingDate = "화요일"
-//            case 2:
-//                consultingDate = "수요일"
-//            case 3:
-//                consultingDate = "목요일"
-//            case 4:
-//                consultingDate = "금요일"
-//            default:
-//                consultingDate = "밀장군"
-//            }
-            
             let formatter = DateFormatter()
             formatter.dateFormat = "MMM-dd-e-EEEE"
             dateCalculate = Date(timeIntervalSinceNow: (86400 * (Double(9+idx%5)-interval))) //다음주 월요일부터 계산, idx가 곧 e (MMM-DD-e-EEEE)
@@ -93,17 +77,17 @@ class ParentsCalenderViewController: BaseViewController {
             consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
             
             switch idx/5 {
-            case 0..<1:
+            case 0:
                 startTime = "14:00"
-            case 1..<2:
+            case 1:
                 startTime = "14:30"
-            case 2..<3:
+            case 2:
                 startTime = "15:00"
-            case 3..<4:
+            case 3:
                 startTime = "15:30"
-            case 4..<5:
+            case 4:
                 startTime = "16:00"
-            case 5..<6:
+            case 5:
                 startTime = "16:30"
             default:
                 startTime = "부니카"
