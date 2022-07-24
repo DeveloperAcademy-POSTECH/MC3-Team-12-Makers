@@ -9,12 +9,14 @@ import UIKit
 let sections = ["긴급알림", "일반알림"]
 
 class NotificationViewController: BaseViewController {
-    let messagesWithChildName = mainTeacher.parentUserIds.flatMap{ $0.getMessagesWithChildName() }
     
-    var emergancy: [(childName: String, message: Message)] {
+    // MARK: - Properties
+    private let messagesWithChildName = mainTeacher.parentUserIds.flatMap{ $0.getMessagesWithChildName() }
+    
+    private var emergancy: [(childName: String, message: Message)] {
         messagesWithChildName.filter{ $0.message.type == .emergency }
     }
-    var normal: [(childName: String, message: Message)] {
+    private var normal: [(childName: String, message: Message)] {
         messagesWithChildName.filter{ $0.message.type != .emergency }
     }
     
@@ -34,6 +36,7 @@ class NotificationViewController: BaseViewController {
         return tableView
     }()
 
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
@@ -50,6 +53,8 @@ class NotificationViewController: BaseViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     
     }
+    
+    // MARK: - Funcs
     
     func navigationBar() {
         self.navigationItem.title = "알림"

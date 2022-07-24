@@ -8,16 +8,18 @@ import UIKit
 
 class NotificationTableViewCell: BaseTableViewCell {
     
+    
+    // MARK: - Properties
     static let identifier: String = "NotificationTableViewCell"
     
-    let messageInfo: UILabel = {
+    private let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
         messageInfo.font = UIFont.systemFont(ofSize: 11, weight: .semibold)
         return messageInfo
     }()
     
-    let senderName: UILabel = {
+    private let senderName: UILabel = {
        let senderName = UILabel()
         senderName.translatesAutoresizingMaskIntoConstraints = false
         senderName.font = UIFont.systemFont(ofSize: 16, weight: .bold)
@@ -25,7 +27,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         return senderName
     }()
     
-    let sendingTime: UILabel = {
+    private let sendingTime: UILabel = {
        let sendingTime = UILabel()
         sendingTime.translatesAutoresizingMaskIntoConstraints = false
         sendingTime.font = UIFont.systemFont(ofSize: 12, weight: .light)
@@ -33,6 +35,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         return sendingTime
     }()
 
+    // MARK: - View Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
@@ -55,10 +58,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         sendingTime.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }
     
-    override func configUI() {
-        
-    }
-    
+    // MARK: - Funcs
     func configure(childName: String, message: Message) {
         switch message.type {
         case .emergency :
