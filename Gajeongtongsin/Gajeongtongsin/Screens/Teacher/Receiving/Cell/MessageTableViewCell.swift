@@ -9,23 +9,22 @@ import UIKit
 
 class MessageTableViewCell: BaseTableViewCell {
     
-    var isChecked: Bool = false {
+    // MARK: - Properties
+    private var isChecked: Bool = false {
         didSet {
             checkBox.tintColor = isChecked ? .red : .gray
         }
     }
 
-    
-    
     static let identifier = "ProfileTableViewCell"
     
-    let checkBox: UIImageView = {
+    private let checkBox: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
-    let messageInfo: UILabel = {
+    private let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
         messageInfo.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
@@ -33,14 +32,15 @@ class MessageTableViewCell: BaseTableViewCell {
         return messageInfo
     }()
     
-    let content: UILabel = {
+    private let content: UILabel = {
        let content = UILabel()
         content.translatesAutoresizingMaskIntoConstraints = false
         content.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         content.textColor = UIColor.black
         return content
     }()
-
+    
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
@@ -49,6 +49,7 @@ class MessageTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Funcs
     override func render() {
         contentView.addSubview(messageInfo)
         messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28).isActive = true
@@ -78,7 +79,7 @@ class MessageTableViewCell: BaseTableViewCell {
         }
     }
     
-    func isCheck() {
+    func changeState() {
         self.isChecked.toggle()
         
     }

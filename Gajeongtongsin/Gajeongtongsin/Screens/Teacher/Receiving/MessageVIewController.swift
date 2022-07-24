@@ -9,6 +9,7 @@ import UIKit
 
 class MessageViewController: BaseViewController {
     
+    // MARK: - Properties
     let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages}).filter({$0.type != .emergency})
     
     private let tableView: UITableView = {
@@ -18,6 +19,7 @@ class MessageViewController: BaseViewController {
         return tableView
     }()
     
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
@@ -35,6 +37,7 @@ class MessageViewController: BaseViewController {
     
     }
     
+    // MARK: - Funcs
     func navigationBar() {
         self.navigationItem.title = "수신내역"
         self.navigationController?.navigationBar.tintColor = .black
@@ -44,18 +47,14 @@ class MessageViewController: BaseViewController {
 }
 
 
+
+
+
+
 extension MessageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messageList.count
     }
-    
-    
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return mainTeacher.parentUserIds.count
-//    }
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return mainTeacher.parentUserIds[section].sendingMessages.count
-//    }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -81,7 +80,7 @@ extension MessageViewController: UITableViewDelegate {
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         let okayAction = UIAlertAction(title: "확인", style: .default) { _ in
             let cell = tableView.cellForRow(at: indexPath) as? MessageTableViewCell
-            cell?.isCheck()
+            cell?.changeState()
         }
         alret.addAction(cancelAction)
         alret.addAction(okayAction)
