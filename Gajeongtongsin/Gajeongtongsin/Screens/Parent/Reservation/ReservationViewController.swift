@@ -67,10 +67,20 @@ class ReservationViewController: BaseViewController {
                 print("상담예약")
             }),
             UIAction(title: "긴급신청", handler: { _ in
+                let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
+                    let text: String = alert.textFields?[0].text ?? ""
+//                    print(text)
+                }
+                alert.addAction(cancelAction)
+                alert.addAction(okayAction)
+                alert.addTextField()
+                self.present(alert, animated: true)
+                
 
-                print("긴급신청")
             })
         ])
     }
-    
 }
+

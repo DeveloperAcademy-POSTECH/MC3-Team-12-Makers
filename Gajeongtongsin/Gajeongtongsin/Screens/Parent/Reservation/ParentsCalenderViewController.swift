@@ -71,7 +71,7 @@ class ParentsCalenderViewController: BaseViewController {
 //        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: submit)
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
-        dismissBtn.addTarget(self, action: #selector(dm), for: .touchUpInside)
+        dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
     }
 
     //MARK: - Funcs
@@ -114,7 +114,7 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     //캘린더뷰 신청 취소
-    @objc func dm() {
+    @objc func cancelSubmit() {
         self.dismiss(animated: true)
     }
     
