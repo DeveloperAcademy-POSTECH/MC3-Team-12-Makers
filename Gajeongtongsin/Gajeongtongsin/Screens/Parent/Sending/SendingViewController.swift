@@ -8,14 +8,9 @@
 import UIKit
 
 class SendingViewController: BaseViewController {
+    private var currentParent = parent1
     
     //MARK: - Properties
-//    let messageFromParent: Message = {
-//        let msg = Message()
-//        msg.isCompleted = false
-//        msg.sentDate = Date()
-//    }()
-    
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
     private let textLabelPurpose: UILabel = {
         let label = UILabel()
@@ -90,6 +85,7 @@ class SendingViewController: BaseViewController {
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
+    
     
     //사유 입력하는 Text Field View
     //TODO: -
@@ -182,7 +178,7 @@ class SendingViewController: BaseViewController {
         ])
         
         //프로퍼티 옵저버 구현 고려 중 (날짜, 시간 값이 세팅되어야 사유 입력창 등장)
-//        var dateObserver: Date = datePicker.date {
+//        var selectedDate: Date = datePicker.date {
 //            didSet {
 //                self.textLabelReason.isHidden = false
 //                self.textFieldForReason.isHidden = false
@@ -201,7 +197,12 @@ class SendingViewController: BaseViewController {
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
-        messageList1.append(newMsg)
+        currentParent.sendingMessages.append(newMsg)
+        print(currentParent.sendingMessages)
+        //전송버튼 누를 때 리스트 뷰가 갱신 되어야 하는데 지금은 처음 로드한 리스트 그대로..
+        let vc = SentMessageListViewController()
+        vc.viewDidLoad()
+        dismiss(animated: true)
     }
 }
 

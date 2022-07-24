@@ -11,7 +11,6 @@ class sentMessageTableViewCell: BaseTableViewCell {
     
     static let identifier = "SentMessageTableViewCell"
     
-    
     let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
@@ -34,7 +33,6 @@ class sentMessageTableViewCell: BaseTableViewCell {
         return imageView
     }()
     
-    
     override func render() {
         contentView.addSubview(messageInfo)
         messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28).isActive = true
@@ -50,13 +48,12 @@ class sentMessageTableViewCell: BaseTableViewCell {
     }
     
     override func configUI() {
-        
+        checkIndicator.image = UIImage(systemName: "checkmark.square")
     }
     
-//    func configure(childName: String, message: Message) {
-//        if message.type != .emergency {
-//            messageInfo.text = "\(childName) / \(message.type) / \(message.expectedDate)"
-//            content.text = "\(message.content)"
-//        }
+//    func cellTextMap(parent: ParentUser, message: Message) {
+//        messageInfo.text = "\(parent.childName) / \(message.type) / \(message.expectedDate)"
+//        content.text = "\(message.content)"
 //    }
 }
+
