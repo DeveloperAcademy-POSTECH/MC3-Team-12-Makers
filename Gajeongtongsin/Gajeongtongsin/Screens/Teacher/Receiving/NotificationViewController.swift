@@ -36,7 +36,7 @@ class NotificationViewController: BaseViewController {
         return tableView
     }()
 
-    // MARK: - Funcs
+    // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
@@ -44,6 +44,7 @@ class NotificationViewController: BaseViewController {
         navigationBar()
     }
     
+    // MARK: - Funcs
     override func render() {
         
         view.addSubview(tableView)
