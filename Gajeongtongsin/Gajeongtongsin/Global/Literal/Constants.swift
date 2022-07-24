@@ -43,3 +43,7 @@ enum Role {
     case parent
     case teacher
 }
+
+// ParentsCalenderViewController 상수
+let secondsInDay = 86400
+let weekDays = 5

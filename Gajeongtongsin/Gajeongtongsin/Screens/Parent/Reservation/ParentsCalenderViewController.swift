@@ -9,11 +9,26 @@ import UIKit
 
 class ParentsCalenderViewController: BaseViewController {
     
+    //MARK: - View Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        calenderView.delegate = self
+        calenderView.dataSource = self
+        
+        subBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
+    }
+    
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
     private var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
+    private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
+//    private var consultingDateDate: Date
+    private var consultingDateList: [String] = []
+    private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
+    private var startTime: String = ""
 
+    private let numberOfRow = 5
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -33,79 +48,67 @@ class ParentsCalenderViewController: BaseViewController {
         return button
     }()
     
+    //MARK: - Funcs
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        calenderView.delegate = self
-        calenderView.dataSource = self
+    func dateIndexToString(index: Int) -> String {
+        let formatter = DateFormatter()
         
-        subBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
+        formatter.dateFormat = "e"    //e는 1~7(sun~sat)
+        var interval = Int(formatter.string(from:Date()))
+        if interval == 1 { interval = 8 } //오늘이 일요일인 경우에는 다음주로 넘어가지 않도록 보정
+        
+        formatter.dateFormat = "MMM-dd-e-EEEE"
+        let daysAfterToday = (7+(index%weekDays+2)-interval!) //오늘부터 신청일까지 더해야 하는 일 수, +2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
+        let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
+        
+        consultingDateList = formatter.string(from: consultingDateDate).components(separatedBy: "-") //Date -> [String]
+        consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
+        return consultingDate
     }
     
-    //날자 계산을 위한 오늘의 요일 상수
-    var interval: Int {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "e"    //e는 1~7(sun~sat)
-        
-        let day = formatter.string(from:Date())
-        var interval = Int(day)
-        if interval == 1 { interval = 8 }
-        return interval!
+    func timeIndexToString(index: Int) -> String {
+        switch index/numberOfRow {
+        case 0:
+            startTime = "14:00"
+        case 1:
+            startTime = "14:30"
+        case 2:
+            startTime = "15:00"
+        case 3:
+            startTime = "15:30"
+        case 4:
+            startTime = "16:00"
+        case 5:
+            startTime = "16:30"
+        default:
+            startTime = "부니카"
+        }
+        return startTime
     }
     
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
         
-        subIdx = choicedCells.enumerated().compactMap { (idx, element) in
-            element ? idx : nil
-        }
-        
-        var subSchedule: [ScheduleInfo] = []
+        appendScheduleList = []
+        subIdx = choicedCells.enumerated().compactMap { (idx, element) in element ? idx : nil }
         
         for idx in subIdx {
-            var consultingDateDate: Date
-            var consultingDateList: [String]
-            var consultingDate: String //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
-            var startTime: String = ""
-            
-            let formatter = DateFormatter()
-            formatter.dateFormat = "MMM-dd-e-EEEE"
-            let daysAfterToday = (Double(9+idx%5)-Double(interval)) //오늘부터 신청일까지 더해야 하는 일 수
-            
-            consultingDateDate = Date(timeIntervalSinceNow: (86400 * daysAfterToday))
-            consultingDateList = formatter.string(from: consultingDateDate).components(separatedBy: "-") //Date -> [String]
-            consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
-            print(consultingDate)
-            switch idx/5 {
-            case 0:
-                startTime = "14:00"
-            case 1:
-                startTime = "14:30"
-            case 2:
-                startTime = "15:00"
-            case 3:
-                startTime = "15:30"
-            case 4:
-                startTime = "16:00"
-            case 5:
-                startTime = "16:30"
-            default:
-                startTime = "부니카"
-            }
-            
-            subSchedule.append(ScheduleInfo(consultingDate: consultingDate, startTime: startTime, isReserved: nil))
+            appendScheduleList.append(ScheduleInfo(
+                consultingDate: dateIndexToString(index: idx),
+                startTime: timeIndexToString(index: idx),
+                isReserved: nil))
         }
         
-        let newSchedule: Schedule = Schedule(
-            reservedDate: "7월22일", 
-            scheduleList: subSchedule,
+        parentList[0].schedules.append(Schedule(
+            reservedDate: "7월22일",
+            scheduleList: appendScheduleList,
             content: "테스트")
-        parentList[0].schedules.append(newSchedule) //TODO : - parentList index를 id 받아서 넣어주어야 함
+            )
+        //TODO : - parentList index를 id 받아서 넣어주어야 함
+        
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
-
-    //MARK: - Funcs
     
     override func render() {
         view.addSubview(calenderView)
@@ -151,7 +154,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
                  choicedCells[indexPath.item].toggle()
                  cell?.backgroundColor = .blue
              }else if truCnt<=3 && choicedCells[indexPath[1]]{
-                 choicedCells[indexPath[1]].toggle()
+                 choicedCells[indexPath.item].toggle()
                  cell?.backgroundColor = .gray
              }
          }
