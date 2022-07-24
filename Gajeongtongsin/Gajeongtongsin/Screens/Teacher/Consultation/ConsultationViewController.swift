@@ -39,46 +39,7 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
-    //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
-    func dayIndex(parentUserIds: Int) -> [Int] {
-        displayDates = []
-        displayIndex = []
-        for i in 0...mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count-1 {
-            displayDates.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
-        }
-        for day in 0...displayDates.count-1 {
-            for nextWeekDay in 0...nextWeek.count-1 {
-                if displayDates[day] == nextWeek[nextWeekDay] {
-                    displayIndex.append(nextWeekDay)
-                }
-            }
-        }
-        return displayIndex
-    }
     
-    func timeIndex(parentUserIds: Int) -> [Int] {
-        startTime = []
-        for i in 0...2{
-            switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
-            case "14시00분":
-                startTime.append(0)
-            case "14시30분":
-                startTime.append(1)
-            case "15시00분":
-                startTime.append(2)
-            case "15시30분":
-                startTime.append(3)
-            case "16시00분":
-                startTime.append(4)
-            case "16시30분":
-                startTime.append(5)
-            default:
-                startTime.append(100)
-            }
-        }
-        return startTime
-    }
-
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -127,6 +88,66 @@ class ConsultationViewController: BaseViewController {
     
     //MARK: - Funcs
     
+    //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
+    func dayIndex(parentUserIds: Int) -> [Int] {
+        displayDates = []
+        displayIndex = []
+        for i in 0...mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count-1 {
+            displayDates.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
+        }
+        for day in 0...displayDates.count-1 {
+            for nextWeekDay in 0...nextWeek.count-1 {
+                if displayDates[day] == nextWeek[nextWeekDay] {
+                    displayIndex.append(nextWeekDay)
+                }
+            }
+        }
+        return displayIndex
+    }
+    
+    func timeIndex(parentUserIds: Int) -> [Int] {
+        startTime = []
+        for i in 0...2{
+            switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
+            case "14시00분":
+                startTime.append(0)
+            case "14시30분":
+                startTime.append(1)
+            case "15시00분":
+                startTime.append(2)
+            case "15시30분":
+                startTime.append(3)
+            case "16시00분":
+                startTime.append(4)
+            case "16시30분":
+                startTime.append(5)
+            default:
+                startTime.append(100)
+            }
+        }
+        return startTime
+    }
+    
+    //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
+    func CalenderDisplayData() -> [teacherCalenderData] {
+        
+        calenderData = []
+        calenderData.append(teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green))
+        calenderData.append(teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
+        calenderData.append(teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
+
+        for parentIdx in 0...mainTeacher.parentUserIds.count-1 {
+            calenderIndex = []
+            for i in 0...2{
+                calenderIndex.append(timeIndex(parentUserIds: parentIdx)[i] * 5 + dayIndex(parentUserIds: parentIdx)[i])
+            }
+
+            calenderData[parentIdx].calenderIndex = calenderIndex
+        }
+        print(calenderData)
+        return calenderData
+    }
+    
     //버튼 누르면 학부모1 신청시간 display
     @objc func par1OnTapButton() {
         displayData = []
@@ -146,26 +167,6 @@ class ConsultationViewController: BaseViewController {
         displayData = CalenderDisplayData()
         calenderView.reloadData()
     }
-    
-    func CalenderDisplayData() -> [teacherCalenderData] {
-        
-        calenderData = []
-        calenderData.append(teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green))
-        calenderData.append(teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
-        calenderData.append(teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
-
-        for parentIdx in 0...mainTeacher.parentUserIds.count-1 {
-            calenderIndex = []
-            for i in 0...2{
-                calenderIndex.append(timeIndex(parentUserIds: parentIdx)[i] * 5 + dayIndex(parentUserIds: parentIdx)[i])
-            }
-
-            calenderData[parentIdx].calenderIndex = calenderIndex
-        }
-        print(calenderData)
-        return calenderData
-    }
-
     
     override func render() {
         view.addSubview(calenderView)
