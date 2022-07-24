@@ -35,7 +35,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         return sendingTime
     }()
 
-    // MARK: - View Life Cycle
+    // MARK: - Init
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
     }
@@ -44,6 +44,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Funcs
     override func render() {
         contentView.addSubview(messageInfo)
         messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 16).isActive = true
@@ -58,7 +59,6 @@ class NotificationTableViewCell: BaseTableViewCell {
         sendingTime.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }
     
-    // MARK: - Funcs
     func configure(childName: String, message: Message) {
         switch message.type {
         case .emergency :

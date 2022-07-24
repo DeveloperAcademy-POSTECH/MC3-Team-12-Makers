@@ -36,7 +36,7 @@ class NotificationViewController: BaseViewController {
         return tableView
     }()
 
-    // MARK: - View Life Cycle
+    // MARK: - Funcs
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
@@ -51,10 +51,7 @@ class NotificationViewController: BaseViewController {
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-    
     }
-    
-    // MARK: - Funcs
     
     func navigationBar() {
         self.navigationItem.title = "알림"
