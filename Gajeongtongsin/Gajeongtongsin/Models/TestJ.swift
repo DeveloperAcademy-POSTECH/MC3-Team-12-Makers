@@ -6,3 +6,10 @@
 //
 
 import Foundation
+import UIKit
+
+struct teacherCalenderData {
+    var parentIds: Int
+    var calenderIndex: [Int]
+    var cellColor: UIColor
+}

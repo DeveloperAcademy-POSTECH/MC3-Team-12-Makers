@@ -42,40 +42,40 @@ class ParentsCalenderViewController: BaseViewController {
         subBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
     }
     
-    //날자 계산을 위한 상수 (근데 왜 let 선언하면 오류가 뜰까?)
-    var interval: Double {
+    //날자 계산을 위한 오늘의 요일 상수
+    var interval: Int {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM-dd-e-EEEE"    //e는 1~7(sun~sat)
-
+        formatter.dateFormat = "e"    //e는 1~7(sun~sat)
+        
         let day = formatter.string(from:Date())
-        let today = day.components(separatedBy: "-")
-        let interval = Double(today[2])
-//        let startDay = Date(timeIntervalSinceNow: (86400 * (9-interval!))) //e: 1~7 이므로 7+2(월요일 보정)-interval = 다음주 월요일
-//        let startDayString = formatter.string(from: startDay).components(separatedBy: "-") //다음주 월요일 date
+        var interval = Int(day)
+        if interval == 1 { interval = 8 }
         return interval!
     }
     
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
         
-        subIdx = choicedCells.enumerated().compactMap { (idx, element) -> Int? in
+        subIdx = choicedCells.enumerated().compactMap { (idx, element) in
             element ? idx : nil
         }
         
         var subSchedule: [ScheduleInfo] = []
         
         for idx in subIdx {
-            var dateCalculate: Date
+            var consultingDateDate: Date
             var consultingDateList: [String]
-            var consultingDate: String
+            var consultingDate: String //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
             var startTime: String = ""
             
             let formatter = DateFormatter()
             formatter.dateFormat = "MMM-dd-e-EEEE"
-            dateCalculate = Date(timeIntervalSinceNow: (86400 * (Double(9+idx%5)-interval))) //다음주 월요일부터 계산, idx가 곧 e (MMM-DD-e-EEEE)
-            consultingDateList = formatter.string(from: dateCalculate).components(separatedBy: "-") //Date -> [String]
-            consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
+            let daysAfterToday = (Double(9+idx%5)-Double(interval)) //오늘부터 신청일까지 더해야 하는 일 수
             
+            consultingDateDate = Date(timeIntervalSinceNow: (86400 * daysAfterToday))
+            consultingDateList = formatter.string(from: consultingDateDate).components(separatedBy: "-") //Date -> [String]
+            consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
+            print(consultingDate)
             switch idx/5 {
             case 0:
                 startTime = "14:00"
@@ -97,13 +97,10 @@ class ParentsCalenderViewController: BaseViewController {
         }
         
         let newSchedule: Schedule = Schedule(
-            reservedDate: "7월22일",
+            reservedDate: "7월22일", 
             scheduleList: subSchedule,
             content: "테스트")
-        
-        parentList[0].schedules.append(newSchedule)
-        
-        print(parentList[0].schedules[1])
+        parentList[0].schedules.append(newSchedule) //TODO : - parentList index를 id 받아서 넣어주어야 함
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
@@ -144,20 +141,20 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
     
     //캘린더 클릭 액션
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
-        
-        //선택한 슬롯 개수 카운터
-        let truCnt = choicedCells.filter({$0 == true}).count
+             let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
 
-        //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
-        if truCnt<3 && !choicedCells[indexPath.item] {
-            choicedCells[indexPath.item].toggle()
-            cell?.backgroundColor = .blue
-        }else if truCnt<=3 && choicedCells[indexPath[1]]{
-            choicedCells[indexPath[1]].toggle()
-            cell?.backgroundColor = .gray
-        }
-    }
+             //선택한 슬롯 개수 카운터
+             let truCnt = choicedCells.filter({$0 == true}).count
+
+             //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
+             if truCnt<3 && !choicedCells[indexPath.item] {
+                 choicedCells[indexPath.item].toggle()
+                 cell?.backgroundColor = .blue
+             }else if truCnt<=3 && choicedCells[indexPath[1]]{
+                 choicedCells[indexPath[1]].toggle()
+                 cell?.backgroundColor = .gray
+             }
+         }
 }
 
 extension ParentsCalenderViewController: UICollectionViewDataSource{

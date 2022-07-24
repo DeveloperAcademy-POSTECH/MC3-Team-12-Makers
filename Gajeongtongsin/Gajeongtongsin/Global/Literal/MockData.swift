@@ -51,6 +51,6 @@ var scheduleList3 = [
              scheduleList: [
                 ScheduleInfo(consultingDate: "7월25일", startTime: "14시00분", isReserved: nil),
                 ScheduleInfo(consultingDate: "7월26일", startTime: "15시30분", isReserved: nil),
-                ScheduleInfo(consultingDate: "7월26일", startTime: "16시00분", isReserved: nil)],
+                ScheduleInfo(consultingDate: "7월28일", startTime: "16시00분", isReserved: nil)],
              content: "최히로체육성적문의")
 ]
