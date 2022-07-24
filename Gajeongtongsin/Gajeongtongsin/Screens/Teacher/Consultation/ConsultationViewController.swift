@@ -32,10 +32,12 @@ class ConsultationViewController: BaseViewController {
         var nextWeek = [String]()
         let weekDay: Int = 6
         for dayCount in 0...weekDay {
-            let dayAdded = (86400 * (9-interval!+dayCount))
+//            let dayAdded = (86400 * (9-interval!+dayCount))
+            let dayAdded = (86400 * (2-interval!+dayCount))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
             nextWeek.append(oneDayString[0]+oneDayString[1]+"일")
         }
+        print(nextWeek)
         return nextWeek
     }
     
