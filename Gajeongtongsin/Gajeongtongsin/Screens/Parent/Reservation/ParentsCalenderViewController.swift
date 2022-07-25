@@ -14,6 +14,7 @@ class ParentsCalenderViewController: BaseViewController {
     private var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var subDate: [String] = []
 
+
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -104,6 +105,7 @@ class ParentsCalenderViewController: BaseViewController {
         parentList[0].schedules.append(newSchedule)
         
         print(parentList[0].schedules[1])
+
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
@@ -128,6 +130,7 @@ class ParentsCalenderViewController: BaseViewController {
 }
 
 //MARK: - Extensions
+
 
 extension ParentsCalenderViewController: UICollectionViewDelegate{
      

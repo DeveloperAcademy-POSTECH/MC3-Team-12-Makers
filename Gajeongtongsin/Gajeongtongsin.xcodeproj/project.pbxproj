@@ -41,6 +41,10 @@
 		359583A82882A6F7002B6873 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A72882A6F7002B6873 /* Constants.swift */; };
 		359583AA28840415002B6873 /* TestJ.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A928840415002B6873 /* TestJ.swift */; };
 		C04B547F2887C6250097EE88 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04B547E2887C6250097EE88 /* MockData.swift */; };
+		C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054017C288D04F6002BF33B /* NotificationViewController.swift */; };
+		C054017F288D0520002BF33B /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054017E288D0520002BF33B /* NotificationTableViewCell.swift */; };
+		C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056F6AC288B0A770070EED5 /* MessageVIewController.swift */; };
+		C056F6AF288B0A950070EED5 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */; };
 		C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFBFC2885DC86009A1563 /* ParentUser.swift */; };
 		C0DFFC032885DE32009A1563 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC022885DE32009A1563 /* Message.swift */; };
 		C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC042885DF05009A1563 /* Schedule.swift */; };
@@ -85,6 +89,10 @@
 		359583A72882A6F7002B6873 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		359583A928840415002B6873 /* TestJ.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestJ.swift; sourceTree = "<group>"; };
 		C04B547E2887C6250097EE88 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
+		C054017C288D04F6002BF33B /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
+		C054017E288D0520002BF33B /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
+		C056F6AC288B0A770070EED5 /* MessageVIewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageVIewController.swift; sourceTree = "<group>"; };
+		C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
 		C0DFFBFC2885DC86009A1563 /* ParentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentUser.swift; sourceTree = "<group>"; };
 		C0DFFC022885DE32009A1563 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		C0DFFC042885DF05009A1563 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
@@ -296,6 +304,8 @@
 				35958371288294F4002B6873 /* Component */,
 				35958370288294F0002B6873 /* Cell */,
 				3595837C288297E7002B6873 /* ReceivingViewController.swift */,
+				C056F6AC288B0A770070EED5 /* MessageVIewController.swift */,
+				C054017C288D04F6002BF33B /* NotificationViewController.swift */,
 			);
 			path = Receiving;
 			sourceTree = "<group>";
@@ -352,6 +362,8 @@
 			isa = PBXGroup;
 			children = (
 				3595839A28829CA1002B6873 /* TestI.swift */,
+				C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */,
+				C054017E288D0520002BF33B /* NotificationTableViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -486,6 +498,8 @@
 				C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */,
 				3595838928829C1D002B6873 /* Test.swift in Sources */,
 				3595839E28829D80002B6873 /* ProfileViewController.swift in Sources */,
+				C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */,
+				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
 				359583732882956C002B6873 /* BaseViewController.swift in Sources */,
@@ -495,8 +509,10 @@
 				3595837B288297D1002B6873 /* ReservationViewController.swift in Sources */,
 				3595839328829C82002B6873 /* TestD.swift in Sources */,
 				3558AB3928868D2800539C66 /* Notification.swift in Sources */,
+				C056F6AF288B0A950070EED5 /* MessageTableViewCell.swift in Sources */,
 				35958379288297B9002B6873 /* SendingViewController.swift in Sources */,
 				3595837F2882980C002B6873 /* StartViewController.swift in Sources */,
+				C054017F288D0520002BF33B /* NotificationTableViewCell.swift in Sources */,
 				359583AA28840415002B6873 /* TestJ.swift in Sources */,
 				3595839B28829CA1002B6873 /* TestI.swift in Sources */,
 				35958362288291D8002B6873 /* TabBarViewController.swift in Sources */,
