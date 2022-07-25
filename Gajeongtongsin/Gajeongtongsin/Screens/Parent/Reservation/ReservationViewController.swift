@@ -8,6 +8,8 @@
 import UIKit
 
 class ReservationViewController: BaseViewController {
+
+    //MARK: - Properties
     //TODO: -
     /// 신청내역 리스트 테이블뷰
 
@@ -19,7 +21,7 @@ class ReservationViewController: BaseViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let textLabel: UILabel = {
         let label = UILabel()
         label.text = "예정된 상담이 없어요 :)"
@@ -43,8 +45,13 @@ class ReservationViewController: BaseViewController {
         super.viewDidLoad()
     }
 
-    
     //MARK: - Funcs
+    @objc func onTapButton() {
+        let vc = ParentsCalenderViewController()
+        present(vc, animated: true)
+    }
+    
+    
     override func render() {
         view.addSubview(textLabel)
         textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
