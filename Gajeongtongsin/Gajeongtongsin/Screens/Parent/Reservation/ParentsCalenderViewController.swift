@@ -114,8 +114,7 @@ class ParentsCalenderViewController: BaseViewController {
         subIdx = choicedCells.enumerated().compactMap { (idx, element) -> Int? in
             element ? idx : nil
         }
-        
-        print(subIdx)
+
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
