@@ -13,7 +13,10 @@ class SentMessageListViewController: BaseViewController {
 //        .filter({$0.type != .emergency})
     
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
-    let currentParent = parent1
+    
+    var currentParent: ParentUser {
+        return mainTeacher.parentUserIds[0]
+    }
 
     
     private let viewTitle: UILabel = {
@@ -34,7 +37,7 @@ class SentMessageListViewController: BaseViewController {
         return btn
     }()
     
-    private let sentMessageList: UITableView = {
+    let sentMessageList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(sentMessageTableViewCell.self, forCellReuseIdentifier: sentMessageTableViewCell.identifier)
         table.rowHeight = 100
@@ -42,6 +45,8 @@ class SentMessageListViewController: BaseViewController {
         return table
     }()
     
+    
+    //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         sentMessageList.delegate = self
@@ -61,7 +66,6 @@ class SentMessageListViewController: BaseViewController {
     
     override func configUI() {
         view.backgroundColor = .primaryBackground
-//        navigationBar.delegate = self
     }
     
     func navigationBar() {
@@ -72,8 +76,11 @@ class SentMessageListViewController: BaseViewController {
     
     @objc func writeButton() {
         let vc = SendingViewController()
+        vc.modalPresentationStyle = UIModalPresentationStyle.popover
+        vc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
         present(vc, animated: true)
     }
+    
 }
 
 extension SentMessageListViewController: UITableViewDelegate {
@@ -94,7 +101,6 @@ extension SentMessageListViewController: UITableViewDataSource {
             switch messagesToView.type {
                 case .absence : return "결석"
                 case .earlyLeave : return "조퇴"
-            case .emergency : return "긴급"
             }
         }
         
@@ -105,7 +111,3 @@ extension SentMessageListViewController: UITableViewDataSource {
         return cell
     }
 }
-
-
-
-

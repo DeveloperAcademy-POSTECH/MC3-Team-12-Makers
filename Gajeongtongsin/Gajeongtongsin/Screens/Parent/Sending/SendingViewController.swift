@@ -8,9 +8,12 @@
 import UIKit
 
 class SendingViewController: BaseViewController {
-    private var currentParent = parent1
     
     //MARK: - Properties
+    var currentParent: ParentUser {
+        return mainTeacher.parentUserIds[0]
+    }
+    
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
     private let textLabelPurpose: UILabel = {
         let label = UILabel()
@@ -74,14 +77,12 @@ class SendingViewController: BaseViewController {
     }()
     
     //Date 입력 관련
-    //TODO: -
-    //messagetype 에서 결석을 선택할 때와 조퇴를 선택할 때 pickermode 변경
     private let datePicker: UIDatePicker = {
         let picker = UIDatePicker()
         picker.isHidden = true
         picker.preferredDatePickerStyle = .compact
         picker.locale = Locale(identifier: "ko-KR")
-        picker.minuteInterval = 15
+        picker.minuteInterval = 30
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
     }()
@@ -93,7 +94,7 @@ class SendingViewController: BaseViewController {
     private let textFieldForReason: UITextField = {
         let textF = UITextField()
         textF.isHidden = true
-        textF.text = "기본텍스트입니다"
+        textF.placeholder = "기본텍스트입니다"
         textF.textColor = .black
         textF.font = .systemFont(ofSize: 17, weight: .medium)
         textF.backgroundColor = .secondarySystemFill
@@ -107,13 +108,15 @@ class SendingViewController: BaseViewController {
         super.viewDidLoad()
         textFieldForReason.delegate = self
         sendButton.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
+        navigationBar()
     }
+    
     //MARK: - Funcs
     override func render() {
 
         view.addSubview(textLabelPurpose)
         textLabelPurpose.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        textLabelPurpose.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        textLabelPurpose.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         textLabelPurpose.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         
         view.addSubview(messageTypeButton)
@@ -157,23 +160,23 @@ class SendingViewController: BaseViewController {
         
         //Message Type 버튼과 선택에 따른 컴포넌트 노출 차이
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
-            UIAction(title: "결석", handler: { _ in
-                self.messageTypeButton.setTitle("결석", for: .normal)
-                self.textLabelDate.isHidden = false
-                self.datePicker.isHidden = false
-                self.datePicker.datePickerMode = .date
-                self.textLabelReason.isHidden = false
-                self.textFieldForReason.isHidden = false
-                self.sendButton.isHidden = false
+            UIAction(title: "결석", handler: { [weak self] _ in
+                self?.messageTypeButton.setTitle("결석", for: .normal)
+                self?.textLabelDate.isHidden = false
+                self?.datePicker.isHidden = false
+                self?.datePicker.datePickerMode = .date
+                self?.textLabelReason.isHidden = false
+                self?.textFieldForReason.isHidden = false
+                self?.sendButton.isHidden = false
             }),
-            UIAction(title: "조퇴", handler: { _ in
-                self.messageTypeButton.setTitle("조퇴", for: .normal)
-                self.textLabelDate.isHidden = false
-                self.datePicker.isHidden = false
-                self.datePicker.datePickerMode = .dateAndTime
-                self.textLabelReason.isHidden = false
-                self.textFieldForReason.isHidden = false
-                self.sendButton.isHidden = false
+            UIAction(title: "조퇴", handler: { [weak self] _ in
+                self?.messageTypeButton.setTitle("조퇴", for: .normal)
+                self?.textLabelDate.isHidden = false
+                self?.datePicker.isHidden = false
+                self?.datePicker.datePickerMode = .dateAndTime
+                self?.textLabelReason.isHidden = false
+                self?.textFieldForReason.isHidden = false
+                self?.sendButton.isHidden = false
             })
         ])
         
@@ -184,6 +187,11 @@ class SendingViewController: BaseViewController {
 //                self.textFieldForReason.isHidden = false
 //            }
 //        }
+    }
+    
+    func navigationBar() {
+        self.navigationItem.title = "문자작성"
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel)
     }
     
     func msgType() -> MessageType {
@@ -197,11 +205,11 @@ class SendingViewController: BaseViewController {
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
-        currentParent.sendingMessages.append(newMsg)
-        print(currentParent.sendingMessages)
-        //전송버튼 누를 때 리스트 뷰가 갱신 되어야 하는데 지금은 처음 로드한 리스트 그대로..
-        let vc = SentMessageListViewController()
-        vc.viewDidLoad()
+//        currentParent.sendingMessages.append(newMsg)
+        
+        //작동 안한다...
+        //전송버튼 누를 때 리스트 뷰가 갱신 되어야 하는데 지금은 처음 로드한 리스트 그대로...
+        
         dismiss(animated: true)
     }
 }

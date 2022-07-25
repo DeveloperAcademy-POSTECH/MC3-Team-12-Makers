@@ -9,6 +9,7 @@ import UIKit
 
 class sentMessageTableViewCell: BaseTableViewCell {
     
+    //MARK: - Properties
     static let identifier = "SentMessageTableViewCell"
     
     let messageInfo: UILabel = {
@@ -27,12 +28,13 @@ class sentMessageTableViewCell: BaseTableViewCell {
         return content
     }()
     
-    let checkIndicator: UIImageView = {
+    private let checkIndicator: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
     
+    //MARK: - Funcs
     override func render() {
         contentView.addSubview(messageInfo)
         messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28).isActive = true
