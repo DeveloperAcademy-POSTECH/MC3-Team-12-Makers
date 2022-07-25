@@ -29,6 +29,7 @@ class ParentsCalenderViewController: BaseViewController {
     private var startTime: String = ""
 
     private let numberOfRow = 5
+    
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -101,6 +102,7 @@ class ParentsCalenderViewController: BaseViewController {
             )
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
+
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
     }
@@ -123,6 +125,7 @@ class ParentsCalenderViewController: BaseViewController {
 }
 
 //MARK: - Extensions
+
 
 extension ParentsCalenderViewController: UICollectionViewDelegate{
      
