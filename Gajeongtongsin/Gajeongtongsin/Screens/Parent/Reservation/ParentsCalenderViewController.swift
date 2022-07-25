@@ -9,15 +9,6 @@ import UIKit
 
 class ParentsCalenderViewController: BaseViewController {
     
-    //MARK: - View Life Cycle
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        calenderView.delegate = self
-        calenderView.dataSource = self
-        
-        subBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
-    }
-    
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
     private var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
@@ -82,10 +73,10 @@ class ParentsCalenderViewController: BaseViewController {
         super.viewDidLoad()
         calenderView.delegate = self
         calenderView.dataSource = self
-
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
+    }
         
     //MARK: - Funcs
     
@@ -181,17 +172,9 @@ class ParentsCalenderViewController: BaseViewController {
     @objc func cancelSubmit() {
         self.dismiss(animated: true)
     }
-    
-    //신청하기 누르면 리로드 & 신청시간 인덱스 subIdx에 저장 / print
-    @objc func onTapButton() {
-        subIdx = choicedCells.enumerated().compactMap { (idx, element) -> Int? in
-            element ? idx : nil
-        }
 
-        choicedCells = Array(repeating: false, count:30)
-        calenderView.reloadData()
-    }
 }
+    
 
 //MARK: - Extensions
 
