@@ -38,10 +38,9 @@ class ReservationViewController: BaseViewController {
         return button
     }()
     
+    //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
     }
 
     
@@ -58,6 +57,8 @@ class ReservationViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .primaryBackground
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
         
         //신청버튼 메뉴에 따라 액션 분리
         reserveButton.menu = UIMenu(options: .displayInline, children: [
@@ -68,13 +69,12 @@ class ReservationViewController: BaseViewController {
                 let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
                 let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
-                    let text: String = alert.textFields?[0].text ?? ""
-//                    print(text)
+                    let _: String = alert.textFields?[0].text ?? ""
                 }
                 alert.addAction(cancelAction)
                 alert.addAction(okayAction)
                 alert.addTextField()
-                alert.textFields?[0].placeholder = "상담 요건 작성"
+                alert.textFields?[0].placeholder = "상담 용건 작성"
                 self.present(alert, animated: true)
                 
 

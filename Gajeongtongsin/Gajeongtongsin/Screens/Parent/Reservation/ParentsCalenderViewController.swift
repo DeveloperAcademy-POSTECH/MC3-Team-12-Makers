@@ -54,21 +54,17 @@ class ParentsCalenderViewController: BaseViewController {
         note.text = "어떤 내용으로 상담을 신청하시나요?"
         note.font = .systemFont(ofSize: 15)
         note.clearsOnInsertion = false
-        note.translatesAutoresizingMaskIntoConstraints = false
         note.layer.borderWidth = 0.5
+        note.translatesAutoresizingMaskIntoConstraints = false
         return note
     }()
     
+    //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         calenderView.delegate = self
         calenderView.dataSource = self
-        
-//        self.navigationController?.popViewController(animated: true)
-//        self.navigationController?.isNavigationBarHidden = false
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: dismiss)
-//        self.navigationItem.backBarButtonItem = UIBarButtonItem(systemItem: UIBarButtonItem.SystemItem.cancel)
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: submit)
+
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
@@ -78,15 +74,13 @@ class ParentsCalenderViewController: BaseViewController {
     
     override func render() {
         view.addSubview(dismissBtn)
-        dismissBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 50).isActive = true
+        dismissBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         dismissBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
 
-
         view.addSubview(submitBtn)
-        submitBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 50).isActive = true
+        submitBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
 
-        
         view.addSubview(calenderView)
         calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         calenderView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
@@ -104,9 +98,6 @@ class ParentsCalenderViewController: BaseViewController {
         reasonNote.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
-        
-
-
     }
 
     override func configUI() {
