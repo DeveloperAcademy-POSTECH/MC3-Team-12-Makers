@@ -52,13 +52,8 @@ class ParentsCalenderViewController: BaseViewController {
     
     func dateIndexToString(index: Int) -> String {
         let formatter = DateFormatter()
-        
-        formatter.dateFormat = "e"    //e는 1~7(sun~sat)
-        var interval = Int(formatter.string(from:Date()))
-        if interval == 1 { interval = 8 } //오늘이 일요일인 경우에는 다음주로 넘어가지 않도록 보정
-        
         formatter.dateFormat = "MMM-dd-e-EEEE"
-        let daysAfterToday = (7+(index%weekDays+2)-interval!) //오늘부터 신청일까지 더해야 하는 일 수, +2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
+        let daysAfterToday = (7+(index%weekDays+2)-todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
         let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
         
         consultingDateList = formatter.string(from: consultingDateDate).components(separatedBy: "-") //Date -> [String]

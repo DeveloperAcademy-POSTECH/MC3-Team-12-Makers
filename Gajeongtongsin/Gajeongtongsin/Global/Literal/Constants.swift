@@ -47,3 +47,13 @@ enum Role {
 // ParentsCalenderViewController 상수
 let secondsInDay = 86400
 let weekDays = 5
+
+
+var todayOfTheWeek: Int{
+    let formatter = DateFormatter()
+    formatter.dateFormat = "e"    //e는 1~7(sun~sat)
+    let day = formatter.string(from:Date())
+    var interval = Int(day)
+    if interval == 1 { interval = 8 }
+    return interval!
+}

@@ -11,33 +11,22 @@ class ConsultationViewController: BaseViewController {
       
     
     //MARK: - Properties
-    private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
-    private var displayDates: [String] = [] //displayIndex 입력 전 다음주 날자와 비교를 위한 리스트
-    private var displayIndex: [Int] = [] //신청버튼 클릭 후 신청내역 날자 인덱스가 저장되는 리스트 (인덱스는 캘린더뷰 기준)
-    private var startTime: [Int] = [] //신청버튼 클릭 후 신청내역 시간 인덱스가 저장되는 리스트 ('')
-    private var calenderIndex: [Int] = [] //위 두 변수로 캘린더 인덱스 계산한 리스트
-    private var calenderData: [teacherCalenderData] = [teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .gray)]
+    private var choicedCells: [Bool] = Array(repeating: false, count:30)
     private var displayData: [teacherCalenderData] = []
     private var cellColor: UIColor = .gray
     
     //다음 일주일의 날짜 리스트를 반환해주는 함수, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "e"    //e는 1~7(sun~sat)
-        let day = formatter.string(from:Date())
-        var interval = Int(day)
-        if interval == 1 { interval = 8 }
-        
-        formatter.dateFormat = "MMM-dd-e-EEEE"
+        formatter.dateFormat = "MMM-dd"
         var nextWeek = [String]()
-        let weekDay: Int = 6
-        for dayCount in 0...weekDay {
-//            let dayAdded = (86400 * (9-interval!+dayCount))
-            let dayAdded = (86400 * (2-interval!+dayCount))
+        
+        for dayCount in 0..<weekDays+2 { //주말 이틀 추가(weekDays==5)
+//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek +7)) //캘린더뷰가 다음주를 표시하는 경우 +7
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
             nextWeek.append(oneDayString[0]+oneDayString[1]+"일")
         }
-        print(nextWeek)
         return nextWeek
     }
     
@@ -91,24 +80,24 @@ class ConsultationViewController: BaseViewController {
     //MARK: - Funcs
     
     //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
-    func dayIndex(parentUserIds: Int) -> [Int] {
-        displayDates = []
-        displayIndex = []
-        for i in 0...mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count-1 {
-            displayDates.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
+    func dateStringToIndex(parentUserIds: Int) -> [Int] {
+        var dateString: [String] = []
+        var dateIndex: [Int] = []
+        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count {
+            dateString.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
         }
-        for day in 0...displayDates.count-1 {
-            for nextWeekDay in 0...nextWeek.count-1 {
-                if displayDates[day] == nextWeek[nextWeekDay] {
-                    displayIndex.append(nextWeekDay)
+        for day in 0..<dateString.count {
+            for nextWeekDay in 0..<nextWeek.count {
+                if dateString[day] == nextWeek[nextWeekDay] {
+                    dateIndex.append(nextWeekDay)
                 }
             }
         }
-        return displayIndex
+        return dateIndex
     }
     
-    func timeIndex(parentUserIds: Int) -> [Int] {
-        startTime = []
+    func timeStringToIndex(parentUserIds: Int) -> [Int] {
+        var startTime:[Int] = []
         for i in 0...2{
             switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
             case "14시00분":
@@ -132,16 +121,16 @@ class ConsultationViewController: BaseViewController {
     
     //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
     func CalenderDisplayData() -> [teacherCalenderData] {
-        
-        calenderData = []
+        var calenderIndex: [Int] = []
+        var calenderData: [teacherCalenderData] = []
         calenderData.append(teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green))
         calenderData.append(teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
         calenderData.append(teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
 
-        for parentIdx in 0...mainTeacher.parentUserIds.count-1 {
+        for parentIdx in 0..<mainTeacher.parentUserIds.count {
             calenderIndex = []
             for i in 0...2{
-                calenderIndex.append(timeIndex(parentUserIds: parentIdx)[i] * 5 + dayIndex(parentUserIds: parentIdx)[i])
+                calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
             }
 
             calenderData[parentIdx].calenderIndex = calenderIndex
@@ -219,10 +208,10 @@ extension ConsultationViewController: UICollectionViewDelegate{
     }
     
     //cell 클릭 액션
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
-        
-    }
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
+//
+//    }
 }
 
 extension ConsultationViewController: UICollectionViewDataSource {
