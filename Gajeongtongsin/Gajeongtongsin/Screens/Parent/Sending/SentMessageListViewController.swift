@@ -9,9 +9,9 @@ import UIKit
 
 class SentMessageListViewController: BaseViewController {
     //MARK: - Properties
-    let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages})
-//        .filter({$0.type != .emergency})
-    
+//    let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages})
+////        .filter({$0.type != .emergency})
+//
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     
     var currentParent: ParentUser {
@@ -51,6 +51,7 @@ class SentMessageListViewController: BaseViewController {
         super.viewDidLoad()
         sentMessageList.delegate = self
         sentMessageList.dataSource = self
+
         navigationBar()
         writeMessageButton.addTarget(self, action: #selector(writeButton), for: .touchUpInside)
     }
@@ -78,10 +79,13 @@ class SentMessageListViewController: BaseViewController {
         let vc = SendingViewController()
         vc.modalPresentationStyle = UIModalPresentationStyle.popover
         vc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
+        vc.delegate = self
         present(vc, animated: true)
     }
-    
+   
 }
+
+//MARK: - Extensions
 
 extension SentMessageListViewController: UITableViewDelegate {
     
@@ -95,19 +99,16 @@ extension SentMessageListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SentMessageTableViewCell", for: indexPath) as! sentMessageTableViewCell
         
-        let messagesToView = currentParent.sendingMessages[indexPath.row]
-        
-        func msgType() -> String {
-            switch messagesToView.type {
-                case .absence : return "결석"
-                case .earlyLeave : return "조퇴"
-            }
-        }
-        
-        cell.messageInfo.text = "\(currentParent.childName) / \(msgType()) / \(messagesToView.expectedDate)"
-        
-        cell.content.text = "\(messagesToView.content)"
+        cell.configure(index: indexPath.row)
 
         return cell
+    }
+}
+
+
+
+extension SentMessageListViewController: SendingViewControllerDelegate {
+    func reloadTable() {
+        sentMessageList.reloadData()
     }
 }

@@ -12,6 +12,10 @@ class sentMessageTableViewCell: BaseTableViewCell {
     //MARK: - Properties
     static let identifier = "SentMessageTableViewCell"
     
+    var currentParent: ParentUser {
+        return mainTeacher.parentUserIds[0]
+    }
+    
     let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
@@ -51,8 +55,25 @@ class sentMessageTableViewCell: BaseTableViewCell {
     
     override func configUI() {
         checkIndicator.image = UIImage(systemName: "checkmark.square")
+        
+        
     }
     
+    
+    
+    func configure(index: Int) {
+        
+        func msgType() -> String {
+            switch currentParent.sendingMessages[index].type {
+                case .absence : return "결석"
+                case .earlyLeave : return "조퇴"
+            }
+        }
+        
+        messageInfo.text = "\(currentParent.childName) / \(msgType()) / \(currentParent.sendingMessages[index].expectedDate)"
+        
+        content.text = "\(currentParent.sendingMessages[index].content)"
+    }
 //    func cellTextMap(parent: ParentUser, message: Message) {
 //        messageInfo.text = "\(parent.childName) / \(message.type) / \(message.expectedDate)"
 //        content.text = "\(message.content)"
