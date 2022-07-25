@@ -29,7 +29,7 @@ class ReservationViewController: BaseViewController {
         return label
     }()
     
-    private let button: UIButton = {
+    private let reserveButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
         button.setTitleColor(.black, for: .normal)
@@ -37,11 +37,10 @@ class ReservationViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: button)
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
     }
 
@@ -52,19 +51,18 @@ class ReservationViewController: BaseViewController {
         textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         textLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
-        view.addSubview(button)
-        button.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180).isActive = true
+        view.addSubview(reserveButton)
+        reserveButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        reserveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180).isActive = true
     }
 
     override func configUI() {
         view.backgroundColor = .primaryBackground
         
         //신청버튼 메뉴에 따라 액션 분리
-        button.menu = UIMenu(options: .displayInline, children: [
+        reserveButton.menu = UIMenu(options: .displayInline, children: [
             UIAction(title: "상담예약", handler: { _ in
                 self.present(ParentsCalenderViewController(), animated: true)
-                print("상담예약")
             }),
             UIAction(title: "긴급신청", handler: { _ in
                 let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
@@ -76,6 +74,7 @@ class ReservationViewController: BaseViewController {
                 alert.addAction(cancelAction)
                 alert.addAction(okayAction)
                 alert.addTextField()
+                alert.textFields?[0].placeholder = "상담 요건 작성"
                 self.present(alert, animated: true)
                 
 
