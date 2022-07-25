@@ -40,15 +40,53 @@ class ParentsCalenderViewController: BaseViewController {
     }()
 
     
-    // 신청버튼
-    private let subBtn: UIButton = {
+    // 신청/취소 버튼
+    private let dismissBtn: UIButton = {
         let button = UIButton()
-        button.setTitle("신청하기", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitle("취소", for: .normal)
+        button.setTitleColor(UIColor.systemBlue, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
+    private let submitBtn: UIButton = {
+        let button = UIButton()
+        button.setTitle("신청", for: .normal)
+        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let noteTitle: UILabel = {
+        let label = UILabel()
+        label.text = "상담용건"
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    //사유 입력 text view
+    private let reasonNote: UITextView = {
+        let note = UITextView()
+        note.text = "어떤 내용으로 상담을 신청하시나요?"
+        note.font = .systemFont(ofSize: 15)
+        note.clearsOnInsertion = false
+        note.layer.borderWidth = 0.5
+        note.translatesAutoresizingMaskIntoConstraints = false
+        return note
+    }()
+    
+    //MARK: - View Life Cycle
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        calenderView.delegate = self
+        calenderView.dataSource = self
+
+        
+        submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
+        dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
+        
     //MARK: - Funcs
     
     func dateIndexToString(index: Int) -> String {
@@ -108,19 +146,50 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     override func render() {
+        view.addSubview(dismissBtn)
+        dismissBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        dismissBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+
+        view.addSubview(submitBtn)
+        submitBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
+        submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+
         view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200).isActive = true
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         calenderView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
         
-        view.addSubview(subBtn)
-        subBtn.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 300).isActive = true
-        subBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        view.addSubview(noteTitle)
+        noteTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        noteTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+        noteTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        noteTitle.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        
+        view.addSubview(reasonNote)
+        reasonNote.topAnchor.constraint(equalTo: noteTitle.topAnchor, constant: 35).isActive = true
+        reasonNote.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+        reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
 
     override func configUI() {
         view.backgroundColor = .white
+    }
+    
+    //캘린더뷰 신청 취소
+    @objc func cancelSubmit() {
+        self.dismiss(animated: true)
+    }
+    
+    //신청하기 누르면 리로드 & 신청시간 인덱스 subIdx에 저장 / print
+    @objc func onTapButton() {
+        subIdx = choicedCells.enumerated().compactMap { (idx, element) -> Int? in
+            element ? idx : nil
+        }
+
+        choicedCells = Array(repeating: false, count:30)
+        calenderView.reloadData()
     }
 }
 

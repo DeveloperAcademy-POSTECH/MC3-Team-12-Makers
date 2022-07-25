@@ -8,21 +8,34 @@
 import UIKit
 
 class ReservationViewController: BaseViewController {
-    
+
     //MARK: - Properties
+    //TODO: -
+    /// 신청내역 리스트 테이블뷰
+
+    private let viewTitle: UILabel = {
+        let label = UILabel()
+        label.text = "예약내역"
+        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+
     private let textLabel: UILabel = {
         let label = UILabel()
-        label.text = "학부모님 상담예약 준비중입니다 😎"
+        label.text = "예정된 상담이 없어요 :)"
         label.font = UIFont.systemFont(ofSize: 20)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    private let button: UIButton = {
+    private let reserveButton: UIButton = {
         let button = UIButton()
-        button.setTitle("상담예약 캘린더뷰 버튼", for: .normal)
+        button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
         button.setTitleColor(.black, for: .normal)
+        button.showsMenuAsPrimaryAction = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -30,10 +43,8 @@ class ReservationViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        button.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
     }
-    
+
     //MARK: - Funcs
     @objc func onTapButton() {
         let vc = ParentsCalenderViewController()
@@ -46,12 +57,36 @@ class ReservationViewController: BaseViewController {
         textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         textLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
-        view.addSubview(button)
-        button.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
-        button.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180).isActive = true
+        view.addSubview(reserveButton)
+        reserveButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        reserveButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 180).isActive = true
     }
 
     override func configUI() {
         view.backgroundColor = .primaryBackground
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
+        
+        //신청버튼 메뉴에 따라 액션 분리
+        reserveButton.menu = UIMenu(options: .displayInline, children: [
+            UIAction(title: "상담예약", handler: { _ in
+                self.present(ParentsCalenderViewController(), animated: true)
+            }),
+            UIAction(title: "긴급신청", handler: { _ in
+                let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
+                    let _: String = alert.textFields?[0].text ?? ""
+                }
+                alert.addAction(cancelAction)
+                alert.addAction(okayAction)
+                alert.addTextField()
+                alert.textFields?[0].placeholder = "상담 용건 작성"
+                self.present(alert, animated: true)
+                
+
+            })
+        ])
     }
 }
+
