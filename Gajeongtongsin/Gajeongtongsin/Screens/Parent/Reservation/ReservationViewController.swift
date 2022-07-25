@@ -8,7 +8,8 @@
 import UIKit
 
 class ReservationViewController: BaseViewController {
-
+    
+    //MARK: - Properties
     private let textLabel: UILabel = {
         let label = UILabel()
         label.text = "학부모님 상담예약 준비중입니다 😎"
@@ -26,19 +27,20 @@ class ReservationViewController: BaseViewController {
         return button
     }()
     
+    //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         button.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
     }
     
-
+    //MARK: - Funcs
     @objc func onTapButton() {
         let vc = ParentsCalenderViewController()
         present(vc, animated: true)
     }
     
-    //MARK: - Funcs
+    
     override func render() {
         view.addSubview(textLabel)
         textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true

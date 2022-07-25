@@ -11,69 +11,26 @@ class ConsultationViewController: BaseViewController {
       
     
     //MARK: - Properties
-    private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
-    private var displayDates: [String] = [] //displayIndex 입력 전 다음주 날자와 비교를 위한 리스트
-    private var displayIndex: [Int] = [] //신청버튼 클릭 후 신청내역 날자 인덱스가 저장되는 리스트 (인덱스는 캘린더뷰 기준)
-    private var startTime: [Int] = [] //신청버튼 클릭 후 신청내역 시간 인덱스가 저장되는 리스트 ('')
-    private var calenderIndex: [Int] = [] //위 두 변수로 캘린더 인덱스 계산한 리스트
+    private var choicedCells: [Bool] = Array(repeating: false, count:30)
+    private var displayData: [teacherCalenderData] = []
+    private var cellColor: UIColor = .gray
     
     //다음 일주일의 날짜 리스트를 반환해주는 함수, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM-dd-e-EEEE"    //e는 1~7(sun~sat)
-
-        let day = formatter.string(from:Date())
-        let today = day.components(separatedBy: "-")
-        let interval = Double(today[2])
+        formatter.dateFormat = "MMM-dd"
         var nextWeek = [String]()
         
-        for i in 0...6 {
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval((86400 * (9-Int(interval!)+i))))).components(separatedBy: "-")
+        for dayCount in 0..<weekDays+2 { //주말 이틀 추가(weekDays==5)
+//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek +7)) //캘린더뷰가 다음주를 표시하는 경우 +7
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
             nextWeek.append(oneDayString[0]+oneDayString[1]+"일")
         }
         return nextWeek
     }
     
-    //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
-    func dayIndex(parentUserIds: Int) -> [Int] {
-        displayDates = []
-        displayIndex = []
-        for i in 0...mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count-1 {
-            displayDates.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
-        }
-        for day in 0...displayDates.count-1 {
-            for nextWeekDay in 0...nextWeek.count-1 {
-                if displayDates[day] == nextWeek[nextWeekDay] {
-                    displayIndex.append(nextWeekDay)
-                }
-            }
-        }
-        return displayIndex
-    }
     
-    func timeIndex(parentUserIds: Int) -> [Int] {
-        startTime = []
-        for i in 0...2{
-            switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
-            case "14시00분":
-                startTime.append(0)
-            case "14시30분":
-                startTime.append(1)
-            case "15시00분":
-                startTime.append(2)
-            case "15시30분":
-                startTime.append(3)
-            case "16시00분":
-                startTime.append(4)
-            case "16시30분":
-                startTime.append(5)
-            default:
-                startTime.append(100)
-            }
-        }
-        return startTime
-    }
-
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -109,7 +66,7 @@ class ConsultationViewController: BaseViewController {
         return button
     }()
     
-    
+    //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         calenderView.delegate = self
@@ -117,36 +74,90 @@ class ConsultationViewController: BaseViewController {
         
         par1.addTarget(self, action: #selector(par1OnTapButton), for: .touchUpInside)
         par2.addTarget(self, action: #selector(par2OnTapButton), for: .touchUpInside)
-//        seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
+        seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
     }
     
-    //신청하기 누르면 리로드 & 신청시간 인덱스 subIdx에 저장 / print
-    @objc func par1OnTapButton() {
-        calenderIndex = []
-        for i in 0...2{
-            calenderIndex.append(timeIndex(parentUserIds: 0)[i] * 5 + dayIndex(parentUserIds: 0)[i])
-        }
-        print(calenderIndex)
-        calenderView.reloadData()
-    }
-    
-    @objc func par2OnTapButton() {
-        calenderIndex = []
-        for i in 0...2{
-            calenderIndex.append(timeIndex(parentUserIds: 1)[i] * 5 + dayIndex(parentUserIds: 1)[i])
-        }
-        print(calenderIndex)
-        calenderView.reloadData()
-
-    }
-    
-//    @objc func seeAllOnTapButton() {
-//        subIdx = choicedCells.enumerated().compactMap { (idx, element) -> Int? in
-//            element ? idx : nil
-//        }
-//    }
-
     //MARK: - Funcs
+    
+    //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
+    func dateStringToIndex(parentUserIds: Int) -> [Int] {
+        var dateString: [String] = []
+        var dateIndex: [Int] = []
+        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count {
+            dateString.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
+        }
+        for day in 0..<dateString.count {
+            for nextWeekDay in 0..<nextWeek.count {
+                if dateString[day] == nextWeek[nextWeekDay] {
+                    dateIndex.append(nextWeekDay)
+                }
+            }
+        }
+        return dateIndex
+    }
+    
+    func timeStringToIndex(parentUserIds: Int) -> [Int] {
+        var startTime:[Int] = []
+        for i in 0...2{
+            switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
+            case "14시00분":
+                startTime.append(0)
+            case "14시30분":
+                startTime.append(1)
+            case "15시00분":
+                startTime.append(2)
+            case "15시30분":
+                startTime.append(3)
+            case "16시00분":
+                startTime.append(4)
+            case "16시30분":
+                startTime.append(5)
+            default:
+                startTime.append(100)
+            }
+        }
+        return startTime
+    }
+    
+    //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
+    func CalenderDisplayData() -> [teacherCalenderData] {
+        var calenderIndex: [Int] = []
+        var calenderData: [teacherCalenderData] = []
+        calenderData.append(teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green))
+        calenderData.append(teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
+        calenderData.append(teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
+
+        for parentIdx in 0..<mainTeacher.parentUserIds.count {
+            calenderIndex = []
+            for i in 0...2{
+                calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
+            }
+
+            calenderData[parentIdx].calenderIndex = calenderIndex
+        }
+        print(calenderData)
+        return calenderData
+    }
+    
+    //버튼 누르면 학부모1 신청시간 display
+    @objc func par1OnTapButton() {
+        displayData = []
+        displayData.append(CalenderDisplayData()[0])
+        
+        calenderView.reloadData()
+    }
+    //버튼 누르면 학부모2 신청시간 display
+    @objc func par2OnTapButton() {
+        displayData = []
+        displayData.append(CalenderDisplayData()[1])
+        calenderView.reloadData()
+
+    }
+    //버튼 누르면 모든 신청시간 색상별 display
+    @objc func seeAllOnTapButton() {
+        displayData = CalenderDisplayData()
+        calenderView.reloadData()
+    }
     
     override func render() {
         view.addSubview(calenderView)
@@ -184,16 +195,26 @@ extension ConsultationViewController: UICollectionViewDelegate{
            for: indexPath) as? CalenderViewCell else {
                return UICollectionViewCell()
            }
-        if (calenderIndex.count != 0) && (indexPath.item == calenderIndex[0] || indexPath.item == calenderIndex[1] || indexPath.item == calenderIndex[2]) {
-            cell.backgroundColor = .blue
-        } else {
-            cell.backgroundColor = .gray
+        
+        for eachData in displayData{ //calenderData = {parentsIds, calenderIdx(해당 Id의 신청시간), cellColor}
+            if eachData.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
+                cell.backgroundColor = eachData.cellColor
+                break //for문을 도는 도중 다른 data로 인해 gray로 display되는것을 방지
+            } else {
+                cell.backgroundColor = .gray
+            }
         }
         return cell
     }
+    
+    //cell 클릭 액션
+//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+//        let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
+//
+//    }
 }
 
-extension ConsultationViewController: UICollectionViewDataSource{
+extension ConsultationViewController: UICollectionViewDataSource {
     
     //캘린더 아이템 수, 5일*6단위 = 30
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
