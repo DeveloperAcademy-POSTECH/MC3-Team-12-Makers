@@ -92,22 +92,11 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     func timeIndexToString(index: Int) -> String {
-        switch index/numberOfRow {
-        case 0:
-            startTime = "14:00"
-        case 1:
-            startTime = "14:30"
-        case 2:
-            startTime = "15:00"
-        case 3:
-            startTime = "15:30"
-        case 4:
-            startTime = "16:00"
-        case 5:
-            startTime = "16:30"
-        default:
-            startTime = "부니카"
-        }
+        
+        let hour = String(14 + (index/numberOfRow)/2) //14시 + @
+        let minute: String = (index/numberOfRow) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
+        startTime = hour+"시"+minute+"분"
+        
         return startTime
     }
     
@@ -121,7 +110,7 @@ class ParentsCalenderViewController: BaseViewController {
             appendScheduleList.append(ScheduleInfo(
                 consultingDate: dateIndexToString(index: idx),
                 startTime: timeIndexToString(index: idx),
-                isReserved: nil))
+                isReserved: false))
         }
         
         parentList[0].schedules.append(Schedule(

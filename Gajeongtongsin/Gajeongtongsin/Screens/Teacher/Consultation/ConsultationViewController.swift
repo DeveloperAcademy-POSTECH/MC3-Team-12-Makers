@@ -14,6 +14,12 @@ class ConsultationViewController: BaseViewController {
     private var choicedCells: [Bool] = Array(repeating: false, count:30)
     private var displayData: [teacherCalenderData] = []
     private var cellColor: UIColor = .gray
+    private var clickedCell: Int?
+    private var selectedIndex: Int?
+    private var parentId: Int?
+    
+//    private var acceptedData: [Schedule] = []
+    
     
     //다음 일주일의 날짜 리스트를 반환해주는 함수, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
@@ -29,6 +35,13 @@ class ConsultationViewController: BaseViewController {
         }
         return nextWeek
     }
+    
+    //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
+    
+    private var calenderData: [teacherCalenderData] = [
+        teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green),
+        teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue),
+        teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red)]
     
     
     // 캘린더뷰
@@ -71,6 +84,7 @@ class ConsultationViewController: BaseViewController {
         super.viewDidLoad()
         calenderView.delegate = self
         calenderView.dataSource = self
+        displayData = acceptedData()
         
         par1.addTarget(self, action: #selector(par1OnTapButton), for: .touchUpInside)
         par2.addTarget(self, action: #selector(par2OnTapButton), for: .touchUpInside)
@@ -79,14 +93,48 @@ class ConsultationViewController: BaseViewController {
     
     //MARK: - Funcs
     
+    func acceptedData() -> [teacherCalenderData] {
+        var acceptedData:[teacherCalenderData] = []
+        var calenderIndex: [Int] = []
+
+        for parentIdx in 0..<mainTeacher.parentUserIds.count {
+            calenderIndex = []
+            
+            for i in 0..<mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
+                if mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList[i].isReserved {
+                    acceptedData.append(calenderData[i])
+                    calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
+                    acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
+                }
+            }
+        }
+        return acceptedData
+    }
+    
+    //모든 신청 예약 데이터를 인덱스로 만들어주는 함수 : 연산 프로퍼티로 하기에는 다시 입력/로드되어야 하는 경우가 있어 함수로 수정
+    func submittedData() -> [teacherCalenderData] {
+        var calenderIndex: [Int] = []
+
+        for parentIdx in 0..<mainTeacher.parentUserIds.count {
+            calenderIndex = []
+            for i in 0..<mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
+                calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
+            }
+
+            calenderData[parentIdx].calenderIndex = calenderIndex
+        }
+        return calenderData
+    }
+    
     //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
     func dateStringToIndex(parentUserIds: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count {
+        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count { //mockData에서 신청 날자 String을 뽑아옴
             dateString.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
         }
-        for day in 0..<dateString.count {
+        
+        for day in 0..<dateString.count { //String을 Index로 바꿔줌
             for nextWeekDay in 0..<nextWeek.count {
                 if dateString[day] == nextWeek[nextWeekDay] {
                     dateIndex.append(nextWeekDay)
@@ -98,64 +146,36 @@ class ConsultationViewController: BaseViewController {
     
     func timeStringToIndex(parentUserIds: Int) -> [Int] {
         var startTime:[Int] = []
-        for i in 0...2{
-            switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
-            case "14시00분":
-                startTime.append(0)
-            case "14시30분":
-                startTime.append(1)
-            case "15시00분":
-                startTime.append(2)
-            case "15시30분":
-                startTime.append(3)
-            case "16시00분":
-                startTime.append(4)
-            case "16시30분":
-                startTime.append(5)
-            default:
-                startTime.append(100)
-            }
+        
+        //switch 싫어서 계산식으로 바꿨는데 어떤게 나은지요
+        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count{
+            let a = mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
+            let time = Int(a[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
+            let minute = Int(a[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
+            startTime.append(time*2 + minute)
         }
         return startTime
     }
     
-    //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
-    func CalenderDisplayData() -> [teacherCalenderData] {
-        var calenderIndex: [Int] = []
-        var calenderData: [teacherCalenderData] = []
-        calenderData.append(teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green))
-        calenderData.append(teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
-        calenderData.append(teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
-
-        for parentIdx in 0..<mainTeacher.parentUserIds.count {
-            calenderIndex = []
-            for i in 0...2{
-                calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
-            }
-
-            calenderData[parentIdx].calenderIndex = calenderIndex
-        }
-        print(calenderData)
-        return calenderData
-    }
-    
     //버튼 누르면 학부모1 신청시간 display
     @objc func par1OnTapButton() {
-        displayData = []
-        displayData.append(CalenderDisplayData()[0])
+        displayData = acceptedData()
+        displayData.append(submittedData()[0])
         
         calenderView.reloadData()
     }
     //버튼 누르면 학부모2 신청시간 display
     @objc func par2OnTapButton() {
-        displayData = []
-        displayData.append(CalenderDisplayData()[1])
+        displayData = acceptedData()
+        displayData.append(submittedData()[1])
+        
         calenderView.reloadData()
-
     }
     //버튼 누르면 모든 신청시간 색상별 display
     @objc func seeAllOnTapButton() {
-        displayData = CalenderDisplayData()
+        displayData = acceptedData()
+        displayData += submittedData()
+        
         calenderView.reloadData()
     }
     
@@ -188,17 +208,18 @@ class ConsultationViewController: BaseViewController {
 
 extension ConsultationViewController: UICollectionViewDelegate{
      
+   
     //cell 로드
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-           guard let cell = collectionView.dequeueReusableCell(
-           withReuseIdentifier: CalenderViewCell.identifier ,
-           for: indexPath) as? CalenderViewCell else {
-               return UICollectionViewCell()
-           }
+        guard let cell = collectionView.dequeueReusableCell(
+        withReuseIdentifier: CalenderViewCell.identifier ,
+        for: indexPath) as? CalenderViewCell else {
+            return UICollectionViewCell()
+        }
         
-        for eachData in displayData{ //calenderData = {parentsIds, calenderIdx(해당 Id의 신청시간), cellColor}
+        for eachData in displayData{ //eachdata = {parentsIds, calenderIdx, cellColor}
             if eachData.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
-                cell.backgroundColor = eachData.cellColor
+                cell.backgroundColor = clickedCell == indexPath.item ? .black : eachData.cellColor
                 break //for문을 도는 도중 다른 data로 인해 gray로 display되는것을 방지
             } else {
                 cell.backgroundColor = .gray
@@ -208,10 +229,41 @@ extension ConsultationViewController: UICollectionViewDelegate{
     }
     
     //cell 클릭 액션
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
-//
-//    }
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        //더블클릭한 경우
+        if indexPath.item == clickedCell {
+            
+            // 확정된 스케줄 이외 다른 스케줄 모두 삭제
+            mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList = [mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[selectedIndex!]]
+            mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[0].isReserved = true
+            
+            calenderData[parentId!].cellColor = .white
+
+            //onTapButton 함수 실행 -> 수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
+            switch parentId {
+            case 0: par1OnTapButton()
+            case 1: par2OnTapButton()
+            default: break
+            }
+            clickedCell = nil
+            calenderView.reloadData()
+            return
+        }
+        
+        //처음 클릭한 경우 (3중 1)
+        for eachData in displayData {
+            if eachData.calenderIndex.contains(indexPath.item) {
+                selectedIndex = eachData.calenderIndex.firstIndex(of: indexPath.item)
+                parentId = eachData.parentIds
+                clickedCell = indexPath.item
+                calenderView.reloadData()
+                break
+            }
+            clickedCell = nil
+        }
+        calenderView.reloadData()
+    }
 }
 
 extension ConsultationViewController: UICollectionViewDataSource {
