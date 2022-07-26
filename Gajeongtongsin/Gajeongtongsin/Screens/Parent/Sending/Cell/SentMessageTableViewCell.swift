@@ -65,9 +65,8 @@ class sentMessageTableViewCell: BaseTableViewCell {
         
         func msgType() -> String {
             switch currentParent.sendingMessages[index].type {
-                case .absence : return "결석"
-                case .earlyLeave : return "조퇴"
-            case .emergency: return ""
+            case .absence : return "결석"
+            case .earlyLeave : return "조퇴"
             }
         }
         
