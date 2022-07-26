@@ -11,14 +11,14 @@ let sections = ["긴급알림", "일반알림"]
 class NotificationViewController: BaseViewController {
     
     // MARK: - Properties
-    private let messagesWithChildName = mainTeacher.parentUserIds.flatMap{ $0.getMessagesWithChildName() }
+    var emergancy: [Notification] {
+        mainTeacher.notificationList.filter { $0.type == .emergency }
+    }
     
-    private var emergancy: [(childName: String, message: Message)] {
-        messagesWithChildName.filter{ $0.message.type == .emergency }
+    var normal: [Notification] {
+        mainTeacher.notificationList.filter { $0.type != .emergency }
     }
-    private var normal: [(childName: String, message: Message)] {
-        messagesWithChildName.filter{ $0.message.type != .emergency }
-    }
+
     
     private let noticicationViewTitle: UILabel = {
         let title = UILabel()
@@ -83,10 +83,10 @@ extension NotificationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
-            cell.configure(childName: emergancy[indexPath.row].childName, message: emergancy[indexPath.row].message)
+            cell.configure(notification: emergancy[indexPath.row])
             cell.backgroundColor = UIColor.red.withAlphaComponent(0.1)
         } else {
-            cell.configure(childName: normal[indexPath.row].childName, message: normal[indexPath.row].message)
+            cell.configure(notification: normal[indexPath.row])
             cell.backgroundColor = UIColor.blue.withAlphaComponent(0.1)
         }
 
@@ -99,10 +99,15 @@ extension NotificationViewController: UITableViewDataSource {
     
 }
 
-
 extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let currentMessage = emergancy[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
-
+        if indexPath.section == 0 {
+            let alret = UIAlertController(title: "\(currentMessage.parentName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
+            let okayAction = UIAlertAction(title: "확인", style: .default)
+            alret.addAction(okayAction)
+            present(alret, animated: true, completion: nil)
+        }
     }
 }

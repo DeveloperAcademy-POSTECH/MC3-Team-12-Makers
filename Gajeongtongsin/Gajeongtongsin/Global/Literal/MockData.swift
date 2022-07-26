@@ -16,14 +16,12 @@ var parent3 = ParentUser(id: "3", sendingMessages: messageList3, childName: "최
 
 var messageList1 = [
     Message(type: .absence, sentDate: Date(), expectedDate: "7월21일", content: "김유쓰배아픔", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: Date(), expectedDate: "7월22일", content: "김유쓰놀이공원", isCompleted: false),
-    Message(type: .emergency, sentDate: Date(), expectedDate: "7월25일", content: "김유쓰실종", isCompleted: false)
+    Message(type: .earlyLeave, sentDate: Date(), expectedDate: "7월22일", content: "김유쓰놀이공원", isCompleted: false)
 ]
 
 var messageList2 = [
     Message(type: .absence, sentDate: Date(), expectedDate: "7월23일", content: "부니카제주도", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: Date(), expectedDate: "7월24일", content: "부니카서울", isCompleted: false),
-    Message(type: .emergency, sentDate: Date(), expectedDate: "7월25일", content: "부니카1:10패싸움중(부니카가 1ㅋ)", isCompleted: false)
+    Message(type: .earlyLeave, sentDate: Date(), expectedDate: "7월24일", content: "부니카서울", isCompleted: false)
     ]
 
 var messageList3 = [
