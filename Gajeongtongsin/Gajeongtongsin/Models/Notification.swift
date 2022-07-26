@@ -14,6 +14,7 @@ struct Notification {
     let postId: String
     let type: NotificationType
     let parentName: String
+    let content: String
  //   let timestamp: TimeStamp  파이어베이스 설치안해서 임시로 주석처리
     
 }

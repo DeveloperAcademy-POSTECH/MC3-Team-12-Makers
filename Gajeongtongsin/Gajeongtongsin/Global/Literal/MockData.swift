@@ -7,7 +7,7 @@
 
 import Foundation
 
-var mainTeacher = TeacherUser(teacherName: "밀선생", parentUserIds: parentList)
+var mainTeacher = TeacherUser(teacherName: "밀선생", parentUserIds: parentList, notificationList: notifications)
 
 var parentList: [ParentUser] = [parent1, parent2, parent3]
 var parent1 = ParentUser(id: "1", sendingMessages: messageList1, childName: "김유쓰", schedules: scheduleList1)
@@ -57,3 +57,19 @@ var scheduleList3 = [
                 ScheduleInfo(consultingDate: "7월26일", startTime: "16시00분", isReserved: nil)],
              content: "최히로체육성적문의")
 ]
+
+var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]
+
+let noti1 = Notification(id: "1", postId: "11", type: .message, parentName: "김유쓰", content: "11")
+let noti2 = Notification(id: "1", postId: "11", type: .message, parentName: "김유쓰", content: "22")
+let noti3 = Notification(id: "1", postId: "11", type: .emergency, parentName: "김유쓰", content: "아이가실종되었습니다")
+let noti4 = Notification(id: "1", postId: "11", type: .reservation, parentName: "김유쓰", content: "44")
+
+let noti5 = Notification(id: "2", postId: "22", type: .message, parentName: "부니카", content: "55")
+let noti6 = Notification(id: "2", postId: "22", type: .message, parentName: "부니카", content: "66")
+let noti7 = Notification(id: "2", postId: "22", type: .emergency, parentName: "부니카", content: "아이가깡패랑싸우고있습니다")
+let noti8 = Notification(id: "2", postId: "22", type: .reservation, parentName: "부니카", content: "88")
+
+let noti9 = Notification(id: "3", postId: "33", type: .message, parentName: "최히로", content: "99")
+let noti10 = Notification(id: "3", postId: "33", type: .message, parentName: "최히로", content: "1010")
+let noti11 = Notification(id: "3", postId: "33", type: .reservation, parentName: "최히로", content: "1111")
