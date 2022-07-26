@@ -10,7 +10,7 @@ import UIKit
 class MessageViewController: BaseViewController {
     
     // MARK: - Properties
-    let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages}).filter({$0.type != .emergency})
+    let messagesWithChildName = mainTeacher.parentUserIds.flatMap({$0.getMessagesWithChildName()})
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -46,23 +46,17 @@ class MessageViewController: BaseViewController {
 
 }
 
-
-
-
-
-
 extension MessageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messageList.count
+        return messagesWithChildName.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier, for: indexPath) as? MessageTableViewCell else { return UITableViewCell()}
         
-        let parent = mainTeacher.parentUserIds[indexPath.section]
-        
-        cell.configure(childName: parent.childName, message: messageList[indexPath.row])
+        let messageInfo = messagesWithChildName[indexPath.row]
+        cell.configure(childName: messageInfo.childName, message: messageInfo.message)  
         
         return cell
     }
@@ -76,14 +70,14 @@ extension MessageViewController: UITableViewDataSource {
 extension MessageViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let alret = UIAlertController(title: "처리완료하시겠습니까?", message: "확인을누르면 블라블라", preferredStyle: .alert)
+        let alert = UIAlertController(title: "처리완료하시겠습니까?", message: "확인을누르면 블라블라", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         let okayAction = UIAlertAction(title: "확인", style: .default) { _ in
             let cell = tableView.cellForRow(at: indexPath) as? MessageTableViewCell
             cell?.changeState()
         }
-        alret.addAction(cancelAction)
-        alret.addAction(okayAction)
-        present(alret, animated: true, completion: nil)
+        alert.addAction(cancelAction)
+        alert.addAction(okayAction)
+        present(alert, animated: true, completion: nil)
     }
 }

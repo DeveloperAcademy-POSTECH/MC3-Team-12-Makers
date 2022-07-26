@@ -59,20 +59,19 @@ class NotificationTableViewCell: BaseTableViewCell {
         sendingTime.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }
     
-    func configure(childName: String, message: Message) {
-        switch message.type {
+    func configure(notification: Notification) {
+        switch notification.type {
         case .emergency :
-            messageInfo.text = "긴급 상담 요청입니다. 빠른 시간 내에 학부모님께 연락주세요!"
+            messageInfo.text = notification.type.notificationMessage
             messageInfo.textColor = .red
-        case .absence:
-            messageInfo.text = "전화상담 예약 요청입니다."
+        case .reservation:
+            messageInfo.text = notification.type.notificationMessage
             messageInfo.textColor = .gray
-        case .earlyLeave:
-            messageInfo.text = "쪽지가 도착했습니다."
+        case .message:
+            messageInfo.text = notification.type.notificationMessage
             messageInfo.textColor = .gray
         }
-        
-        senderName.text = "\(childName) 학부모님"
+        senderName.text = "\(notification.childName) 학부모님"
         sendingTime.text = "5시간전"
     }
 
