@@ -67,7 +67,7 @@ class sentMessageTableViewCell: BaseTableViewCell {
             switch currentParent.sendingMessages[index].type {
                 case .absence : return "결석"
                 case .earlyLeave : return "조퇴"
-            case .emergency: return ""
+                case .emergency: return ""
             }
         }
         
