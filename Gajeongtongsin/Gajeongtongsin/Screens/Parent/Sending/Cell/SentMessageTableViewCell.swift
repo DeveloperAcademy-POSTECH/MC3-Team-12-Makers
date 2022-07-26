@@ -7,7 +7,7 @@
 
 import UIKit
 
-class sentMessageTableViewCell: BaseTableViewCell {
+class SentMessageTableViewCell: BaseTableViewCell {
     
     //MARK: - Properties
     static let identifier = "SentMessageTableViewCell"
