@@ -10,6 +10,7 @@ import UIKit
 class StartViewController: BaseViewController {
     
     // MARK: - Properties
+    
     private lazy var parentButton: UIButton = {
         let button = UIButton()
         button.setTitle("학부모님", for: .normal)
@@ -49,6 +50,7 @@ class StartViewController: BaseViewController {
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        
     }
     
     // MARK: - Funcs
@@ -69,15 +71,23 @@ class StartViewController: BaseViewController {
     }
     
     @objc func parentTap() {
+        UserDefaults.standard.set(getUid(), forKey: "ParentUser")
         let vc = TabBarViewController(role: .parent)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
     }
     @objc func teacherTap() {
+        UserDefaults.standard.set(getUid(), forKey: "TeacherUser")
         let vc = TabBarViewController(role: .teacher)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
         present(vc, animated: true)
+    }
+    
+    func getUid()-> String{
+        let uuid = UIDevice.current.identifierForVendor!.uuidString
+        let uidIndex = uuid.index(uuid.startIndex, offsetBy: 5)
+        return String(uuid[...uidIndex])
     }
 }
