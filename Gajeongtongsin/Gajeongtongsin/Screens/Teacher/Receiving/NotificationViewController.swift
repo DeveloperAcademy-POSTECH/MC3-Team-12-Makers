@@ -104,7 +104,7 @@ extension NotificationViewController: UITableViewDelegate {
         let currentMessage = emergancy[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
-            let alret = UIAlertController(title: "\(currentMessage.parentName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
+            let alret = UIAlertController(title: "\(currentMessage.childName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
             let okayAction = UIAlertAction(title: "확인", style: .default)
             alret.addAction(okayAction)
             present(alret, animated: true, completion: nil)

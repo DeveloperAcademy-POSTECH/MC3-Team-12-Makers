@@ -70,14 +70,14 @@ extension MessageViewController: UITableViewDataSource {
 extension MessageViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let alret = UIAlertController(title: "처리완료하시겠습니까?", message: "확인을누르면 블라블라", preferredStyle: .alert)
+        let alert = UIAlertController(title: "처리완료하시겠습니까?", message: "확인을누르면 블라블라", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         let okayAction = UIAlertAction(title: "확인", style: .default) { _ in
             let cell = tableView.cellForRow(at: indexPath) as? MessageTableViewCell
             cell?.changeState()
         }
-        alret.addAction(cancelAction)
-        alret.addAction(okayAction)
-        present(alret, animated: true, completion: nil)
+        alert.addAction(cancelAction)
+        alert.addAction(okayAction)
+        present(alert, animated: true, completion: nil)
     }
 }

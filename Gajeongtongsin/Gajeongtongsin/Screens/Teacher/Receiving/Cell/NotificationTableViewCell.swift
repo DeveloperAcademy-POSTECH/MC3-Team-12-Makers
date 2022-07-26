@@ -71,7 +71,7 @@ class NotificationTableViewCell: BaseTableViewCell {
             messageInfo.text = notification.type.notificationMessage
             messageInfo.textColor = .gray
         }
-        senderName.text = "\(notification.parentName) 학부모님"
+        senderName.text = "\(notification.childName) 학부모님"
         sendingTime.text = "5시간전"
     }
 
