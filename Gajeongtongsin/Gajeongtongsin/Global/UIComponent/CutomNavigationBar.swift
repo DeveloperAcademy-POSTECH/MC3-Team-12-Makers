@@ -27,6 +27,8 @@ class CutomNavigationBar: UIView {
         return button
     }()
     
+    
+    
     init(title: String, imageName: String){
         super.init(frame: .zero)
         self.title = title

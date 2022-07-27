@@ -30,6 +30,13 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
+    private lazy var customNavigationBar: CutomNavigationBar = {
+        let customNavigationBar = CutomNavigationBar(title: "이번주 상담일정", imageName: "bell")
+        customNavigationBar.backgroundColor = .white
+        customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+        return customNavigationBar
+    }()
+    
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -71,14 +78,26 @@ class ConsultationViewController: BaseViewController {
         super.viewDidLoad()
         calenderView.delegate = self
         calenderView.dataSource = self
+        customNavigationBar.delegate = self
+        render()
+        configUI()
         
         par1.addTarget(self, action: #selector(par1OnTapButton), for: .touchUpInside)
         par2.addTarget(self, action: #selector(par2OnTapButton), for: .touchUpInside)
         seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
     }
     
-    //MARK: - Funcs
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+        tabBarController?.tabBar.isHidden = false
+    }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = true
+    }
+
+    
+    //MARK: - Funcs
     //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
     func dateStringToIndex(parentUserIds: Int) -> [Int] {
         var dateString: [String] = []
@@ -177,10 +196,24 @@ class ConsultationViewController: BaseViewController {
         view.addSubview(seeAll)
         seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 420).isActive = true
         seeAll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        
+        view.addSubview(customNavigationBar)
+        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        customNavigationBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
     }
 
     override func configUI() {
         view.backgroundColor = .white
+        setupNavigationBackButton()
+    }
+    
+    func setupNavigationBackButton() {
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        self.navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+        navigationController?.navigationBar.tintColor = .black
     }
 }
 
@@ -206,12 +239,6 @@ extension ConsultationViewController: UICollectionViewDelegate{
         }
         return cell
     }
-    
-    //cell 클릭 액션
-//    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
-//
-//    }
 }
 
 extension ConsultationViewController: UICollectionViewDataSource {
@@ -237,5 +264,12 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     //cell 종간 간격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return CGFloat(0)
+    }
+}
+
+extension ConsultationViewController : CustomNavigationBarDelegate {
+    func tapButton() {
+        let vc = NotificationViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
