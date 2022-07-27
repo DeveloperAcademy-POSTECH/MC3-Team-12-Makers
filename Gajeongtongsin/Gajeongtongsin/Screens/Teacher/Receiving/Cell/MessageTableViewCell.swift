@@ -73,10 +73,9 @@ class MessageTableViewCell: BaseTableViewCell {
     }
 
     func configure(childName: String, message: Message) {
-        if message.type != .emergency {
-            messageInfo.text = "\(childName) / \(message.type.rawValue) / \(message.expectedDate)"
-            content.text = "\(message.content)"
-        }
+        messageInfo.text = "\(childName) / \(message.type.rawValue) / \(message.expectedDate)"
+        content.text = "\(message.content)"
+
     }
     
     func changeState() {

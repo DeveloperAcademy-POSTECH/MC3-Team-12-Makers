@@ -17,5 +17,4 @@ struct Message {
 enum MessageType: String {
     case absence = "결석"
     case earlyLeave = "조퇴"
-    case emergency = "긴급"
 }
