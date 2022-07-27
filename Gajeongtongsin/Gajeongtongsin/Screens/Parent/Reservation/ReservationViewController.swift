@@ -76,7 +76,8 @@ class ReservationViewController: BaseViewController {
                 let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
                 let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
-                    let _: String = alert.textFields?[0].text ?? ""
+                    let emergencyContent = alert.textFields?[0].text ?? ""
+                    
                 }
                 alert.addAction(cancelAction)
                 alert.addAction(okayAction)

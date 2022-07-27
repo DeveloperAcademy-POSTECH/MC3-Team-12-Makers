@@ -93,14 +93,6 @@ final class FirebaseManager {
     func fetchReservations() {
         
     }
-//    /// 학부모 긴급요청하기
-//    func uploadEmergency(){
-//        
-//    }
-//    /// 선생님 긴급요청 가져오기
-//    func fetchEmergency(){
-//        
-//    }
     /// 학부모 메시지 업로드하기
     func uploadMessage(teacherUid:String, message: Message){
         guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
@@ -121,14 +113,14 @@ final class FirebaseManager {
     }
     // TODO: - 코드 안돌아감 수정필요함
     /// 알림 업로드하기
-    func uploadNotification(teacherUid:String ,parentUserId: String, childName: String, type:NotificationType){ // FIXME: -  파라미터개수 줄이는 수정 필요
+    func uploadNotification(teacherUid:String ,parentUserId: String, childName: String, content: String, type:NotificationType){ // FIXME: -  파라미터개수 줄이는 수정 필요
 
         let data: [String: Any] = [
             "id" : parentUserId,
             "postId" : "1",
             "type" : type.rawValue,
             "childName" : childName,
-            "content" : "hello",
+            "content" : content,
             "time" : "7월20일" // 수정 필요
         ]
 
