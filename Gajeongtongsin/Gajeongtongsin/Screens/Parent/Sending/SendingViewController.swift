@@ -17,7 +17,7 @@ class SendingViewController: BaseViewController {
     weak var delegate: SendingViewControllerDelegate?
     
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
     
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
@@ -207,11 +207,11 @@ class SendingViewController: BaseViewController {
   
     @objc func sendMessage() {
         let newMsg = Message(type: msgType(),
-                             sentDate: Date(),
+                             sentDate: "Date()",
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
-        mainTeacher.parentUserIds[0].sendingMessages.append(newMsg)
+        mainTeacher.parentUsers[0].sendingMessages.append(newMsg)
         delegate?.reloadTable()
         dismiss(animated: true)
     }

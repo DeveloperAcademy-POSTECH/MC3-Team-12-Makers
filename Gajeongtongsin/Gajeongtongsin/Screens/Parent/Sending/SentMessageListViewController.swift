@@ -12,7 +12,7 @@ class SentMessageListViewController: BaseViewController {
     
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
     
     private let viewTitle: UILabel = {

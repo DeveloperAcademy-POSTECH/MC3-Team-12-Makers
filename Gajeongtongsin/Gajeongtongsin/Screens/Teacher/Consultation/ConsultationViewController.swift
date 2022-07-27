@@ -42,7 +42,7 @@ class ConsultationViewController: BaseViewController {
     
     
     // 테이블뷰 테스트
-    let scheduledParentsList: [Schedule] = mainTeacher.parentUserIds.flatMap({$0.schedules})
+    let scheduledParentsList: [Schedule] = mainTeacher.parentUsers.flatMap({$0.schedules})
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -91,11 +91,11 @@ class ConsultationViewController: BaseViewController {
         var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [Int] = []
 
-        for parentIndex in 0..<mainTeacher.parentUserIds.count {
+        for parentIndex in 0..<mainTeacher.parentUsers.count {
             calenderIndex = []
             
-            for index in 0..<mainTeacher.parentUserIds[parentIndex].schedules[0].scheduleList.count { //하단 funcs 참고
-                if mainTeacher.parentUserIds[parentIndex].schedules[0].scheduleList[index].isReserved {
+            for index in 0..<mainTeacher.parentUsers[parentIndex].schedules[0].scheduleList.count { //하단 funcs 참고
+                if mainTeacher.parentUsers[parentIndex].schedules[0].scheduleList[index].isReserved {
                     acceptedData.append(calenderData[index])
                     calenderIndex.append(timeStringToIndex(parentUserIds: parentIndex)[index] * weekDays + dateStringToIndex(parentUserIds: parentIndex)[index])
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
@@ -110,9 +110,9 @@ class ConsultationViewController: BaseViewController {
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
         
-        for parentIdx in 0..<mainTeacher.parentUserIds.count {
+        for parentIdx in 0..<mainTeacher.parentUsers.count {
             calenderIndex = []
-            for i in 0..<mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
+            for i in 0..<mainTeacher.parentUsers[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
                 calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
             }
 
@@ -127,8 +127,9 @@ class ConsultationViewController: BaseViewController {
     func dateStringToIndex(parentUserIds: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count { //mockData에서 신청 날자 String을 뽑아옴
-            dateString.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
+        for i in 0..<mainTeacher.parentUsers[parentUserIds].schedules[0].scheduleList.count {
+            dateString.append(mainTeacher.parentUsers[parentUserIds].schedules[0].scheduleList[i].consultingDate)
+
         }
         
         for day in 0..<dateString.count { //String을 Index로 바꿔줌
@@ -143,8 +144,9 @@ class ConsultationViewController: BaseViewController {
     
     func timeStringToIndex(parentUserIds: Int) -> [Int] {
         var startTime:[Int] = []
+
         
-        mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.forEach{
+        mainTeacher.parentUsers[parentUserIds].schedules[0].scheduleList.forEach{
             let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
             let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
             let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
@@ -154,6 +156,27 @@ class ConsultationViewController: BaseViewController {
         return startTime
     }
     
+    //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
+    func CalenderDisplayData() -> [TeacherCalenderData] {
+        var calenderIndex: [Int] = []
+        var calenderData: [TeacherCalenderData] = []
+        calenderData.append(TeacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green))
+        calenderData.append(TeacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
+        calenderData.append(TeacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
+
+        for parentIdx in 0..<mainTeacher.parentUsers.count {
+            calenderIndex = []
+            for i in 0...2{
+                calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
+            }
+
+            calenderData[parentIdx].calenderIndex = calenderIndex
+        }
+        print(calenderData)
+        return calenderData
+    }
+    
+
     //버튼 누르면 학부모1 신청시간 display
     @objc func par1OnTapButton() {
         displayData = acceptedData()
@@ -227,8 +250,8 @@ extension ConsultationViewController: UICollectionViewDelegate{
         if indexPath.item == clickedCell {
             
             // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
-            mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList = [mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[selectedIndex!]]
-            mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[0].isReserved = true
+            mainTeacher.parentUsers[parentId!].schedules[0].scheduleList = [mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[selectedIndex!]]
+            mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[0].isReserved = true
             
             calenderData[parentId!].cellColor = .borderGray // 예약확정된 셀은 연회색
             clickedCell = nil // 선택해제
@@ -293,7 +316,7 @@ extension ConsultationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: CalenderTableViewCell.identifier, for: indexPath) as? CalenderTableViewCell else { return UITableViewCell()}
         
-        let parent = mainTeacher.parentUserIds[indexPath.item]
+        let parent = mainTeacher.parentUsers[indexPath.item]
         
         cell.configure(childName: parent.childName, schedule: parent.schedules[0])
         
