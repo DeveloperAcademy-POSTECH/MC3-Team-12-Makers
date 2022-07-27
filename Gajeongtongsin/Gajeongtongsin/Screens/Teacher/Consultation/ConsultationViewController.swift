@@ -83,8 +83,8 @@ class ConsultationViewController: BaseViewController {
     func dateStringToIndex(parentUserIds: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count {
-            dateString.append(mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].consultingDate)
+        for i in 0..<mainTeacher.parentUsers[parentUserIds].schedules[0].scheduleList.count {
+            dateString.append(mainTeacher.parentUsers[parentUserIds].schedules[0].scheduleList[i].consultingDate)
         }
         for day in 0..<dateString.count {
             for nextWeekDay in 0..<nextWeek.count {
@@ -99,7 +99,7 @@ class ConsultationViewController: BaseViewController {
     func timeStringToIndex(parentUserIds: Int) -> [Int] {
         var startTime:[Int] = []
         for i in 0...2{
-            switch mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime {
+            switch mainTeacher.parentUsers[parentUserIds].schedules[0].scheduleList[i].startTime {
             case "14시00분":
                 startTime.append(0)
             case "14시30분":
@@ -127,7 +127,7 @@ class ConsultationViewController: BaseViewController {
         calenderData.append(teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue))
         calenderData.append(teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red))
 
-        for parentIdx in 0..<mainTeacher.parentUserIds.count {
+        for parentIdx in 0..<mainTeacher.parentUsers.count {
             calenderIndex = []
             for i in 0...2{
                 calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])

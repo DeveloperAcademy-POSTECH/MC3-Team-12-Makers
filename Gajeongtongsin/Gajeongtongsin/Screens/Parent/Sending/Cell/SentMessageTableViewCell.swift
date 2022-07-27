@@ -13,7 +13,7 @@ class sentMessageTableViewCell: BaseTableViewCell {
     static let identifier = "SentMessageTableViewCell"
     
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
     
     let messageInfo: UILabel = {

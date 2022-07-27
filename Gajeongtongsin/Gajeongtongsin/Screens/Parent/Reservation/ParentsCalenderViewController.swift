@@ -121,7 +121,7 @@ class ParentsCalenderViewController: BaseViewController {
             appendScheduleList.append(ScheduleInfo(
                 consultingDate: dateIndexToString(index: idx),
                 startTime: timeIndexToString(index: idx),
-                isReserved: nil))
+                isReserved: false))
         }
         
         parentList[0].schedules.append(Schedule(
