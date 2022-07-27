@@ -8,7 +8,7 @@
 import Foundation
 import UIKit
 
-struct teacherCalenderData {
+struct TeacherCalenderData {
     var parentIds: Int
 //    var calenderIndex: calenderIndex
     var calenderIndex: [Int]

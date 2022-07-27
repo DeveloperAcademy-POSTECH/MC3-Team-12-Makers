@@ -8,25 +8,21 @@
 import UIKit
 
 class ConsultationViewController: BaseViewController {
-      
     
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30)
-    private var displayData: [teacherCalenderData] = []
+    private var displayData: [TeacherCalenderData] = []
     private var cellColor: UIColor = .gray
     private var clickedCell: Int?
     private var selectedIndex: Int?
     private var parentId: Int?
-    
-//    private var acceptedData: [Schedule] = []
-    
     
     //다음 일주일의 날짜 리스트를 반환해주는 함수, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM-dd"
         var nextWeek = [String]()
-        
+         
         for dayCount in 0..<weekDays+2 { //주말 이틀 추가(weekDays==5)
 //            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek +7)) //캘린더뷰가 다음주를 표시하는 경우 +7
             let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
@@ -38,11 +34,10 @@ class ConsultationViewController: BaseViewController {
     
     //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
     
-    private var calenderData: [teacherCalenderData] = [
-        teacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green),
-        teacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue),
-        teacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red)]
-    
+    private var calenderData: [TeacherCalenderData] = [
+        TeacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green),
+        TeacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue),
+        TeacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red)]
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -52,7 +47,6 @@ class ConsultationViewController: BaseViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false //필수 !!
         return collectionView
     }()
-
     
     // 학부모1 신청내역 보기
     private let par1: UIButton = {
@@ -93,17 +87,17 @@ class ConsultationViewController: BaseViewController {
     
     //MARK: - Funcs
     
-    func acceptedData() -> [teacherCalenderData] {
-        var acceptedData:[teacherCalenderData] = []
+    func acceptedData() -> [TeacherCalenderData] {
+        var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [Int] = []
 
-        for parentIdx in 0..<mainTeacher.parentUserIds.count {
+        for parentIndex in 0..<mainTeacher.parentUserIds.count {
             calenderIndex = []
             
-            for i in 0..<mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
-                if mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList[i].isReserved {
-                    acceptedData.append(calenderData[i])
-                    calenderIndex.append(timeStringToIndex(parentUserIds: parentIdx)[i] * weekDays + dateStringToIndex(parentUserIds: parentIdx)[i])
+            for index in 0..<mainTeacher.parentUserIds[parentIndex].schedules[0].scheduleList.count { //하단 funcs 참고
+                if mainTeacher.parentUserIds[parentIndex].schedules[0].scheduleList[index].isReserved {
+                    acceptedData.append(calenderData[index])
+                    calenderIndex.append(timeStringToIndex(parentUserIds: parentIndex)[index] * weekDays + dateStringToIndex(parentUserIds: parentIndex)[index])
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                 }
             }
@@ -112,9 +106,9 @@ class ConsultationViewController: BaseViewController {
     }
     
     //모든 신청 예약 데이터를 인덱스로 만들어주는 함수 : 연산 프로퍼티로 하기에는 다시 입력/로드되어야 하는 경우가 있어 함수로 수정
-    func submittedData() -> [teacherCalenderData] {
+    func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
-
+        
         for parentIdx in 0..<mainTeacher.parentUserIds.count {
             calenderIndex = []
             for i in 0..<mainTeacher.parentUserIds[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
@@ -161,6 +155,7 @@ class ConsultationViewController: BaseViewController {
     @objc func par1OnTapButton() {
         displayData = acceptedData()
         displayData.append(submittedData()[0])
+        print(acceptedData())
         
         calenderView.reloadData()
     }
@@ -181,7 +176,7 @@ class ConsultationViewController: BaseViewController {
     
     override func render() {
         view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 200).isActive = true
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
         calenderView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
@@ -207,7 +202,6 @@ class ConsultationViewController: BaseViewController {
 //MARK: - Extensions
 
 extension ConsultationViewController: UICollectionViewDelegate{
-     
    
     //cell 로드
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

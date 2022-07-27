@@ -92,9 +92,9 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     func timeIndexToString(index: Int) -> String {
-        
-        let hour = String(14 + (index/numberOfRow)/2) //14시 + @
-        let minute: String = (index/numberOfRow) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
+        let rowInCalender = index/numberOfRow
+        let hour = String(14 + (rowInCalender)/2) //14시 + @
+        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
         startTime = hour+"시"+minute+"분"
         
         return startTime
