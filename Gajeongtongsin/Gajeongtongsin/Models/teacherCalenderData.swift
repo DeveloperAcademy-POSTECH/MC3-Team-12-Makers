@@ -10,6 +10,12 @@ import UIKit
 
 struct teacherCalenderData {
     var parentIds: Int
+//    var calenderIndex: calenderIndex
     var calenderIndex: [Int]
     var cellColor: UIColor
 }
+
+//struct calenderIndex {
+//    var displayIndex: [Int]
+//    var isReserved: Bool?
+//}
