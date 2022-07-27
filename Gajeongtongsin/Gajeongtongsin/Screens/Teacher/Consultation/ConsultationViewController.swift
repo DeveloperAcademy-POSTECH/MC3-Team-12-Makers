@@ -31,7 +31,7 @@ class ConsultationViewController: BaseViewController {
     }
     
     private lazy var customNavigationBar: CutomNavigationBar = {
-        let customNavigationBar = CutomNavigationBar(title: "이번주 상담일정", imageName: "bell")
+        let customNavigationBar = CutomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
         customNavigationBar.backgroundColor = .white
         customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
         return customNavigationBar

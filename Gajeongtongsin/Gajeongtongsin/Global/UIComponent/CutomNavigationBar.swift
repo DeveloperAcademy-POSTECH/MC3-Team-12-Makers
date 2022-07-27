@@ -12,10 +12,11 @@ class CutomNavigationBar: UIView {
     var delegate: CustomNavigationBarDelegate?
     var title: String = ""
     var imageName: String = ""
+    var imageSize: Int
     
     var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -29,10 +30,11 @@ class CutomNavigationBar: UIView {
     
     
     
-    init(title: String, imageName: String){
-        super.init(frame: .zero)
+    init(title: String, imageName: String, imageSize: Int){
         self.title = title
         self.imageName = imageName
+        self.imageSize = imageSize
+        super.init(frame: .zero)
         render()
         configUI()
 
@@ -45,17 +47,20 @@ class CutomNavigationBar: UIView {
     
     func render() {
         addSubview(titleLabel)
-        titleLabel.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor,constant: 16).isActive = true
+        titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 29).isActive = true
+        titleLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 16).isActive = true
+        titleLabel.widthAnchor.constraint(equalToConstant: 148).isActive = true
+        titleLabel.heightAnchor.constraint(equalToConstant: 35).isActive = true
         
         addSubview(rightButtonItem)
-        rightButtonItem.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
+        rightButtonItem.topAnchor.constraint(equalTo: self.topAnchor, constant: 33).isActive = true
         rightButtonItem.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16).isActive = true
     }
     
     func configUI() {
+        let config = UIImage.SymbolConfiguration(pointSize: CGFloat(imageSize), weight: .medium, scale: .default)
         titleLabel.text = title
-        rightButtonItem.setImage(UIImage(systemName: imageName), for: .normal)
+        rightButtonItem.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
     }
     @objc func tapButton(){
         delegate?.tapButton()
