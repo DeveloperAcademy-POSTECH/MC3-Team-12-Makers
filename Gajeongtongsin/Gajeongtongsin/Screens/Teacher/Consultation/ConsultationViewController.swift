@@ -62,22 +62,7 @@ class ConsultationViewController: BaseViewController {
         return collectionView
     }()
     
-    // 학부모1 신청내역 보기
-    private let par1: UIButton = {
-        let button = UIButton()
-        button.setTitle("학부모 1", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    // 학부모2 신청내역 보기
-    private let par2: UIButton = {
-        let button = UIButton()
-        button.setTitle("학부모 2", for: .normal)
-        button.setTitleColor(.black, for: .normal)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+    
     // 전체 신청내역 보기
     private let seeAll: UIButton = {
         let button = UIButton()
@@ -96,9 +81,6 @@ class ConsultationViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
 
-        
-        par1.addTarget(self, action: #selector(par1OnTapButton), for: .touchUpInside)
-        par2.addTarget(self, action: #selector(par2OnTapButton), for: .touchUpInside)
         seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
     }
     
@@ -117,6 +99,7 @@ class ConsultationViewController: BaseViewController {
                     calenderIndex.append(timeStringToIndex(parentUserIds: parentIndex)[index] * weekDays + dateStringToIndex(parentUserIds: parentIndex)[index])
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                 }
+                
             }
         }
         return acceptedData
@@ -136,6 +119,8 @@ class ConsultationViewController: BaseViewController {
         }
         return calenderData
     }
+    
+    
     
     //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
     func dateStringToIndex(parentUserIds: Int) -> [Int] {
@@ -198,23 +183,15 @@ class ConsultationViewController: BaseViewController {
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
         
-        view.addSubview(par1)
-        par1.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 320).isActive = true
-        par1.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
-        
-        view.addSubview(par2)
-        par2.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 370).isActive = true
-        par2.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
-        
         view.addSubview(seeAll)
-        seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 420).isActive = true
+        seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 320).isActive = true
         seeAll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 450).isActive = true
+        tableView.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 350).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
     }
 
     override func configUI() {
@@ -255,14 +232,13 @@ extension ConsultationViewController: UICollectionViewDelegate{
             mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList = [mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[selectedIndex!]]
             mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[0].isReserved = true
             
-            calenderData[parentId!].cellColor = .white
+            calenderData[parentId!].cellColor = .borderGray
+            
 
             //onTapButton 함수 실행 -> 수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
-            switch parentId {
-            case 0: par1OnTapButton()
-            case 1: par2OnTapButton()
-            default: break
-            }
+            displayData = acceptedData()
+            displayData.append(submittedData()[parentId!])
+            calenderView.reloadData()
             
             clickedCell = nil
             calenderView.reloadData()
@@ -335,12 +311,11 @@ extension ConsultationViewController: UITableViewDataSource {
 
 
 extension ConsultationViewController: UITableViewDelegate {
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         displayData = acceptedData()
         displayData.append(submittedData()[indexPath.item])
-        print(acceptedData())
         
         calenderView.reloadData()
-        
     }
 }
