@@ -57,3 +57,4 @@ var todayOfTheWeek: Int{
     if interval == 1 { interval = 8 }
     return interval!
 }
+

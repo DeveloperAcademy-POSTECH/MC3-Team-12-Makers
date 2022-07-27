@@ -11,7 +11,7 @@ class ParentsCalenderViewController: BaseViewController {
     
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
-    private var subIdx: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
+    private var submitIndexList: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
 //    private var consultingDateDate: Date
@@ -19,7 +19,6 @@ class ParentsCalenderViewController: BaseViewController {
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
     private var startTime: String = ""
 
-    private let numberOfRow = 5
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -92,22 +91,11 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     func timeIndexToString(index: Int) -> String {
-        switch index/numberOfRow {
-        case 0:
-            startTime = "14:00"
-        case 1:
-            startTime = "14:30"
-        case 2:
-            startTime = "15:00"
-        case 3:
-            startTime = "15:30"
-        case 4:
-            startTime = "16:00"
-        case 5:
-            startTime = "16:30"
-        default:
-            startTime = "부니카"
-        }
+        let rowInCalender = index/weekDays
+        let hour = String(14 + (rowInCalender)/2) //14시 + @
+        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
+        startTime = hour+"시"+minute+"분"
+        
         return startTime
     }
     
@@ -115,13 +103,14 @@ class ParentsCalenderViewController: BaseViewController {
     @objc func onTapButton() {
         
         appendScheduleList = []
-        subIdx = choicedCells.enumerated().compactMap { (idx, element) in element ? idx : nil }
+        submitIndexList = choicedCells.enumerated().compactMap { (idx, element) in element ? idx : nil }
         
-        for idx in subIdx {
+        for index in submitIndexList {
             appendScheduleList.append(ScheduleInfo(
-                consultingDate: dateIndexToString(index: idx),
-                startTime: timeIndexToString(index: idx),
-                isReserved: nil))
+
+                consultingDate: dateIndexToString(index: index),
+                startTime: timeIndexToString(index: index),
+                isReserved: false))
         }
         
         FirebaseManager.shared.uploadReservations(teacherUid: "19DD4C",
