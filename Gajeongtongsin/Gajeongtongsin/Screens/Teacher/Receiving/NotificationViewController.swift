@@ -49,8 +49,8 @@ class NotificationViewController: BaseViewController {
         view.addSubview(notificationLabel)
         notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
         notificationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        notificationLabel.widthAnchor.constraint(equalToConstant: 200).isActive = true
-        notificationLabel.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        notificationLabel.widthAnchor.constraint(equalToConstant: 343).isActive = true
+        notificationLabel.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 0).isActive = true
