@@ -10,19 +10,7 @@ import UIKit
 class CalenderTableViewCell: BaseTableViewCell {
     
     // MARK: - Properties
-    private var isChecked: Bool = false {
-        didSet {
-            checkBox.tintColor = isChecked ? .red : .gray
-        }
-    }
-
     static let identifier = "CalenderTableViewCell"
-    
-    private let checkBox: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
     
     private let messageInfo: UILabel = {
        let messageInfo = UILabel()
@@ -60,12 +48,6 @@ class CalenderTableViewCell: BaseTableViewCell {
         content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         
     }
-    
-    override func configUI() {
-        checkBox.image = UIImage(systemName: "flame.fill")
-        checkBox.tintColor = .gray
-
-    }
 
     func configure(childName: String, schedule: Schedule) {
         
@@ -82,11 +64,6 @@ class CalenderTableViewCell: BaseTableViewCell {
         
         messageInfo.text = "\(childName) / \(schedule.content)"
         content.text = "\(dateAndTime)"
-        
-    }
-    
-    func changeState() {
-        self.isChecked.toggle()
         
     }
 }
