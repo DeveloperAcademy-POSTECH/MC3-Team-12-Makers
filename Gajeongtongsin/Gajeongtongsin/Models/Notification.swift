@@ -9,17 +9,17 @@ import Foundation
 
 
 
-struct Notification {
+struct Notification: Codable {
     let id: String // 보낸사람 아이디
     let postId: String
     let type: NotificationType
     let childName: String
     let content: String
- //   let timestamp: TimeStamp  파이어베이스 설치안해서 임시로 주석처리
+    //var time: Date? = Date() //    임시로 옵셔널 및 값 넣음.
     
 }
 
-enum NotificationType: Int {
+enum NotificationType: Int, Codable {
     case emergency
     case reservation
     case message
@@ -36,3 +36,4 @@ enum NotificationType: Int {
     }
     
 }
+

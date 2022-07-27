@@ -124,6 +124,12 @@ class ParentsCalenderViewController: BaseViewController {
                 isReserved: nil))
         }
         
+        FirebaseManager.shared.uploadReservations(teacherUid: "19DD4C",
+                                                  scheduleInfos: appendScheduleList)
+        FirebaseManager.shared.uploadNotification(teacherUid: "19DD4C",
+                                                  parentUserId: UserDefaults.standard.string(forKey: "ParentUser")!,
+                                                  childName: "김유쓰",
+                                                  type: .reservation)
         parentList[0].schedules.append(Schedule(
             reservedDate: "7월22일",
             scheduleList: appendScheduleList,

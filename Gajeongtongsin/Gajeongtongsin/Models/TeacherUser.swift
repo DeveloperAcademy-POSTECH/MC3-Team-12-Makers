@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct TeacherUser {
+struct TeacherUser : Codable {
     let teacherName: String             //교사이름
     var parentUserIds: [ParentUser]     //교사가 담당해야할 학부모 ->파베할떈 String
     //let parentUsers: [ParentUser]     //이게 맞지 않나...?

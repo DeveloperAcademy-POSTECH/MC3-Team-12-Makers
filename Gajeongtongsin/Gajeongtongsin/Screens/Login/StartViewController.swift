@@ -75,6 +75,7 @@ class StartViewController: BaseViewController {
         let vc = TabBarViewController(role: .parent)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
+        FirebaseManager.shared.initializeParent(teacherUid: "19DD4C", childName: "김유쓰")
         present(vc, animated: true)
     }
     @objc func teacherTap() {
@@ -82,6 +83,7 @@ class StartViewController: BaseViewController {
         let vc = TabBarViewController(role: .teacher)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
+        FirebaseManager.shared.initializeTeacher()
         present(vc, animated: true)
     }
     

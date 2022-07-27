@@ -19,6 +19,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
+        
+        
         if UserDefaults.standard.string(forKey: "ParentUser") != nil {
             window?.rootViewController = TabBarViewController(role: .parent)
         } else if UserDefaults.standard.string(forKey: "TeacherUser") != nil {

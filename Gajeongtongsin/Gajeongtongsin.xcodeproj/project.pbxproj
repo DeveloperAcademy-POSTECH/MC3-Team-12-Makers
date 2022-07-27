@@ -42,6 +42,7 @@
 		359583A82882A6F7002B6873 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583A72882A6F7002B6873 /* Constants.swift */; };
 		35AA44B5288F8609000573B8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35AA44B4288F8609000573B8 /* GoogleService-Info.plist */; };
 		35AA44B8288F87AA000573B8 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 35AA44B7288F87AA000573B8 /* FirebaseDatabase */; };
+		35AA44BB288FD985000573B8 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 35AA44BA288FD985000573B8 /* FirebaseDatabaseSwift */; };
 		8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */; };
 		8C40E867288B7BC100DECACA /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C40E866288B7BC100DECACA /* SentMessageTableViewCell.swift */; };
 		C04B547F2887C6250097EE88 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04B547E2887C6250097EE88 /* MockData.swift */; };
@@ -112,6 +113,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35AA44BB288FD985000573B8 /* FirebaseDatabaseSwift in Frameworks */,
 				35AA44B8288F87AA000573B8 /* FirebaseDatabase in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -447,6 +449,7 @@
 			name = Gajeongtongsin;
 			packageProductDependencies = (
 				35AA44B7288F87AA000573B8 /* FirebaseDatabase */,
+				35AA44BA288FD985000573B8 /* FirebaseDatabaseSwift */,
 			);
 			productName = Gajeongtongsin;
 			productReference = 35171CFA28828C930059F297 /* Gajeongtongsin.app */;
@@ -777,6 +780,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 35AA44B6288F87A9000573B8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseDatabase;
+		};
+		35AA44BA288FD985000573B8 /* FirebaseDatabaseSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 35AA44B6288F87A9000573B8 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseDatabaseSwift;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

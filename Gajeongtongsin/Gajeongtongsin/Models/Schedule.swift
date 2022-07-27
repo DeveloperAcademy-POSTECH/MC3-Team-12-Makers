@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct Schedule {
+struct Schedule : Codable {
     let reservedDate: String            //상담신청날짜
     let scheduleList: [ScheduleInfo]  //스케줄정보들
     let content: String               //상담내용
