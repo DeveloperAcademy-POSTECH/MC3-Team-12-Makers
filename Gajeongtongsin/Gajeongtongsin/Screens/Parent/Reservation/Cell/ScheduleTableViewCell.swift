@@ -16,16 +16,15 @@ class ScheduleTableViewCell: BaseTableViewCell {
         return mainTeacher.parentUserIds[0]
     }
     
-    let scheduleInfo: UILabel = {
+    private let scheduleInfo: UILabel = {
         let scheduleInfo = UILabel()
-        scheduleInfo.text = "ㅇㅇㅇ"
         scheduleInfo.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         scheduleInfo.textColor = UIColor.black
         scheduleInfo.translatesAutoresizingMaskIntoConstraints = false
         return scheduleInfo
     }()
     
-    let content: UILabel = {
+    private let content: UILabel = {
        let content = UILabel()
         content.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
         content.textColor = UIColor.black
@@ -72,10 +71,7 @@ class ScheduleTableViewCell: BaseTableViewCell {
         appointment.scheduleList[0].isReserved = true
         
         //인디케이터 디자인 확정 후 변경
-        if appointment.scheduleList[row].isReserved == true {
-            checkIndicator.image = UIImage(systemName: "exclamationmark.circle")
-        } else {
-            return
-        }
+        guard appointment.scheduleList[row].isReserved == true else {return}
+        checkIndicator.image = UIImage(systemName: "exclamationmark.circle")
     }
 }
