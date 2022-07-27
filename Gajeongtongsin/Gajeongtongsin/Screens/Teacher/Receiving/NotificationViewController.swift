@@ -39,7 +39,6 @@ class NotificationViewController: BaseViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-//        navigationBar()
         view.backgroundColor = .systemBackground
     }
     
@@ -88,10 +87,10 @@ extension NotificationViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
             cell.configure(notification: emergancy[indexPath.row])
-            cell.backgroundColor = UIColor.red.withAlphaComponent(0.1)
+            cell.backgroundColor = UIColor.emergencyAlertColor
         } else {
             cell.configure(notification: normal[indexPath.row])
-            cell.backgroundColor = UIColor.blue.withAlphaComponent(0.1)
+            cell.backgroundColor = UIColor.normalAlertColor
         }
 
         return cell

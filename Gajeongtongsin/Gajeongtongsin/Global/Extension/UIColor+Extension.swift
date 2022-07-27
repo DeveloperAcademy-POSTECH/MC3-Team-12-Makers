@@ -23,6 +23,10 @@ extension UIColor {
     static var normalAlertColor: UIColor {
         return UIColor(hex: "#F0E5CF")
     }
+    
+    static var alertInfoGary: UIColor {
+        return UIColor(hex: "#5F5E61")
+    }
    
 }
 
