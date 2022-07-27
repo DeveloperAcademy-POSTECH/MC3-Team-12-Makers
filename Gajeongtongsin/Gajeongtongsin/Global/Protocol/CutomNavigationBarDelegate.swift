@@ -8,5 +8,5 @@
 import Foundation
 
 protocol CustomNavigationBarDelegate {
-    func tapbutton()
+    func tapButton()
 }
