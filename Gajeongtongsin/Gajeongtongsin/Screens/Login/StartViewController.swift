@@ -75,7 +75,13 @@ class StartViewController: BaseViewController {
         let vc = TabBarViewController(role: .parent)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
-        FirebaseManager.shared.initializeParent(teacherUid: "19DD4C", childName: "김유쓰")
+        // 파이어베이스 부모 초기화 업로드
+        let homeroomTeacherUid = getUid() // 일단은 선생님, 부모님 uid 같음.  선생님 id 받는 뷰가 필요할듯.
+        let childName = "김유쓰" // 아이 이름을 받는 뷰가 필요할 듯.
+        UserDefaults.standard.set(homeroomTeacherUid, forKey: "HomeroomTeacher")
+        UserDefaults.standard.set(childName, forKey: "ChildName")
+
+        FirebaseManager.shared.initializeParent()
         present(vc, animated: true)
     }
     @objc func teacherTap() {
@@ -83,6 +89,7 @@ class StartViewController: BaseViewController {
         let vc = TabBarViewController(role: .teacher)
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
+        // 파이어베이스 선생님 초기화 업로드
         FirebaseManager.shared.initializeTeacher()
         present(vc, animated: true)
     }

@@ -112,14 +112,24 @@ class ParentsCalenderViewController: BaseViewController {
                 startTime: timeIndexToString(index: index),
                 isReserved: false))
         }
+        // 파이어베이스 예약업로드 & 알림
+        let schedule = Schedule(reservedDate: "실시간",     // FIXME: - 수정 필요
+                                scheduleList: appendScheduleList,
+                                content: reasonNote.text)
         
-        FirebaseManager.shared.uploadReservations(teacherUid: "19DD4C",
-                                                  scheduleInfos: appendScheduleList)
-        FirebaseManager.shared.uploadNotification(teacherUid: "19DD4C",
-                                                  parentUserId: UserDefaults.standard.string(forKey: "ParentUser")!,
-                                                  childName: "김유쓰",
-                                                  content: "테스트",
-                                                  type: .reservation)
+        FirebaseManager.shared.uploadReservations(schedule: schedule)
+        
+        let parentUserId = UserDefaults.standard.string(forKey: "ParentUser")!
+        let childName = UserDefaults.standard.string(forKey: "ChildName")!
+
+        let reservationNoti = Notification(id: parentUserId,
+                                           postId: "2", // FIXME: - 수정 필요
+                                           type: .reservation,
+                                           childName: childName, 
+                                           content: reasonNote.text)
+        
+        FirebaseManager.shared.uploadNotification(notification: reservationNoti)
+        
         parentList[0].schedules.append(Schedule(
             reservedDate: "7월22일",
             scheduleList: appendScheduleList,

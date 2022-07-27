@@ -95,6 +95,17 @@ class ReservationViewController: BaseViewController {
                 let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
                     let emergencyContent = alert.textFields?[0].text ?? ""
                     
+                    // 파이어베이스 긴급알림업로드.
+                    let parentUserId = UserDefaults.standard.string(forKey: "ParentUser")!
+                    let childName = UserDefaults.standard.string(forKey: "ChildName")!
+
+                    let emergencyNoti = Notification(id: parentUserId,
+                                                    postId: "2",
+                                                    type: .emergency,
+                                                    childName: childName,
+                                                    content: emergencyContent)
+                    
+                    FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
                 }
                 alert.addAction(cancelAction)
                 alert.addAction(okayAction)

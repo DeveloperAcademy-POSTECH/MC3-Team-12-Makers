@@ -13,8 +13,3 @@ struct ScheduleInfo: Codable {
     var isReserved: Bool             //false = 대기중, true = 완료
 }
 
-//enum ReservedState : Int, Codable {
-//    case pending
-//    case reserved
-//    case impossible
-//}
