@@ -34,6 +34,7 @@ class SentMessageTableViewCell: BaseTableViewCell {
     
     private let checkIndicator: UIImageView = {
         let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "questionmark.circle")
         imageView.translatesAutoresizingMaskIntoConstraints = false
         return imageView
     }()
@@ -54,12 +55,7 @@ class SentMessageTableViewCell: BaseTableViewCell {
     }
     
     override func configUI() {
-        checkIndicator.image = UIImage(systemName: "checkmark.square")
-        
-        
     }
-    
-    
     
     func configure(index: Int) {
         
@@ -74,10 +70,9 @@ class SentMessageTableViewCell: BaseTableViewCell {
         messageInfo.text = "\(currentParent.childName) / \(msgType()) / \(currentParent.sendingMessages[index].expectedDate)"
         
         content.text = "\(currentParent.sendingMessages[index].content)"
+        
+        //완료 여부 알려주는 인디케이터
+        guard currentParent.sendingMessages[index].isCompleted == true else {return}
+        checkIndicator.image = UIImage(systemName: "exclamationmark.circle")
     }
-//    func cellTextMap(parent: ParentUser, message: Message) {
-//        messageInfo.text = "\(parent.childName) / \(message.type) / \(message.expectedDate)"
-//        content.text = "\(message.content)"
-//    }
 }
-
