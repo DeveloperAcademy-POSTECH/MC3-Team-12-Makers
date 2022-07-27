@@ -24,7 +24,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if UserDefaults.standard.string(forKey: "ParentUser") != nil {
             window?.rootViewController = TabBarViewController(role: .parent)
         } else if UserDefaults.standard.string(forKey: "TeacherUser") != nil {
-            window?.rootViewController = TabBarViewController(role: .parent)
+            window?.rootViewController = TabBarViewController(role: .teacher)
         } else {
             window?.rootViewController = StartViewController()
         }
