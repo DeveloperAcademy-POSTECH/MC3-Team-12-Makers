@@ -14,8 +14,3 @@ struct TeacherCalenderData {
     var calenderIndex: [Int]
     var cellColor: UIColor
 }
-
-//struct calenderIndex {
-//    var displayIndex: [Int]
-//    var isReserved: Bool?
-//}

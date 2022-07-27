@@ -16,6 +16,7 @@ class ConsultationViewController: BaseViewController {
     private var clickedCell: Int?
     private var selectedIndex: Int?
     private var parentId: Int?
+    private var selectedTableRow:IndexPath?
     
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
@@ -143,13 +144,13 @@ class ConsultationViewController: BaseViewController {
     func timeStringToIndex(parentUserIds: Int) -> [Int] {
         var startTime:[Int] = []
         
-        //switch 싫어서 계산식으로 바꿨는데 어떤게 나은지요
-        for i in 0..<mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.count{
-            let a = mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList[i].startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
-            let time = Int(a[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
-            let minute = Int(a[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
-            startTime.append(time*2 + minute)
+        mainTeacher.parentUserIds[parentUserIds].schedules[0].scheduleList.forEach{
+            let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
+            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
+            let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
+            startTime.append(hour*2 + minute)
         }
+        
         return startTime
     }
     
@@ -210,13 +211,11 @@ extension ConsultationViewController: UICollectionViewDelegate{
         for: indexPath) as? CalenderViewCell else {
             return UICollectionViewCell()
         }
-        
+        cell.backgroundColor = .gray
         for eachData in displayData{ //eachdata = {parentsIds, calenderIdx, cellColor}
             if eachData.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
                 cell.backgroundColor = clickedCell == indexPath.item ? .black : eachData.cellColor
                 break //for문을 도는 도중 다른 data로 인해 gray로 display되는것을 방지
-            } else {
-                cell.backgroundColor = .gray
             }
         }
         return cell
@@ -224,24 +223,21 @@ extension ConsultationViewController: UICollectionViewDelegate{
     
     //cell 클릭 액션
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
         //더블클릭한 경우
         if indexPath.item == clickedCell {
             
-            // 확정된 스케줄 이외 다른 스케줄 모두 삭제
+            // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
             mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList = [mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[selectedIndex!]]
             mainTeacher.parentUserIds[parentId!].schedules[0].scheduleList[0].isReserved = true
             
-            calenderData[parentId!].cellColor = .borderGray
-            
+            calenderData[parentId!].cellColor = .borderGray // 예약확정된 셀은 연회색
+            clickedCell = nil // 선택해제
 
             //onTapButton 함수 실행 -> 수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
             displayData = acceptedData()
-            displayData.append(submittedData()[parentId!])
             calenderView.reloadData()
             
-            clickedCell = nil
-            calenderView.reloadData()
+            tableView.reloadData()
             return
         }
         
@@ -254,7 +250,8 @@ extension ConsultationViewController: UICollectionViewDelegate{
                 calenderView.reloadData()
                 break
             }
-            clickedCell = nil
+            clickedCell = nil // 신청된 슬롯 외 클릭하면 선택해제
+//            deSelectTableRow(selectedTableRow: selectedTableRow!)
         }
         calenderView.reloadData()
     }
@@ -313,9 +310,20 @@ extension ConsultationViewController: UITableViewDataSource {
 extension ConsultationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        selectedTableRow = indexPath
         displayData = acceptedData()
         displayData.append(submittedData()[indexPath.item])
         
+        
+        calenderView.reloadData()
+    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
+        deSelectTableRow(selectedTableRow: selectedTableRow!)
+    }
+    
+    func deSelectTableRow(selectedTableRow: IndexPath) {
+        tableView.deselectRow(at: selectedTableRow, animated: true)
+        displayData = acceptedData()
         calenderView.reloadData()
     }
 }
