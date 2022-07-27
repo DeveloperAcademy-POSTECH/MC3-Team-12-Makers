@@ -17,7 +17,7 @@ class ConsultationViewController: BaseViewController {
     private var selectedIndex: Int?
     private var parentId: Int?
     
-    //다음 일주일의 날짜 리스트를 반환해주는 함수, 아래의 dayIndex 함수에 사용함
+    //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM-dd"
@@ -32,12 +32,26 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
-    //mockdata의 상담예약 관련 데이터를 teacherCalenderDate에 불러오는 함수
-    
+    //displayData에 추가될 데이터 포멧
     private var calenderData: [TeacherCalenderData] = [
         TeacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green),
         TeacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue),
         TeacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red)]
+    
+    
+    
+    // 테이블뷰 테스트
+    let scheduledParentsList: [Schedule] = mainTeacher.parentUserIds.flatMap({$0.schedules})
+    
+    private let tableView: UITableView = {
+        let tableView = UITableView(frame: .zero, style: .plain)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.register(CalenderTableViewCell.self, forCellReuseIdentifier: CalenderTableViewCell.identifier)
+        return tableView
+    }()
+    //여기까지
+    
+    
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -78,7 +92,10 @@ class ConsultationViewController: BaseViewController {
         super.viewDidLoad()
         calenderView.delegate = self
         calenderView.dataSource = self
-        displayData = acceptedData()
+        
+        tableView.dataSource = self
+        tableView.delegate = self
+
         
         par1.addTarget(self, action: #selector(par1OnTapButton), for: .touchUpInside)
         par2.addTarget(self, action: #selector(par2OnTapButton), for: .touchUpInside)
@@ -192,6 +209,12 @@ class ConsultationViewController: BaseViewController {
         view.addSubview(seeAll)
         seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 420).isActive = true
         seeAll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+        
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 450).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
 
     override func configUI() {
@@ -240,6 +263,7 @@ extension ConsultationViewController: UICollectionViewDelegate{
             case 1: par2OnTapButton()
             default: break
             }
+            
             clickedCell = nil
             calenderView.reloadData()
             return
@@ -283,5 +307,40 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     //cell 종간 간격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return CGFloat(0)
+    }
+}
+
+
+//학부모 테이블뷰
+extension ConsultationViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return scheduledParentsList.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: CalenderTableViewCell.identifier, for: indexPath) as? CalenderTableViewCell else { return UITableViewCell()}
+        
+        let parent = mainTeacher.parentUserIds[indexPath.item]
+        
+        cell.configure(childName: parent.childName, schedule: parent.schedules[0])
+        
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 100
+    }
+}
+
+
+extension ConsultationViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        displayData = acceptedData()
+        displayData.append(submittedData()[indexPath.item])
+        print(acceptedData())
+        
+        calenderView.reloadData()
+        
     }
 }
