@@ -81,3 +81,28 @@ extension MessageViewController: UITableViewDelegate {
         present(alert, animated: true, completion: nil)
     }
 }
+
+//MARK: Chunk Logic Extension
+extension TeacherUser {
+    private var sortedMessage: [Message] {
+        return parentUsers.flatMap({$0.sendingMessages}).sorted(by: {$0.sentDate < $1.sentDate})
+    }
+    
+    var messagesByDate: [[Message]] {
+        var messagesByDate: [[Message]] = []
+        var currentDateMessages: [Message] = []
+        
+        for message in sortedMessage {
+            if let lastElement = currentDateMessages.last {
+                if lastElement.sentDate != message.sentDate {
+                    messagesByDate.append(currentDateMessages)
+                    currentDateMessages = []
+                }
+            }
+            
+            currentDateMessages.append(message)
+        }
+        
+        return messagesByDate
+    }
+}
