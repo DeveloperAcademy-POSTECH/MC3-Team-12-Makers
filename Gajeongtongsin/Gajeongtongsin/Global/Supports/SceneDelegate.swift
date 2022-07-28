@@ -10,7 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+        
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
        
@@ -18,7 +18,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        window?.rootViewController = StartViewController()
+        
+        
+        
+        if UserDefaults.standard.string(forKey: "ParentUser") != nil {
+            window?.rootViewController = TabBarViewController(role: .parent)
+        } else if UserDefaults.standard.string(forKey: "TeacherUser") != nil {
+            window?.rootViewController = TabBarViewController(role: .teacher)
+        } else {
+            window?.rootViewController = StartViewController()
+        }
         window?.makeKeyAndVisible()
     }
 
