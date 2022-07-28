@@ -49,15 +49,26 @@ class ReservationDetailViewController: BaseViewController {
         return label
     }()
     
-    private let reasonContent: UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 17)
-        label.textColor = .black
-        label.numberOfLines = 0
-        label.lineBreakMode = .byWordWrapping
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let reasonContent: UITextView = {
+        let content = UITextView()
+        content.font = UIFont.systemFont(ofSize: 17)
+        content.textColor = .black
+        content.isScrollEnabled = true
+        content.isEditable = false
+        content.translatesAutoresizingMaskIntoConstraints = false
+        return content
     }()
+
+    
+//    private let reasonContent: UILabel = {
+//        let label = UILabel()
+//        label.font = UIFont.systemFont(ofSize: 17)
+//        label.textColor = .black
+//        label.numberOfLines = 0
+//        label.lineBreakMode = .byWordWrapping
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
     
     //MARK: - View Life Cycle
     override func viewDidLoad() {
@@ -90,6 +101,7 @@ class ReservationDetailViewController: BaseViewController {
         reasonContent.topAnchor.constraint(equalTo: reasonLabel.bottomAnchor, constant: 20).isActive = true
         reasonContent.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         reasonContent.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        reasonContent.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -150).isActive = true
     }
     
     override func configUI() {
@@ -104,8 +116,7 @@ class ReservationDetailViewController: BaseViewController {
         scheduleTitle.text = "예약 \(index.row + 1)"
         
         let appointment: Schedule = currentParent.schedules[index.row]
-        let reason: String = appointment.content
-        reasonContent.text = reason
+        reasonContent.text = appointment.content
 
         //스케줄 리스트 데이터의 갯수만큼 text 정보를 추가해서 여러 줄로 예약 대기 스케줄 표기
         func printSchedule() {
