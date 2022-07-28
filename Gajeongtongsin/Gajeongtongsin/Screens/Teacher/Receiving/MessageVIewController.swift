@@ -10,7 +10,7 @@ import UIKit
 class MessageViewController: BaseViewController {
     
     // MARK: - Properties
-    let messagesWithChildName = mainTeacher.parentUserIds.flatMap({$0.getMessagesWithChildName()})
+    let messagesWithChildName = mainTeacher.parentUsers.flatMap({$0.getMessagesWithChildName()})
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)

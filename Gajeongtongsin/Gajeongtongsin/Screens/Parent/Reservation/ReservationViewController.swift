@@ -12,7 +12,7 @@ class ReservationViewController: BaseViewController {
 
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
     
     private let viewTitle: UILabel = {
@@ -106,8 +106,19 @@ class ReservationViewController: BaseViewController {
                 let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
                 let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
-                    //신청 버튼 누를 때 noti로 전송하는 것 구현 필요
-                    let _: String = alert.textFields?.first?.text ?? ""
+                    let emergencyContent = alert.textFields?[0].text ?? ""
+                    
+                    // 파이어베이스 긴급알림업로드.
+                    let parentUserId = UserDefaults.standard.string(forKey: "ParentUser")!
+                    let childName = UserDefaults.standard.string(forKey: "ChildName")!
+
+                    let emergencyNoti = Notification(id: parentUserId,
+                                                    postId: "2",
+                                                    type: .emergency,
+                                                    childName: childName,
+                                                    content: emergencyContent)
+                    
+                    FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
                 }
                 alert.addAction(cancelAction)
                 alert.addAction(okayAction)

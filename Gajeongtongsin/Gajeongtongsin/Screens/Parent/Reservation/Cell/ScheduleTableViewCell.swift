@@ -13,7 +13,7 @@ class ScheduleTableViewCell: BaseTableViewCell {
     static let identifier = "ScheduleTableViewCell"
     
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
     
     private let scheduleInfo: UILabel = {
