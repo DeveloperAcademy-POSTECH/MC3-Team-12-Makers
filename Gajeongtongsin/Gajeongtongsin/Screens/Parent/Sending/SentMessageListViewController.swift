@@ -9,15 +9,11 @@ import UIKit
 
 class SentMessageListViewController: BaseViewController {
     //MARK: - Properties
-//    let messageList: [Message] = mainTeacher.parentUserIds.flatMap({$0.sendingMessages})
-////        .filter({$0.type != .emergency})
-//
-    //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     
+    //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
-
     
     private let viewTitle: UILabel = {
         let label = UILabel()
@@ -37,9 +33,9 @@ class SentMessageListViewController: BaseViewController {
         return btn
     }()
     
-    let sentMessageList: UITableView = {
+    private let sentMessageList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
-        table.register(sentMessageTableViewCell.self, forCellReuseIdentifier: sentMessageTableViewCell.identifier)
+        table.register(SentMessageTableViewCell.self, forCellReuseIdentifier: SentMessageTableViewCell.identifier)
         table.rowHeight = 100
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -97,7 +93,7 @@ extension SentMessageListViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "SentMessageTableViewCell", for: indexPath) as! sentMessageTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SentMessageTableViewCell", for: indexPath) as! SentMessageTableViewCell
         
         cell.configure(index: indexPath.row)
 

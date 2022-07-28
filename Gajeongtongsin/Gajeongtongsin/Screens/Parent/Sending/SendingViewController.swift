@@ -17,7 +17,7 @@ class SendingViewController: BaseViewController {
     weak var delegate: SendingViewControllerDelegate?
     
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
     
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
@@ -207,16 +207,12 @@ class SendingViewController: BaseViewController {
   
     @objc func sendMessage() {
         let newMsg = Message(type: msgType(),
-                             sentDate: Date(),
+                             sentDate: "Date()",
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
-        mainTeacher.parentUserIds[0].sendingMessages.append(newMsg)
+        mainTeacher.parentUsers[0].sendingMessages.append(newMsg)
         delegate?.reloadTable()
-        
-        //작동 안한다...
-        //전송버튼 누를 때 리스트 뷰가 갱신 되어야 하는데 지금은 처음 로드한 리스트 그대로...
-        
         dismiss(animated: true)
     }
 }
