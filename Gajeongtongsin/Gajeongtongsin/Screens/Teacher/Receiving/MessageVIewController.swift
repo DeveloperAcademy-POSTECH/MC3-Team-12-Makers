@@ -12,7 +12,6 @@ typealias MessagesWithChildName = [(childName: String, message: Message)]
 class MessageViewController: BaseViewController {
     
     // MARK: - Properties
-    let messagesWithChildName = mainTeacher.parentUsers.flatMap({$0.getMessagesWithChildName()})
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -45,37 +44,28 @@ class MessageViewController: BaseViewController {
         self.navigationController?.navigationBar.tintColor = .black
         self.navigationController?.navigationBar.prefersLargeTitles = true
     }
-    
-    func chunkedMessages(_ messages: MessagesWithChildName) -> [MessagesWithChildName] {
-        var messagesByDate: [MessagesWithChildName] = []
-        var currentDateMessages: MessagesWithChildName = []
-        
-        for message in messagesWithChildName {
-            if let lastElement = currentDateMessages.last {
-                if lastElement.message.sentDate != message.message.sentDate {
-                    messagesByDate.append(currentDateMessages)
-                    currentDateMessages = []
-                }
-            }
-            currentDateMessages.append(message)
-        }
-        return messagesByDate
-        
-    }
-
 }
 
 extension MessageViewController: UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        print(sortedMessages.count)
+        sortedMessages.forEach{print($0)}
+        return sortedMessages.count
+    }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return messagesWithChildName.count
+        return sortedMessages[section].count
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sortedMessages[section][0].message.sentDate.toString()
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier, for: indexPath) as? MessageTableViewCell else { return UITableViewCell()}
-        
-        let messageInfo = messagesWithChildName[indexPath.row]
-        cell.configure(childName: messageInfo.childName, message: messageInfo.message)  
+    
+        cell.aa(section: indexPath.section, row: indexPath.row)
         
         return cell
     }
@@ -101,3 +91,19 @@ extension MessageViewController: UITableViewDelegate {
     }
 }
 
+func chunkedMessages(messages: MessagesWithChildName) -> [MessagesWithChildName] {
+    var messagesByDate: [MessagesWithChildName] = []
+    var currentDateMessages: MessagesWithChildName = []
+    
+    for message in messages {
+        if let lastElement = currentDateMessages.last {
+            if lastElement.message.sentDate != message.message.sentDate {
+                messagesByDate.append(currentDateMessages)
+                currentDateMessages = []
+            }
+        }
+        currentDateMessages.append(message)
+    }
+    return messagesByDate
+    
+}

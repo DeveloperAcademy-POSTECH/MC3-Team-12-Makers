@@ -78,6 +78,12 @@ class MessageTableViewCell: BaseTableViewCell {
 
     }
     
+    func aa(section: Int, row: Int) {
+        let aa: MessagesWithChildName = sortedMessages[section]
+        messageInfo.text = "\(aa[row].childName) / \(aa[row].message.type.rawValue) / \(aa[row].message.expectedDate)"
+        content.text = "\(aa[row].message.content)"
+    }
+    
     func changeState() {
         self.isChecked.toggle()
         
