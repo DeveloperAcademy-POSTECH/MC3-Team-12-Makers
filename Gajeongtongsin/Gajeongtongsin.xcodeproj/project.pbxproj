@@ -51,6 +51,8 @@
 		C054017F288D0520002BF33B /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054017E288D0520002BF33B /* NotificationTableViewCell.swift */; };
 		C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056F6AC288B0A770070EED5 /* MessageVIewController.swift */; };
 		C056F6AF288B0A950070EED5 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */; };
+		C0B4A4302890E7AA001DC86C /* CutomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */; };
+		C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B4A4312890E8B9001DC86C /* CutomNavigationBarDelegate.swift */; };
 		C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFBFC2885DC86009A1563 /* ParentUser.swift */; };
 		C0DFFC032885DE32009A1563 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC022885DE32009A1563 /* Message.swift */; };
 		C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC042885DF05009A1563 /* Schedule.swift */; };
@@ -103,6 +105,8 @@
 		C054017E288D0520002BF33B /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		C056F6AC288B0A770070EED5 /* MessageVIewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageVIewController.swift; sourceTree = "<group>"; };
 		C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
+		C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutomNavigationBar.swift; sourceTree = "<group>"; };
+		C0B4A4312890E8B9001DC86C /* CutomNavigationBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutomNavigationBarDelegate.swift; sourceTree = "<group>"; };
 		C0DFFBFC2885DC86009A1563 /* ParentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentUser.swift; sourceTree = "<group>"; };
 		C0DFFC022885DE32009A1563 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		C0DFFC042885DF05009A1563 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
@@ -222,6 +226,7 @@
 			isa = PBXGroup;
 			children = (
 				3595838828829C1D002B6873 /* Test.swift */,
+				C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */,
 			);
 			path = UIComponent;
 			sourceTree = "<group>";
@@ -238,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				3595838A28829C2C002B6873 /* Test2.swift */,
+				C0B4A4312890E8B9001DC86C /* CutomNavigationBarDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -526,9 +532,11 @@
 				C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */,
 				046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */,
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
+				C0B4A4302890E7AA001DC86C /* CutomNavigationBar.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
 				8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */,
+				C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */,
 				359583732882956C002B6873 /* BaseViewController.swift in Sources */,
 				04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */,
 				3595838D28829C6C002B6873 /* TestA.swift in Sources */,
