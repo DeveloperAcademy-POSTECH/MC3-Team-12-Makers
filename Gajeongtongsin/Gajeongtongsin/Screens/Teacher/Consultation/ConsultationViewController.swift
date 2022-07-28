@@ -92,14 +92,8 @@ class ConsultationViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
-        tabBarController?.tabBar.isHidden = false
     }
     
-
-    override func viewWillDisappear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = true
-    }
-
     
     //MARK: - Funcs
     
@@ -390,7 +384,8 @@ extension ConsultationViewController: UITableViewDelegate {
         calenderView.reloadData()
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        deSelectTableRow(selectedTableRow: selectedTableRow!)
+        guard let selectedRow = selectedTableRow else {return}
+        deSelectTableRow(selectedTableRow: selectedRow)
     }
     
     func deSelectTableRow(selectedTableRow: IndexPath) {
