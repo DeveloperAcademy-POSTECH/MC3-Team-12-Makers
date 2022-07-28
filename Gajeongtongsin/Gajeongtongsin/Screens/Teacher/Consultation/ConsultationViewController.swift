@@ -33,7 +33,7 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
-    private lazy var customNavigationBar: CutomNavigationBar = {
+    private var customNavigationBar: CutomNavigationBar = {
         let customNavigationBar = CutomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
         customNavigationBar.backgroundColor = .white
         customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
@@ -82,14 +82,10 @@ class ConsultationViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        calenderView.delegate = self
-        calenderView.dataSource = self
-        customNavigationBar.delegate = self
         render()
         configUI()
-        
-        tableView.dataSource = self
-        tableView.delegate = self
+        setDelegations()
+
 
         seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
     }
@@ -106,6 +102,14 @@ class ConsultationViewController: BaseViewController {
 
     
     //MARK: - Funcs
+    
+    func setDelegations() {
+        calenderView.delegate = self
+        calenderView.dataSource = self
+        customNavigationBar.delegate = self
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
 
     func acceptedData() -> [TeacherCalenderData] {
         var acceptedData: [TeacherCalenderData] = []
@@ -349,7 +353,8 @@ extension ConsultationViewController : CustomNavigationBarDelegate {
     func tapButton() {
         let vc = NotificationViewController()
         navigationController?.pushViewController(vc, animated: true)
-
+    }
+}
 
 //학부모 테이블뷰
 extension ConsultationViewController: UITableViewDataSource {

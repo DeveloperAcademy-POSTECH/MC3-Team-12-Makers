@@ -9,6 +9,7 @@ import UIKit
 
 class CutomNavigationBar: UIView {
     
+    // MARK: - Properties
     var delegate: CustomNavigationBarDelegate?
     var title: String = ""
     var imageName: String = ""
@@ -29,7 +30,7 @@ class CutomNavigationBar: UIView {
     }()
     
     
-    
+    // MARK: - Init
     init(title: String, imageName: String, imageSize: Int){
         self.title = title
         self.imageName = imageName
@@ -45,6 +46,7 @@ class CutomNavigationBar: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Funcs
     func render() {
         addSubview(titleLabel)
         titleLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 29).isActive = true
