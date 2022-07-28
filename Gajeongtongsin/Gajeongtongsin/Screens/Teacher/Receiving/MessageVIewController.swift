@@ -7,6 +7,8 @@
 
 import UIKit
 
+typealias MessagesWithChildName = [(childName: String, message: Message)]
+
 class MessageViewController: BaseViewController {
     
     // MARK: - Properties
@@ -42,6 +44,23 @@ class MessageViewController: BaseViewController {
         self.navigationItem.title = "수신내역"
         self.navigationController?.navigationBar.tintColor = .black
         self.navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    func chunkedMessages(_ messages: MessagesWithChildName) -> [MessagesWithChildName] {
+        var messagesByDate: [MessagesWithChildName] = []
+        var currentDateMessages: MessagesWithChildName = []
+        
+        for message in messagesWithChildName {
+            if let lastElement = currentDateMessages.last {
+                if lastElement.message.sentDate != message.message.sentDate {
+                    messagesByDate.append(currentDateMessages)
+                    currentDateMessages = []
+                }
+            }
+            currentDateMessages.append(message)
+        }
+        return messagesByDate
+        
     }
 
 }
@@ -82,27 +101,3 @@ extension MessageViewController: UITableViewDelegate {
     }
 }
 
-//MARK: Chunk Logic Extension
-extension TeacherUser {
-    private var sortedMessage: [Message] {
-        return parentUsers.flatMap({$0.sendingMessages}).sorted(by: {$0.sentDate < $1.sentDate})
-    }
-    
-    var messagesByDate: [[Message]] {
-        var messagesByDate: [[Message]] = []
-        var currentDateMessages: [Message] = []
-        
-        for message in sortedMessage {
-            if let lastElement = currentDateMessages.last {
-                if lastElement.sentDate != message.sentDate {
-                    messagesByDate.append(currentDateMessages)
-                    currentDateMessages = []
-                }
-            }
-            
-            currentDateMessages.append(message)
-        }
-        
-        return messagesByDate
-    }
-}
