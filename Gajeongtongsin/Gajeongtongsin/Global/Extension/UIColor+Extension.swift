@@ -15,6 +15,18 @@ extension UIColor {
     static var borderGray: UIColor {
         return UIColor(hex: "#E5E5EA")
     }
+    
+    static var emergencyAlertColor: UIColor {
+        return UIColor(hex: "#AD3E3E")
+    }
+    
+    static var normalAlertColor: UIColor {
+        return UIColor(hex: "#F0E5CF")
+    }
+    
+    static var alertInfoGary: UIColor {
+        return UIColor(hex: "#5F5E61")
+    }
    
 }
 

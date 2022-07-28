@@ -18,15 +18,13 @@ class NotificationViewController: BaseViewController {
     var normal: [Notification] {
         mainTeacher.notificationList.filter { $0.type != .emergency }
     }
-
     
-    private let noticicationViewTitle: UILabel = {
-        let title = UILabel()
-        title.translatesAutoresizingMaskIntoConstraints = false
-        title.text = "알림"
-        title.font = UIFont.systemFont(ofSize: 30, weight: .bold)
-        title.textColor = UIColor.black
-        return title
+    private let notificationLabel: UILabel = {
+       let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "알림"
+        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+        return label
     }()
     
     private let tableView: UITableView = {
@@ -41,25 +39,30 @@ class NotificationViewController: BaseViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        navigationBar()
+        view.backgroundColor = .systemBackground
     }
     
     // MARK: - Funcs
     override func render() {
+
+        view.addSubview(notificationLabel)
+        notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        notificationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        notificationLabel.widthAnchor.constraint(equalToConstant: 343).isActive = true
+        notificationLabel.heightAnchor.constraint(equalToConstant: 44).isActive = true
         
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 0).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+ 
     }
     
-    func navigationBar() {
-        self.navigationItem.title = "알림"
-        self.navigationController?.navigationBar.tintColor = .black
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
     }
-
 }
 
 extension NotificationViewController: UITableViewDataSource {
@@ -84,10 +87,10 @@ extension NotificationViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
             cell.configure(notification: emergancy[indexPath.row])
-            cell.backgroundColor = UIColor.red.withAlphaComponent(0.1)
+            cell.backgroundColor = UIColor.emergencyAlertColor
         } else {
             cell.configure(notification: normal[indexPath.row])
-            cell.backgroundColor = UIColor.blue.withAlphaComponent(0.1)
+            cell.backgroundColor = UIColor.normalAlertColor
         }
 
         return cell
