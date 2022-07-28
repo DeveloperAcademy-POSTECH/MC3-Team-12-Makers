@@ -17,16 +17,19 @@ var parent3 = ParentUser(id: "3", sendingMessages: messageList3, childName: "최
 var messageList1 = [
     Message(type: .absence, sentDate: "2022-03-01".toDate()!, expectedDate: "7월21일", content: "김유쓰배아픔", isCompleted: false),
     Message(type: .earlyLeave, sentDate: "2022-03-04".toDate()!, expectedDate: "7월22일", content: "김유쓰놀이공원", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-19".toDate()!, expectedDate: "7월28일", content: "김유쓰할머니댁", isCompleted: false)
 ]
 
 var messageList2 = [
     Message(type: .absence, sentDate: "2022-03-04".toDate()!, expectedDate: "7월23일", content: "부니카제주도", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: "2022-03-12".toDate()!, expectedDate: "7월24일", content: "부니카서울", isCompleted: false)
+    Message(type: .earlyLeave, sentDate: "2022-03-07".toDate()!, expectedDate: "7월24일", content: "부니카서울", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-15".toDate()!, expectedDate: "7월24일", content: "부니카애플아카데미", isCompleted: false)
 ]
 
 var messageList3 = [
     Message(type: .absence, sentDate: "2022-03-01".toDate()!, expectedDate: "7월25일", content: "최히로소개팅", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: "2022-03-07".toDate()!, expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false)
+    Message(type: .earlyLeave, sentDate: "2022-03-07".toDate()!, expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-15".toDate()!, expectedDate: "7월26일", content: "최히로번개만남", isCompleted: false)
 ]
 
 var scheduleList1 = [
@@ -71,4 +74,3 @@ let noti8 = Notification(id: "2", postId: "22", type: .reservation, childName: "
 let noti9 = Notification(id: "3", postId: "33", type: .message, childName: "최히로", content: "99")
 let noti10 = Notification(id: "3", postId: "33", type: .message, childName: "최히로", content: "1010")
 let noti11 = Notification(id: "3", postId: "33", type: .reservation, childName: "최히로", content: "1111")
-

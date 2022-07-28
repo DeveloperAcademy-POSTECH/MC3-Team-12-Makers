@@ -49,8 +49,7 @@ class MessageViewController: BaseViewController {
 extension MessageViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print(sortedMessages.count)
-        sortedMessages.forEach{print($0)}
+        print("섹션갯수\(sortedMessages.count)")
         return sortedMessages.count
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -58,14 +57,14 @@ extension MessageViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sortedMessages[section][0].message.sentDate.toString()
+        return "\(sortedMessages[section][0].message.sentDate.toString())에 수신하신 쪽지입니다"
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier, for: indexPath) as? MessageTableViewCell else { return UITableViewCell()}
     
-        cell.aa(section: indexPath.section, row: indexPath.row)
+        cell.configure(section: indexPath.section, row: indexPath.row)
         
         return cell
     }
@@ -104,6 +103,7 @@ func chunkedMessages(messages: MessagesWithChildName) -> [MessagesWithChildName]
         }
         currentDateMessages.append(message)
     }
+    messagesByDate.append(currentDateMessages)  //마지막 리스트도 추가하고 리턴해야함
     return messagesByDate
     
 }

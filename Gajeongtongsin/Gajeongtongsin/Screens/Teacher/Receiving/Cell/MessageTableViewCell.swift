@@ -72,13 +72,8 @@ class MessageTableViewCell: BaseTableViewCell {
 
     }
 
-    func configure(childName: String, message: Message) {
-        messageInfo.text = "\(childName) / \(message.type.rawValue) / \(message.expectedDate)"
-        content.text = "\(message.content)"
-
-    }
     
-    func aa(section: Int, row: Int) {
+    func configure(section: Int, row: Int) {
         let aa: MessagesWithChildName = sortedMessages[section]
         messageInfo.text = "\(aa[row].childName) / \(aa[row].message.type.rawValue) / \(aa[row].message.expectedDate)"
         content.text = "\(aa[row].message.content)"
