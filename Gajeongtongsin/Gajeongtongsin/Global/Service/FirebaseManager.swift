@@ -23,7 +23,7 @@ final class FirebaseManager {
     
     // 파이어베이스업로드 함수
     
-    /// 초기 교사 정보 업로드하기
+    /// 초기 교사 정보 업로드하기 for 선생님
     func initializeTeacher() {
         guard let teacherUid = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
         
@@ -34,7 +34,7 @@ final class FirebaseManager {
             .setValue(data)
     }
     
-    /// 초기 학부모 정보 업로드하기
+    /// 초기 학부모 정보 업로드하기 for 학부모
     func initializeParent() {
         guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
         guard let childName = UserDefaults.standard.string(forKey: "ChildName") else {return}
@@ -48,7 +48,7 @@ final class FirebaseManager {
             .setValue(data)
     }
     
-    /// 학부모 예약 업로드
+    /// 학부모 예약 업로드 for 학부모
     func uploadReservations(schedule: Schedule) {
         guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
         guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
@@ -72,7 +72,7 @@ final class FirebaseManager {
             scheduleDB.setValue(data)
     }
     
-    /// 학부모 메시지 업로드하기
+    /// 학부모 메시지 업로드하기 for 학부모
     func uploadMessage(message: Message){
         guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
         guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
@@ -90,7 +90,7 @@ final class FirebaseManager {
         
     }
     
-    /// 알림 업로드하기
+    /// 알림 업로드하기 for 학부모
     func uploadNotification(notification: Notification){
         guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
         
@@ -123,18 +123,228 @@ final class FirebaseManager {
     
     // 파이어베이스가져오기 함수
     
-    /// 예약정보들 가져오기
-    func fetchReservations() {
+    
+    
+    
+    /// 학부모 여러명의 예약정보들 가져오기 for 선생님
+    func fetchParentsReservations(completion: @escaping (([Schedule]) -> Void)) {
         
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        
+        var allSchedules: [Schedule] = []
+        
+        db.child("TeacherUsers/\(teacherUserId)/parentUsers")
+            .observe(.value) { snapshot in
+                let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
+                print(parents)
+                for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
+                    
+                    let schedules = parent["schedules"] as! [String: [String:Any]] // [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                    print(schedules)
+                    for key in schedules.keys {
+
+               do {
+                let scheduleData = try JSONSerialization.data(withJSONObject: schedules[key]!, options: [])
+                let decoder = JSONDecoder()
+                let schedule = try decoder.decode(Schedule.self, from: scheduleData)
+                   allSchedules.append(schedule)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context) {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
+            }
+                }
+                }
+               // DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    completion(allSchedules)
+               // }
+        }
     }
-    /// 학부모,선생님 메시지들 가져오기
-    func fetchMessages(){
+    /// 학부모 1명의 예약정보 가져오기 for 학부모
+    func fetchParentReservations(completion: @escaping (([Schedule]) -> Void)) {
+        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
+        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
         
+        var scheduleList: [Schedule] = []
+        db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
+            .observe(.value) { snapshot in
+                
+                guard let dic = snapshot.value as? NSDictionary else { print("모야") ;return }
+                
+                
+                let schedules = dic["schedules"] as! [String:[String:Any]]   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+
+                for scheduleVal in schedules.values {
+                  
+                    do {
+                     let scheduleData = try JSONSerialization.data(withJSONObject: scheduleVal, options: [])
+                     let decoder = JSONDecoder()
+                     let schedule = try decoder.decode(Schedule.self, from: scheduleData)
+                        
+                        scheduleList.append(schedule)
+                    } catch let DecodingError.dataCorrupted(context) {
+                     print(context)
+                 } catch let DecodingError.keyNotFound(key, context) {
+                     print("Key '\(key)' not found:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch let DecodingError.valueNotFound(value, context) {
+                     print("Value '\(value)' not found:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch let DecodingError.typeMismatch(type, context) {
+                     print("Type '\(type)' mismatch:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch {
+                     print("error: ", error)
+                 }
+                     }
+                }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            completion(scheduleList)
+            print(scheduleList)
+        }
+            
+    
     }
     
-    /// 알림들 가져오기
-    func fetchNotifications(){
+    
+    
+    
+    /// 학부모 여러명의 메시지들 가져오기 for 선생님
+    func fetchParentsMessages(completion: @escaping (([Message]) -> Void)) {
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
         
+        var allMessages: [Message] = []
+        
+        db.child("TeacherUsers/\(teacherUserId)/parentUsers")
+            .observe(.value) { snapshot in
+                let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
+
+                for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
+                    
+                    let sendimgMessasges = parent["sendingMessages"] as! [String: [String:Any]] // [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                for key in sendimgMessasges.keys {
+
+               do {
+                let messageData = try JSONSerialization.data(withJSONObject: sendimgMessasges[key]!, options: [])
+                let decoder = JSONDecoder()
+                let message = try decoder.decode(Message.self, from: messageData)
+                   allMessages.append(message)
+            } catch let DecodingError.dataCorrupted(context) {
+                print(context)
+            } catch let DecodingError.keyNotFound(key, context) {
+                print("Key '\(key)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.valueNotFound(value, context) {
+                print("Value '\(value)' not found:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch let DecodingError.typeMismatch(type, context) {
+                print("Type '\(type)' mismatch:", context.debugDescription)
+                print("codingPath:", context.codingPath)
+            } catch {
+                print("error: ", error)
+            }
+                }
+                }
+               // DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    completion(allMessages)
+               // }
+        }
+    }
+    /// 학부모 1명의 메시지들 가져오기 for 학부모
+    func fetchParentMessages(completion: @escaping (([Message]) -> Void)) {
+        
+        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
+        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
+        
+        var messageList: [Message] = []
+        db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
+            .observe(.value) { snapshot in
+                
+                guard let dic = snapshot.value as? NSDictionary else { return }
+                
+                let messages = dic["sendingMessages"] as! [String:[String:Any]]   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+
+                for messageVal in messages.values {
+                  
+                    do {
+                     let messageData = try JSONSerialization.data(withJSONObject: messageVal, options: [])
+                     let decoder = JSONDecoder()
+                     let message = try decoder.decode(Message.self, from: messageData)
+                        messageList.append(message)
+                 } catch let DecodingError.dataCorrupted(context) {
+                     print(context)
+                 } catch let DecodingError.keyNotFound(key, context) {
+                     print("Key '\(key)' not found:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch let DecodingError.valueNotFound(value, context) {
+                     print("Value '\(value)' not found:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch let DecodingError.typeMismatch(type, context) {
+                     print("Type '\(type)' mismatch:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch {
+                     print("error: ", error)
+                 }
+                     }
+                }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            completion(messageList)
+            print(messageList)
+        }
+            
+            }
+    
+    /// 알림들 가져오기 for 선생님
+    func fetchNotifications(completion: @escaping ([Notification])->Void)   {
+        
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        var notificationsList: [Notification] = []
+          db.child("Notifications/\(teacherUserId)/notificationList")
+            .observe(.value) { snapshot in
+
+                let notifications = snapshot.value as! [String: [String:Any]]  // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+
+
+                for notificationVal in notifications.values {
+                    
+                    do {
+                     let notificationData = try JSONSerialization.data(withJSONObject: notificationVal, options: [])
+                     let decoder = JSONDecoder()
+                     let notification = try decoder.decode(Notification.self, from: notificationData)
+                        notificationsList.append(notification)
+                 } catch let DecodingError.dataCorrupted(context) {
+                     print(context)
+                 } catch let DecodingError.keyNotFound(key, context) {
+                     print("Key '\(key)' not found:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch let DecodingError.valueNotFound(value, context) {
+                     print("Value '\(value)' not found:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch let DecodingError.typeMismatch(type, context) {
+                     print("Type '\(type)' mismatch:", context.debugDescription)
+                     print("codingPath:", context.codingPath)
+                 } catch {
+                     print("error: ", error)
+                 }
+                }
+            }
+        
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        completion(notificationsList)
+        print(notificationsList)
+        }
     }
     
 }
