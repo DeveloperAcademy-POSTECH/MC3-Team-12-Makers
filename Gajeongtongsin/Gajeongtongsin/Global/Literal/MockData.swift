@@ -29,13 +29,18 @@ var messageList3 = [
     Message(type: .earlyLeave, sentDate: Date(), expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false)
 ]
 
-var scheduleList1 = [
+var scheduleList1: [Schedule] = [
     Schedule(reservedDate: "8월1일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월27일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월27일", startTime: "14시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월27일", startTime: "15시00분", isReserved: false)],
-             content: "김유쓰영어성적문의")
+                ScheduleInfo(consultingDate: "7월1일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월2일", startTime: "14시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월3일", startTime: "15시00분", isReserved: false)],
+             content: "김유쓰영 어성 적문 의김유쓰 영어성적문의 김유쓰영어 성적문 의김유쓰영 어성적 문의 김유 쓰 영어성적문 의김유쓰영 어성 적문의김유쓰영어성적 문의김유쓰영 어성적 문의김유 쓰영어성적문의김유쓰 영어성적문의김유쓰영어성적문의김유쓰영어성적 문의김유쓰영 어성적 문의김유 쓰영어성적문의김유쓰 영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문 의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어영어성적 문의김유쓰영 어성적 문의김유 쓰영어성적문의김유쓰 영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문 의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어영어성 적문의김유쓰영어성적문 의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의"),
+    Schedule(reservedDate: "8월2일",
+             scheduleList: [
+                ScheduleInfo(consultingDate: "7월4일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월5일", startTime: "14시30분", isReserved: false)],
+             content: "김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의김유쓰수학성적문의")
 ]
 
 var scheduleList2 = [

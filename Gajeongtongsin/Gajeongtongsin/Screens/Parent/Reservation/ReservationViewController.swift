@@ -8,7 +8,6 @@
 import UIKit
 
 class ReservationViewController: BaseViewController {
-
     //MARK: - Properties
 
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
@@ -25,10 +24,10 @@ class ReservationViewController: BaseViewController {
         return label
     }()
 
-    private let textLabel: UILabel = {
+    private let noScheduleLabel: UILabel = {
         let label = UILabel()
         label.text = "예정된 상담이 없어요 :)"
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -46,7 +45,7 @@ class ReservationViewController: BaseViewController {
     private let reservedScheduleList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.identifier)
-        table.rowHeight = 100
+        table.rowHeight = 60
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
     }()
@@ -56,6 +55,7 @@ class ReservationViewController: BaseViewController {
         super.viewDidLoad()
         reservedScheduleList.delegate = self
         reservedScheduleList.dataSource = self
+        navigationController?.navigationBar.topItem?.title = ""
     }
 
     //MARK: - Funcs
@@ -64,22 +64,35 @@ class ReservationViewController: BaseViewController {
         present(vc, animated: true)
     }
     
-    
     override func render() {
         view.addSubview(reservedScheduleList)
         reservedScheduleList.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
         reservedScheduleList.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         reservedScheduleList.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         reservedScheduleList.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
+        
+        view.addSubview(noScheduleLabel)
+        noScheduleLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        noScheduleLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
     }
 
     override func configUI() {
         view.backgroundColor = .primaryBackground
-        
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
-        
+        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
+        scheduleToggle()
         calendarBtnAct()
+    }
+    
+    func scheduleToggle() {
+        if currentParent.schedules.isEmpty {
+            reservedScheduleList.isHidden = true
+            noScheduleLabel.isHidden = false
+        } else {
+            reservedScheduleList.isHidden = false
+            noScheduleLabel.isHidden = true
+        }
     }
     
     func calendarBtnAct() {
@@ -107,31 +120,33 @@ class ReservationViewController: BaseViewController {
 }
 
 
-
 //MARK: - Extensions
 
 extension ReservationViewController: UITableViewDelegate {
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = ReservationDetailViewController()
+        vc.modalTransitionStyle = .coverVertical
+        vc.modalPresentationStyle = .popover
+        vc.configure(index: indexPath)
+        navigationController?.pushViewController(vc, animated: true)
+//        present(vc, animated: true)
+    }
 }
 
 extension ReservationViewController: UITableViewDataSource {
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return currentParent.schedules.count
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "\(currentParent.schedules[section].reservedDate)에 신청하신 예약"
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentParent.schedules[section].scheduleList.count
+        if currentParent.schedules.isEmpty {
+            
+        } else {
+            scheduleToggle()
+        }
+        return currentParent.schedules.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleTableViewCell", for: indexPath) as! ScheduleTableViewCell
-        
-        cell.configure(section: indexPath.section, row: indexPath.row)
-
+        cell.configure(index: indexPath)
         return cell
     }
 }

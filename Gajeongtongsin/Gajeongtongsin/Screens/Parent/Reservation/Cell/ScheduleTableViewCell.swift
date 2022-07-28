@@ -18,7 +18,7 @@ class ScheduleTableViewCell: BaseTableViewCell {
     
     private let scheduleInfo: UILabel = {
         let scheduleInfo = UILabel()
-        scheduleInfo.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        scheduleInfo.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         scheduleInfo.textColor = UIColor.black
         scheduleInfo.translatesAutoresizingMaskIntoConstraints = false
         return scheduleInfo
@@ -32,16 +32,20 @@ class ScheduleTableViewCell: BaseTableViewCell {
         return content
     }()
     
-    private let checkIndicator: UIImageView = {
-        let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private let checkIndicator: UILabel = {
+        let label = UILabel()
+        label.text = "대기중"
+        label.backgroundColor = .systemBlue
+        label.frame.size = CGSize(width: 50, height: 20)
+        label.layer.cornerRadius = 10
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
     }()
     
     //MARK: - Funcs
     override func render() {
         contentView.addSubview(scheduleInfo)
-        scheduleInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28).isActive = true
+        scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
 
 //        contentView.addSubview(content)
@@ -50,28 +54,24 @@ class ScheduleTableViewCell: BaseTableViewCell {
 
         contentView.addSubview(checkIndicator)
         checkIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
-        checkIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40).isActive = true
+        checkIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
     }
     
     override func configUI() {
-        checkIndicator.image = UIImage(systemName: "questionmark.circle")
+
     }
     
-    func configure(section: Int, row: Int) {
-        
-        
-        var appointment: Schedule = currentParent.schedules[section]
+    func configure(index: IndexPath) {
 
-        scheduleInfo.text = appointment.scheduleList[row].consultingDate + " " + appointment.scheduleList[row].startTime + " 상담"
-
-        //예약내역 view 에서 사유를 띄울 시에 content 속성 사용 예정
-        content.text = appointment.content
+        var appointment: Schedule = currentParent.schedules[index.row]
         
-        //약속시간 중 첫 번째가 교사에 의해 확정되었다고 가정할 때 indicator 변화 확인하기 위한 시험 코드 (추후 삭제)
-        appointment.scheduleList[0].isReserved = true
+        scheduleInfo.text = "예약 \(index.row + 1)"
+        
+//        //약속시간 중 첫 번째가 교사에 의해 확정되었다고 가정할 때 indicator 변화 확인하기 위한 시험 코드 (추후 삭제)
+//        appointment.scheduleList[0].isReserved = true
         
         //인디케이터 디자인 확정 후 변경
-        guard appointment.scheduleList[row].isReserved == true else {return}
-        checkIndicator.image = UIImage(systemName: "exclamationmark.circle")
+        guard appointment.scheduleList[index.row].isReserved == true else {return}
+        checkIndicator.text = "확정"
     }
 }
