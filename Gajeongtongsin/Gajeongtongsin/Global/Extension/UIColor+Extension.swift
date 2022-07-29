@@ -9,41 +9,41 @@ import UIKit
 
 extension UIColor {
     
-    static var primaryBackground: UIColor {
-        return UIColor(hex: "#F5F5F5")
+    static var Background: UIColor {
+        .load(name: "Background")
     }
-    static var borderGray: UIColor {
-        return UIColor(hex: "#E5E5EA")
+    static var Action: UIColor {
+        .load(name: "Action")
+    }
+    static var Urgent: UIColor {
+        .load(name: "Urgent")
+    }
+    static var Confirm: UIColor {
+        .load(name: "Confirm")
+    }
+    static var LightLine: UIColor {
+        .load(name: "LightLine")
+    }
+    static var DarkLine: UIColor {
+        .load(name: "DarkLine")
+    }
+    static var LightText: UIColor {
+        .load(name: "LightText")
+    }
+    static var DarkText: UIColor {
+        .load(name: "DarkText")
     }
     
-    static var emergencyAlertColor: UIColor {
-        return UIColor(hex: "#AD3E3E")
-    }
-    
-    static var normalAlertColor: UIColor {
-        return UIColor(hex: "#F0E5CF")
-    }
-    
-    static var alertInfoGary: UIColor {
-        return UIColor(hex: "#5F5E61")
-    }
-   
+
 }
 
+
 extension UIColor {
-    convenience init(hex: String, alpha: CGFloat = 1.0) {
-        var hexFormatted: String = hex.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines).uppercased()
-
-        if hexFormatted.hasPrefix("#") {
-            hexFormatted = String(hexFormatted.dropFirst())
+    static func load(name: String) -> UIColor {
+        guard let color = UIColor(named: name) else {
+            assert(false, "\(name) 컬러 로드 실패")
+            return UIColor()
         }
-
-        assert(hexFormatted.count == 6, "Invalid hex code used.")
-        var rgbValue: UInt64 = 0
-        Scanner(string: hexFormatted).scanHexInt64(&rgbValue)
-
-        self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0, alpha: alpha)
+        return color
     }
 }

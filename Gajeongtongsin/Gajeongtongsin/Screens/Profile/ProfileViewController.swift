@@ -31,7 +31,7 @@ class ProfileViewController: BaseViewController {
     }
     
     override func configUI() {
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = .Background
     }
     
     

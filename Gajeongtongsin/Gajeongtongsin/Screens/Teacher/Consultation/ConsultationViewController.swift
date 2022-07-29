@@ -288,7 +288,7 @@ extension ConsultationViewController: UICollectionViewDelegate{
             mainTeacher.parentUsers[parentId!].schedules[0].scheduleList = [mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[selectedIndex!]]
             mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[0].isReserved = true
             
-            calenderData[parentId!].cellColor = .borderGray // 예약확정된 셀은 연회색
+            calenderData[parentId!].cellColor = .LightLine // 예약확정된 셀은 연회색
             clickedCell = nil // 선택해제
 
             //onTapButton 함수 실행 -> 수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
