@@ -41,7 +41,7 @@ class MessageTableViewCell: BaseTableViewCell {
     private let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
-        messageInfo.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        messageInfo.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         messageInfo.textColor = UIColor.black
         return messageInfo
     }()
@@ -49,7 +49,7 @@ class MessageTableViewCell: BaseTableViewCell {
     private let content: UILabel = {
        let content = UILabel()
         content.translatesAutoresizingMaskIntoConstraints = false
-        content.font = UIFont.systemFont(ofSize: 17, weight: .medium)
+        content.font = UIFont.systemFont(ofSize: 17, weight: .regular)
         content.textColor = UIColor.black
         return content
     }()
