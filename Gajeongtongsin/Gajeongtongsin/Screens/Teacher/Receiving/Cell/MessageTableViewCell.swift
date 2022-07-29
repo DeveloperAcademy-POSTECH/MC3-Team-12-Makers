@@ -10,28 +10,30 @@ import UIKit
 class MessageTableViewCell: BaseTableViewCell {
     
     // MARK: - Properties
-    private var isChecked: Bool = false {
+    var isChecked: Bool = false {
         didSet {
-            checkBox.tintColor = isChecked ? .red : .gray
+            if isChecked == true {
+                checkBox.backgroundColor = UIColor(hex: "#F0E5CF")
+                stateLabel.text = "처리완료"
+                stateLabel.textColor = UIColor(hex: "#666569")
+            }
         }
     }
 
     static let identifier = "ProfileTableViewCell"
     
     private let checkBox: UIImageView = {
-        let imageView = UIImageView()
-        imageView.frame = CGRect(x: 274, y: 18, width: 100, height: 30)
-        imageView.backgroundColor = .red
-        imageView.layer.cornerRadius = 10
-        return imageView
+        let checkBox = UIImageView()
+        checkBox.frame = CGRect(x: 274, y: 18, width: 100, height: 30)
+        checkBox.backgroundColor = UIColor(hex: "#415D95")
+        checkBox.layer.cornerRadius = 10
+        return checkBox
     }()
     
     private let stateLabel: UILabel = {
         let stateLabel = UILabel()
         stateLabel.translatesAutoresizingMaskIntoConstraints = false
-        stateLabel.text = "처리하기"
         stateLabel.textAlignment = .center
-        stateLabel.textColor = .white
         stateLabel.font = UIFont.systemFont(ofSize: 16)
         return stateLabel
     }()
@@ -39,7 +41,7 @@ class MessageTableViewCell: BaseTableViewCell {
     private let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
-        messageInfo.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        messageInfo.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         messageInfo.textColor = UIColor.black
         return messageInfo
     }()
@@ -47,7 +49,7 @@ class MessageTableViewCell: BaseTableViewCell {
     private let content: UILabel = {
        let content = UILabel()
         content.translatesAutoresizingMaskIntoConstraints = false
-        content.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
+        content.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         content.textColor = UIColor.black
         return content
     }()
@@ -64,7 +66,7 @@ class MessageTableViewCell: BaseTableViewCell {
     // MARK: - Funcs
     override func render() {
         contentView.addSubview(messageInfo)
-        messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28).isActive = true
+        messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 9).isActive = true
         messageInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         
         contentView.addSubview(content)
@@ -76,26 +78,23 @@ class MessageTableViewCell: BaseTableViewCell {
         stateLabel.centerYAnchor.constraint(equalTo: checkBox.centerYAnchor).isActive = true
         
         contentView.addSubview(checkBox)
-//        checkBox.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18).isActive = true
-//        checkBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 274).isActive = true
-
         
     }
     
     override func configUI() {
-        checkBox.tintColor = .gray
-
+        stateLabel.text = "처리하기"
+        stateLabel.textColor = .white
     }
 
     
-    func configure(section: Int, row: Int) {
-        let aa: MessagesWithChildName = sortedMessages[section]
-        messageInfo.text = "\(aa[row].childName) / \(aa[row].message.type.rawValue) / \(aa[row].message.expectedDate)"
-        content.text = "\(aa[row].message.content)"
+    func configure(indexPath: IndexPath) {
+        let message: MessagesWithChildName = sortedMessages[indexPath.section]
+        messageInfo.text = "\(message[indexPath.row].message.expectedDate) \(message[indexPath.row].message.type.rawValue) \(message[indexPath.row].childName)"
+        content.text = "\(message[indexPath.row].message.content)"
     }
     
     func changeState() {
-        self.isChecked.toggle()
+        self.isChecked = true
         
     }
 }

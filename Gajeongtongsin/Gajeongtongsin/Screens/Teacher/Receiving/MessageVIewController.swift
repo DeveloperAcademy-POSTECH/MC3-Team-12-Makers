@@ -64,7 +64,7 @@ extension MessageViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier, for: indexPath) as? MessageTableViewCell else { return UITableViewCell()}
     
-        cell.configure(section: indexPath.section, row: indexPath.row)
+        cell.configure(indexPath: indexPath)
         
         return cell
     }
@@ -78,6 +78,7 @@ extension MessageViewController: UITableViewDataSource {
 extension MessageViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let clickedCell = tableView.cellForRow(at: indexPath) as? MessageTableViewCell
         let alert = UIAlertController(title: "처리완료하시겠습니까?", message: "확인을누르면 블라블라", preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
         let okayAction = UIAlertAction(title: "확인", style: .default) { _ in
@@ -86,7 +87,10 @@ extension MessageViewController: UITableViewDelegate {
         }
         alert.addAction(cancelAction)
         alert.addAction(okayAction)
-        present(alert, animated: true, completion: nil)
+        
+        if clickedCell?.isChecked == false {
+            present(alert, animated: true, completion: nil)
+        }
     }
 }
 
