@@ -20,8 +20,20 @@ class MessageTableViewCell: BaseTableViewCell {
     
     private let checkBox: UIImageView = {
         let imageView = UIImageView()
-        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.frame = CGRect(x: 274, y: 18, width: 100, height: 30)
+        imageView.backgroundColor = .red
+        imageView.layer.cornerRadius = 10
         return imageView
+    }()
+    
+    private let stateLabel: UILabel = {
+        let stateLabel = UILabel()
+        stateLabel.translatesAutoresizingMaskIntoConstraints = false
+        stateLabel.text = "처리하기"
+        stateLabel.textAlignment = .center
+        stateLabel.textColor = .white
+        stateLabel.font = UIFont.systemFont(ofSize: 16)
+        return stateLabel
     }()
     
     private let messageInfo: UILabel = {
@@ -59,15 +71,18 @@ class MessageTableViewCell: BaseTableViewCell {
         content.topAnchor.constraint(equalTo: messageInfo.bottomAnchor, constant: 10).isActive = true
         content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         
+        checkBox.addSubview(stateLabel)
+        stateLabel.centerXAnchor.constraint(equalTo: checkBox.centerXAnchor).isActive = true
+        stateLabel.centerYAnchor.constraint(equalTo: checkBox.centerYAnchor).isActive = true
+        
         contentView.addSubview(checkBox)
-        checkBox.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
-        checkBox.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40).isActive = true
+//        checkBox.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 18).isActive = true
+//        checkBox.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 274).isActive = true
 
         
     }
     
     override func configUI() {
-        checkBox.image = UIImage(systemName: "flame.fill")
         checkBox.tintColor = .gray
 
     }

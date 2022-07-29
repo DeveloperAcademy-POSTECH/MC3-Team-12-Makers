@@ -207,7 +207,7 @@ class SendingViewController: BaseViewController {
   
     @objc func sendMessage() {
         let newMsg = Message(type: msgType(),
-                             sentDate: "2022-03-21".toDate()!,
+                             sentDate: "2022-03-21",
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)

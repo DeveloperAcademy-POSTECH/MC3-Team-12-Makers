@@ -57,7 +57,7 @@ extension MessageViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "\(sortedMessages[section][0].message.sentDate.toString())에 수신하신 쪽지입니다"
+        return "\(sortedMessages[section][0].message.sentDate)에 수신하신 쪽지입니다"
     }
     
     
@@ -70,7 +70,7 @@ extension MessageViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100
+        return 69
     }
 }
 
