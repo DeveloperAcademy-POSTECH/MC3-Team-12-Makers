@@ -46,6 +46,8 @@
 		8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */; };
 		8C40E867288B7BC100DECACA /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C40E866288B7BC100DECACA /* SentMessageTableViewCell.swift */; };
 		8CBD1521288F900500510610 /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD1520288F900500510610 /* ScheduleTableViewCell.swift */; };
+		C01FA466289406B300A1E4DB /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FA465289406B300A1E4DB /* Date+Extension.swift */; };
+		C01FA468289406C700A1E4DB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FA467289406C700A1E4DB /* String+Extension.swift */; };
 		C04B547F2887C6250097EE88 /* MockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C04B547E2887C6250097EE88 /* MockData.swift */; };
 		C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054017C288D04F6002BF33B /* NotificationViewController.swift */; };
 		C054017F288D0520002BF33B /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054017E288D0520002BF33B /* NotificationTableViewCell.swift */; };
@@ -100,6 +102,8 @@
 		8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageListViewController.swift; sourceTree = "<group>"; };
 		8C40E866288B7BC100DECACA /* SentMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageTableViewCell.swift; sourceTree = "<group>"; };
 		8CBD1520288F900500510610 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
+		C01FA465289406B300A1E4DB /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
+		C01FA467289406C700A1E4DB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		C04B547E2887C6250097EE88 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		C054017C288D04F6002BF33B /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		C054017E288D0520002BF33B /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
@@ -235,6 +239,8 @@
 			isa = PBXGroup;
 			children = (
 				35958382288299AE002B6873 /* UIColor+Extension.swift */,
+				C01FA465289406B300A1E4DB /* Date+Extension.swift */,
+				C01FA467289406C700A1E4DB /* String+Extension.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -534,6 +540,7 @@
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
 				C0B4A4302890E7AA001DC86C /* CutomNavigationBar.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
+				C01FA468289406C700A1E4DB /* String+Extension.swift in Sources */,
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
 				8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */,
 				C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */,
@@ -563,6 +570,7 @@
 				35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */,
 				C0DFFC032885DE32009A1563 /* Message.swift in Sources */,
 				3595837D288297E7002B6873 /* ReceivingViewController.swift in Sources */,
+				C01FA466289406B300A1E4DB /* Date+Extension.swift in Sources */,
 				359583A82882A6F7002B6873 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

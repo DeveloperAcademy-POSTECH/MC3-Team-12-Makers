@@ -47,23 +47,3 @@ extension UIColor {
             blue: CGFloat(rgbValue & 0x0000FF) / 255.0, alpha: alpha)
     }
 }
-
-extension String {
-    func toDate() -> Date? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        dateFormatter.timeZone = TimeZone(identifier: "ko_KR")
-
-        guard let date = dateFormatter.date(from: self) else {return nil}
-        return date
-    }
-}
-
-extension Date {
-    func toString() -> String {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MM월dd일"
-        dateFormatter.timeZone = TimeZone(identifier: "ko_KR")
-        return dateFormatter.string(from: self)
-    }
-}
