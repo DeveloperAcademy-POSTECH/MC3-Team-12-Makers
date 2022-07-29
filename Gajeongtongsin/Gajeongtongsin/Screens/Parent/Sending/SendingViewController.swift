@@ -162,7 +162,7 @@ class SendingViewController: BaseViewController {
     }
 
     override func configUI() {
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = .Background
         
         //Message Type 버튼과 선택에 따른 컴포넌트 노출 차이
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
