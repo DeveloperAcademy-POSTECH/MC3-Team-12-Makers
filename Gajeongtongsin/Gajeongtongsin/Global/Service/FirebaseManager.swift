@@ -158,8 +158,6 @@ final class FirebaseManager {
                             print("error: ", error)
                         }
                     }
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
                 }
             }
@@ -201,12 +199,8 @@ final class FirebaseManager {
                         print("error: ", error)
                     }
                 }
+                completion(scheduleList)
             }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completion(scheduleList)
-        }
-        
         
     }
     
@@ -248,8 +242,6 @@ final class FirebaseManager {
                             print("error: ", error)
                         }
                     }
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allMessages)
                 }
             }
@@ -290,12 +282,8 @@ final class FirebaseManager {
                         print("error: ", error)
                     }
                 }
+                completion(messageList)
             }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completion(messageList)
-        }
-        
     }
     
     /// 알림들 가져오기 for 선생님
@@ -331,11 +319,9 @@ final class FirebaseManager {
                         print("error: ", error)
                     }
                 }
+                completion(notificationsList)
             }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completion(notificationsList)
-        }
+
     }
     
 }
