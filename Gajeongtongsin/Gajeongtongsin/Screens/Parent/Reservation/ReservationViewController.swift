@@ -54,6 +54,7 @@ class ReservationViewController: BaseViewController {
         super.viewDidLoad()
         reservedScheduleList.delegate = self
         reservedScheduleList.dataSource = self
+        
         navigationController?.navigationBar.topItem?.title = ""
     }
 
@@ -116,7 +117,6 @@ extension ReservationViewController: UITableViewDelegate {
         let vc = ReservationDetailViewController()
         vc.configure(index: indexPath)
         navigationController?.pushViewController(vc, animated: true)
-//        present(vc, animated: true)
     }
 }
 

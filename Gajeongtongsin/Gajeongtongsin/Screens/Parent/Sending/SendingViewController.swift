@@ -100,7 +100,7 @@ class SendingViewController: BaseViewController {
     private let textFieldForReason: UITextField = {
         let textF = UITextField()
         textF.isHidden = true
-        textF.placeholder = "기본텍스트입니다"
+        textF.placeholder = "결석사유를 입력해주세요 (20자)"
         textF.textColor = .black
         textF.font = .systemFont(ofSize: 17, weight: .medium)
         textF.backgroundColor = .secondarySystemFill
@@ -113,7 +113,7 @@ class SendingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldForReason.delegate = self
-        sendButton.addTarget(self, action: #selector(sendMessage), for: .touchUpInside)
+        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
         navigationBar()
     }
     
@@ -197,15 +197,25 @@ class SendingViewController: BaseViewController {
     
     func navigationBar() {
         self.navigationItem.title = "문자작성"
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(systemItem: .cancel)
     }
     
     func msgType() -> MessageType {
         let msgType = messageTypeButton.currentTitle == "결석" ? MessageType.absence : MessageType.earlyLeave
         return msgType
     }
+    
+    @objc func sendAlert() {
+        let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
+            self.sendMessage()
+        }
+        alert.addAction(cancelAction)
+        alert.addAction(okayAction)
+        self.present(alert, animated: true)
+    }
   
-    @objc func sendMessage() {
+    func sendMessage() {
         let newMsg = Message(type: msgType(),
                              sentDate: "Date()",
                              expectedDate: "\(datePicker.date)",
@@ -216,7 +226,7 @@ class SendingViewController: BaseViewController {
         
         mainTeacher.parentUsers[0].sendingMessages.append(newMsg)
         delegate?.reloadTable()
-        dismiss(animated: true)
+        navigationController?.popViewController(animated: true)
     }
 }
 
