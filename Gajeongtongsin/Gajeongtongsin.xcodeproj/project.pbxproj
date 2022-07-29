@@ -60,6 +60,7 @@
 		DDD8A79328936B98002542C5 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A79228936B98002542C5 /* PrimaryButton.swift */; };
 		DDD8A79528936BA3002542C5 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A79428936BA2002542C5 /* SecondaryButton.swift */; };
 		DDD8A79728936BCC002542C5 /* CardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A79628936BCC002542C5 /* CardCollectionViewCell.swift */; };
+		DDD8A7A328941BCE002542C5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A7A228941BCE002542C5 /* ViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -116,6 +117,7 @@
 		DDD8A79228936B98002542C5 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
 		DDD8A79428936BA2002542C5 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
 		DDD8A79628936BCC002542C5 /* CardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionViewCell.swift; sourceTree = "<group>"; };
+		DDD8A7A228941BCE002542C5 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -229,6 +231,7 @@
 		35171D1728828EEA0059F297 /* UIComponent */ = {
 			isa = PBXGroup;
 			children = (
+				DDD8A7A228941BCE002542C5 /* ViewController.swift */,
 				C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */,
 				DDD8A79228936B98002542C5 /* PrimaryButton.swift */,
 				DDD8A79428936BA2002542C5 /* SecondaryButton.swift */,
@@ -528,6 +531,7 @@
 				35958377288297A7002B6873 /* ConsultationViewController.swift in Sources */,
 				8CBD1521288F900500510610 /* ScheduleTableViewCell.swift in Sources */,
 				3595838528829A82002B6873 /* ImageLiteral.swift in Sources */,
+				DDD8A7A328941BCE002542C5 /* ViewController.swift in Sources */,
 				C04B547F2887C6250097EE88 /* MockData.swift in Sources */,
 				3595838B28829C2C002B6873 /* Test2.swift in Sources */,
 				3595839928829C94002B6873 /* TestH.swift in Sources */,
