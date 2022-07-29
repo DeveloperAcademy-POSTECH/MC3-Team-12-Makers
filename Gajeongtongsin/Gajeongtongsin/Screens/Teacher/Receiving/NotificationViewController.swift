@@ -32,6 +32,7 @@ class NotificationViewController: BaseViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(NotificationTableViewCell.self, forCellReuseIdentifier: NotificationTableViewCell.identifier)
         tableView.backgroundColor = .white
+        tableView.separatorColor = .opGray
 
 
         return tableView
@@ -59,6 +60,8 @@ class NotificationViewController: BaseViewController {
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.separatorInset.left = 0
+        tableView.separatorColor = .white
   //      tableView.contentInset = UIEdgeInsets(top: 7, left: 0, bottom: 0, right: 0)
  
     }
@@ -173,4 +176,6 @@ extension NotificationViewController: UITableViewDelegate {
             present(alret, animated: true, completion: nil)
         }
     }
+    
+    
 }

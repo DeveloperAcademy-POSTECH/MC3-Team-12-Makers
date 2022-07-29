@@ -8,7 +8,6 @@ import UIKit
 
 class NotificationTableViewCell: BaseTableViewCell {
     
-    
     // MARK: - Properties
     static let identifier: String = "NotificationTableViewCell"
     
@@ -58,6 +57,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         sendingTime.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 66).isActive = true
         sendingTime.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }
+    
 
     func configure(notification: Notification) {
         switch notification.type {
