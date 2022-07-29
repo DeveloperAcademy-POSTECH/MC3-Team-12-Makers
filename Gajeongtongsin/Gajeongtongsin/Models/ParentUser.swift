@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct ParentUser {
+struct ParentUser : Codable{
     let id: String                    //유저아이디
     var sendingMessages: [Message]    //보내는문자
     let childName: String             //자녀이름

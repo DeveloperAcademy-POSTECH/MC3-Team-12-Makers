@@ -211,6 +211,9 @@ class SendingViewController: BaseViewController {
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
+        
+        FirebaseManager.shared.uploadMessage(message: newMsg)
+        
         mainTeacher.parentUsers[0].sendingMessages.append(newMsg)
         delegate?.reloadTable()
         dismiss(animated: true)
