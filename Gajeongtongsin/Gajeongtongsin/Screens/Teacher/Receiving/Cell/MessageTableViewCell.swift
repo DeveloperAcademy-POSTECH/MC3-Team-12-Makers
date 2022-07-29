@@ -13,9 +13,9 @@ class MessageTableViewCell: BaseTableViewCell {
     var isChecked: Bool = false {
         didSet {
             if isChecked == true {
-                checkBox.backgroundColor = UIColor(hex: "#F0E5CF")
+                checkBox.backgroundColor = UIColor.Confirm
                 stateLabel.text = "처리완료"
-                stateLabel.textColor = UIColor(hex: "#666569")
+                stateLabel.textColor = UIColor.DarkText
             }
         }
     }
@@ -25,7 +25,7 @@ class MessageTableViewCell: BaseTableViewCell {
     private let checkBox: UIImageView = {
         let checkBox = UIImageView()
         checkBox.frame = CGRect(x: 274, y: 18, width: 100, height: 30)
-        checkBox.backgroundColor = UIColor(hex: "#415D95")
+        checkBox.backgroundColor = UIColor.Action
         checkBox.layer.cornerRadius = 10
         return checkBox
     }()
