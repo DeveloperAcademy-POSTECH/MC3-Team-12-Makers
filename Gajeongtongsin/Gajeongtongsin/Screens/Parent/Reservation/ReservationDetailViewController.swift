@@ -12,7 +12,7 @@ class ReservationDetailViewController: BaseViewController {
 
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     var currentParent: ParentUser {
-        return mainTeacher.parentUserIds[0]
+        return mainTeacher.parentUsers[0]
     }
 
     private let scheduleTitle: UILabel = {
@@ -58,17 +58,6 @@ class ReservationDetailViewController: BaseViewController {
         content.translatesAutoresizingMaskIntoConstraints = false
         return content
     }()
-
-    
-//    private let reasonContent: UILabel = {
-//        let label = UILabel()
-//        label.font = UIFont.systemFont(ofSize: 17)
-//        label.textColor = .black
-//        label.numberOfLines = 0
-//        label.lineBreakMode = .byWordWrapping
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
     
     //MARK: - View Life Cycle
     override func viewDidLoad() {

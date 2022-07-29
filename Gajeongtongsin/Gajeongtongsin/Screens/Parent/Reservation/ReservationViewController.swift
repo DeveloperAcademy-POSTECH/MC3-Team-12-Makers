@@ -9,7 +9,6 @@ import UIKit
 
 class ReservationViewController: BaseViewController {
     //MARK: - Properties
-
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
     var currentParent: ParentUser {
         return mainTeacher.parentUsers[0]
@@ -103,28 +102,7 @@ class ReservationViewController: BaseViewController {
                 self.present(ParentsCalenderViewController(), animated: true)
             }),
             UIAction(title: "긴급신청", handler: { _ in
-                let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-                let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
-                    let emergencyContent = alert.textFields?[0].text ?? ""
-                    
-                    // 파이어베이스 긴급알림업로드.
-                    let parentUserId = UserDefaults.standard.string(forKey: "ParentUser")!
-                    let childName = UserDefaults.standard.string(forKey: "ChildName")!
-
-                    let emergencyNoti = Notification(id: parentUserId,
-                                                    postId: "2",
-                                                    type: .emergency,
-                                                    childName: childName,
-                                                    content: emergencyContent)
-                    
-                    FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
-                }
-                alert.addAction(cancelAction)
-                alert.addAction(okayAction)
-                alert.addTextField()
-                alert.textFields?[0].placeholder = "상담 용건 작성"
-                self.present(alert, animated: true)
+                self.present(UrgentRequestViewController(), animated: true)
             })
         ])
     }
@@ -136,8 +114,6 @@ class ReservationViewController: BaseViewController {
 extension ReservationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = ReservationDetailViewController()
-        vc.modalTransitionStyle = .coverVertical
-        vc.modalPresentationStyle = .popover
         vc.configure(index: indexPath)
         navigationController?.pushViewController(vc, animated: true)
 //        present(vc, animated: true)
@@ -145,7 +121,6 @@ extension ReservationViewController: UITableViewDelegate {
 }
 
 extension ReservationViewController: UITableViewDataSource {
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if currentParent.schedules.isEmpty {
             
