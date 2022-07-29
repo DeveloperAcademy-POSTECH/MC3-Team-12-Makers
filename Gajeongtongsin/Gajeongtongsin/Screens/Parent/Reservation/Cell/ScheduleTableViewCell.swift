@@ -71,7 +71,8 @@ class ScheduleTableViewCell: BaseTableViewCell {
 //        appointment.scheduleList[0].isReserved = true
         
         //인디케이터 디자인 확정 후 변경
-        guard appointment.scheduleList[index.row].isReserved == true else {return}
-        checkIndicator.text = "확정"
+               if appointment.scheduleList[index.row].isReserved {
+            checkIndicator.text = "확정"
+        }
     }
 }
