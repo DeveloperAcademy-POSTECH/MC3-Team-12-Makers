@@ -85,8 +85,6 @@ class ConsultationViewController: BaseViewController {
         render()
         configUI()
         setDelegations()
-
-
         seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
     }
     

@@ -158,10 +158,10 @@ final class FirebaseManager {
                             print("error: ", error)
                         }
                     }
-                }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
+
                 }
+               
             }
     }
     /// 학부모 1명의 예약정보 가져오기 for 학부모
@@ -201,11 +201,11 @@ final class FirebaseManager {
                         print("error: ", error)
                     }
                 }
+                completion(scheduleList)
+
             }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completion(scheduleList)
-        }
+        
         
         
     }
@@ -248,10 +248,11 @@ final class FirebaseManager {
                             print("error: ", error)
                         }
                     }
+
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    completion(allMessages)
-                }
+                completion(allMessages)
+
+
             }
     }
     /// 학부모 1명의 메시지들 가져오기 for 학부모
@@ -290,19 +291,17 @@ final class FirebaseManager {
                         print("error: ", error)
                     }
                 }
+                completion(messageList)
             }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completion(messageList)
-        }
         
     }
     
     /// 알림들 가져오기 for 선생님
-    func fetchNotifications(completion: @escaping ([Notification])->Void)   {
+    func fetchNotifications(completion: @escaping (([Notification]) -> Void)){
         
         guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
         var notificationsList: [Notification] = []
+        
         db.child("Notifications/\(teacherUserId)/notificationList")
             .observe(.value) { snapshot in
                 
@@ -312,7 +311,7 @@ final class FirebaseManager {
                 for notificationVal in notifications.values {
                     
                     do {
-                        let notificationData = try JSONSerialization.data(withJSONObject: notificationVal, options: [])
+                        let notificationData = try  JSONSerialization.data(withJSONObject: notificationVal, options: [])
                         let decoder = JSONDecoder()
                         let notification = try decoder.decode(Notification.self, from: notificationData)
                         notificationsList.append(notification)
@@ -331,11 +330,10 @@ final class FirebaseManager {
                         print("error: ", error)
                     }
                 }
+                completion(notificationsList)
             }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            completion(notificationsList)
-        }
+
+
     }
     
 }
