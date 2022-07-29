@@ -58,7 +58,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         sendingTime.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 66).isActive = true
         sendingTime.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }
-    
+
     func configure(notification: Notification) {
         switch notification.type {
         case .emergency :

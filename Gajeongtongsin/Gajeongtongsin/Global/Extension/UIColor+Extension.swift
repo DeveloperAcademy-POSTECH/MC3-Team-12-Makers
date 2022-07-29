@@ -27,6 +27,14 @@ extension UIColor {
     static var alertInfoGary: UIColor {
         return UIColor(hex: "#5F5E61")
     }
+    
+    static var opGray: UIColor {
+        return UIColor(hex: "#D9D9D9")
+    }
+    
+    static var titleGray: UIColor {
+        return UIColor(hex: "#5F5E61")
+    }
    
 }
 

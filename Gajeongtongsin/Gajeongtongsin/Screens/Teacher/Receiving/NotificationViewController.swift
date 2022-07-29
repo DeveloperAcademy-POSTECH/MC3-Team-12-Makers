@@ -28,9 +28,12 @@ class NotificationViewController: BaseViewController {
     }()
     
     private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(NotificationTableViewCell.self, forCellReuseIdentifier: NotificationTableViewCell.identifier)
+        tableView.backgroundColor = .white
+
+
         return tableView
     }()
 
@@ -46,17 +49,17 @@ class NotificationViewController: BaseViewController {
     override func render() {
 
         view.addSubview(notificationLabel)
-        notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
+        notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13).isActive = true
         notificationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         notificationLabel.widthAnchor.constraint(equalToConstant: 343).isActive = true
-        notificationLabel.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        notificationLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 0).isActive = true
+        tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 10).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
+  //      tableView.contentInset = UIEdgeInsets(top: 7, left: 0, bottom: 0, right: 0)
  
     }
     
@@ -68,6 +71,7 @@ class NotificationViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
     }
+    
 }
 
 extension NotificationViewController: UITableViewDataSource {
@@ -76,10 +80,61 @@ extension NotificationViewController: UITableViewDataSource {
         return sections.count
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerContent = UIView()
+        
+        let title = UILabel()
+        title.text = sections[section]
+        title.font = UIFont.systemFont(ofSize: 11)
+        title.textColor = UIColor.titleGray
+        
+        headerContent.addSubview(title)
+        title.translatesAutoresizingMaskIntoConstraints = false
+        title.centerYAnchor.constraint(equalTo: headerContent.centerYAnchor).isActive = true
+        title.centerXAnchor.constraint(equalTo: headerContent.centerXAnchor).isActive = true
+        title.widthAnchor.constraint(equalToConstant: 41).isActive = true
+        title.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        
+        let separatorView1 = UIView()
+        separatorView1.translatesAutoresizingMaskIntoConstraints = false
+        separatorView1.backgroundColor = UIColor.opGray
+        headerContent.addSubview(separatorView1)
+        separatorView1.leadingAnchor.constraint(equalTo: headerContent.leadingAnchor, constant: 0).isActive = true
+        separatorView1.trailingAnchor.constraint(equalTo: title.leadingAnchor, constant: -13).isActive = true
+        separatorView1.heightAnchor.constraint(equalToConstant: 1).isActive = true
+        separatorView1.centerYAnchor.constraint(equalTo: headerContent.centerYAnchor).isActive = true
+        
+        let separatorView2 = UIView()
+        separatorView2.translatesAutoresizingMaskIntoConstraints = false
+        separatorView2.backgroundColor = UIColor.opGray
+        headerContent.addSubview(separatorView2)
+        separatorView2.leadingAnchor.constraint(equalTo: title.trailingAnchor, constant: 13).isActive = true
+        separatorView2.trailingAnchor.constraint(equalTo: headerContent.trailingAnchor, constant: 0).isActive = true
+        separatorView2.centerYAnchor.constraint(equalTo: headerContent.centerYAnchor).isActive = true
+        separatorView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
+  
+        
+        return headerContent
+    }
+    
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections[section]
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNonzeroMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        38
+    }
+    
+   
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
