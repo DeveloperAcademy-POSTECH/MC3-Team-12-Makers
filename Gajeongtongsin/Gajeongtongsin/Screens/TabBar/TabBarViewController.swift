@@ -63,7 +63,7 @@ class TabBarViewController: UITabBarController {
         tabBar.tintColor = .systemBlue
         tabBar.backgroundColor = .white
         tabBar.layer.borderWidth = 2
-        tabBar.layer.borderColor = UIColor.borderGray.cgColor
+        tabBar.layer.borderColor = UIColor.LightLine.cgColor
         setViewControllers([vc1,vc2,vc3], animated: true)
     }
 

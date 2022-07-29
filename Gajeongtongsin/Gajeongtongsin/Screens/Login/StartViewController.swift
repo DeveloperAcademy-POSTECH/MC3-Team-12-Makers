@@ -65,7 +65,7 @@ class StartViewController: BaseViewController {
     }
     
     override func configUI() {
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = .Background
     }
     
     @objc func parentTap() {

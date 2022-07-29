@@ -74,7 +74,7 @@ class ReservationViewController: BaseViewController {
     }
 
     override func configUI() {
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = .Background
         
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
