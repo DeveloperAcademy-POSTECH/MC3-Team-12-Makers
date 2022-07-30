@@ -135,10 +135,9 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
                 }
             }
             // 글자수 6글자를 넘어가면 입력제한
-            if text.count >= MAX_LENGTH {
-                return false
-            }
-            return true
+            return text.count >= MAX_LENGTH ? false : true
+            
+            
         } else {
             guard let text = textField.text else {return false}
             childName = text
