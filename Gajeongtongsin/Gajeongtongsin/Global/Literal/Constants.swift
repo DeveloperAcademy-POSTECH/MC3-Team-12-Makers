@@ -58,3 +58,9 @@ var todayOfTheWeek: Int{
     return interval!
 }
 
+// Button 활성화 여부
+enum ButtonState {
+    case normal
+    case disabled
+    
+}

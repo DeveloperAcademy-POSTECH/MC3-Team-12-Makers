@@ -32,9 +32,3 @@ class PrimaryButton: UIButton {
         fatalError("init(coder:) has not been implemented")
     }
 }
-
-enum ButtonState {
-    case normal
-    case disabled
-    
-}
