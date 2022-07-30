@@ -52,7 +52,7 @@ class UrgentRequestViewController: BaseViewController {
         textView.layer.borderWidth = 1.0
         textView.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.7).cgColor
         textView.layer.cornerRadius = 10
-        textView.textContainerInset = UIEdgeInsets(top: 16.0, left: 16.0, bottom: 16.0, right: 16.0)
+        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         textView.translatesAutoresizingMaskIntoConstraints = false
         return textView
     }()

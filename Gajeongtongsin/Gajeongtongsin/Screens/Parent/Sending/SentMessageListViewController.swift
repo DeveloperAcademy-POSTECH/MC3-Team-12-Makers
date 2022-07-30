@@ -73,11 +73,9 @@ class SentMessageListViewController: BaseViewController {
     
     @objc func writeButton() {
         let vc = SendingViewController()
-//        vc.modalPresentationStyle = UIModalPresentationStyle.popover
-//        vc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)
-//        present(vc, animated: true)
+
     }
    
 }

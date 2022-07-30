@@ -73,11 +73,12 @@ class SendingViewController: BaseViewController {
         button.isHidden = true
         button.setTitle("전송", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
-        button.backgroundColor = .systemBlue
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
         button.layer.borderWidth = 0
         button.layer.borderColor = UIColor.systemBlue.cgColor
         button.layer.cornerRadius = 10
+        button.backgroundColor = .systemGray
+        button.isEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -99,8 +100,12 @@ class SendingViewController: BaseViewController {
     //Text Field 내 여백 padding 값 조절, 글자수 제한, 박스 외부 클릭했을 때 커서와 키보드 사라지게 등등
     private let textFieldForReason: UITextField = {
         let textF = UITextField()
+        let leftMargin = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: textF.frame.height))
         textF.isHidden = true
         textF.placeholder = "결석사유를 입력해주세요 (20자)"
+        textF.text = nil
+        textF.leftView = leftMargin
+        textF.leftViewMode = .always
         textF.textColor = .black
         textF.font = .systemFont(ofSize: 17, weight: .medium)
         textF.backgroundColor = .secondarySystemFill
@@ -195,6 +200,11 @@ class SendingViewController: BaseViewController {
 //        }
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.textFieldForReason.endEditing(true)
+        textCheck()
+    }
+    
     func navigationBar() {
         self.navigationItem.title = "문자작성"
     }
@@ -202,6 +212,13 @@ class SendingViewController: BaseViewController {
     func msgType() -> MessageType {
         let msgType = messageTypeButton.currentTitle == "결석" ? MessageType.absence : MessageType.earlyLeave
         return msgType
+    }
+    
+    func textCheck() {
+        if textFieldForReason.text != nil {
+            sendButton.backgroundColor = .systemBlue
+            sendButton.isEnabled = true
+        }
     }
     
     @objc func sendAlert() {

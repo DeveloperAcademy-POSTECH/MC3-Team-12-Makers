@@ -54,7 +54,7 @@ class ReservationViewController: BaseViewController {
         super.viewDidLoad()
         reservedScheduleList.delegate = self
         reservedScheduleList.dataSource = self
-        
+        scheduleToggle()
         navigationController?.navigationBar.topItem?.title = ""
     }
 
@@ -122,11 +122,6 @@ extension ReservationViewController: UITableViewDelegate {
 
 extension ReservationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if currentParent.schedules.isEmpty {
-            
-        } else {
-            scheduleToggle()
-        }
         return currentParent.schedules.count
     }
     
