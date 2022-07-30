@@ -83,7 +83,7 @@ extension NotificationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let customSectionBar = CustomSectionBar()
-        customSectionBar.configUI(section: section)
+        customSectionBar.configure(section: section)
         return customSectionBar
     }
     

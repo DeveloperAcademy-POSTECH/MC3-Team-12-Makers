@@ -63,11 +63,7 @@ class CustomSectionBar: UIView {
         separatorView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
     }
     
-    func configUI(section: Int) {
+    func configure(section: Int) {
         title.text = sections[section]
     }
-    
-
-    
-
 }
