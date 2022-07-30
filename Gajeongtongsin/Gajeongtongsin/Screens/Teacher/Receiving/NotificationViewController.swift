@@ -92,10 +92,10 @@ extension NotificationViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
             cell.configure(notification: emergancy[indexPath.row])
-            cell.backgroundColor = UIColor.emergencyAlertColor
+            cell.backgroundColor = UIColor.red
         } else {
             cell.configure(notification: normal[indexPath.row])
-            cell.backgroundColor = UIColor.normalAlertColor
+            cell.backgroundColor = UIColor.brown
         }
 
         return cell

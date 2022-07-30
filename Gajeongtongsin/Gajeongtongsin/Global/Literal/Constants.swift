@@ -58,3 +58,5 @@ var todayOfTheWeek: Int{
     return interval!
 }
 
+// 최대 글자수 
+let MAX_LENGTH = 6

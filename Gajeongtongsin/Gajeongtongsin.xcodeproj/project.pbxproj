@@ -17,6 +17,8 @@
 		35171D0728828C930059F297 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35171D0628828C930059F297 /* Assets.xcassets */; };
 		35171D0A28828C930059F297 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 35171D0828828C930059F297 /* LaunchScreen.storyboard */; };
 		3558AB3928868D2800539C66 /* Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3558AB3828868D2800539C66 /* Notification.swift */; };
+		356B77E5289457A3001D2F6C /* ParentRegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356B77E4289457A3001D2F6C /* ParentRegistrationViewController.swift */; };
+		356B77E728945A70001D2F6C /* LabelFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 356B77E628945A70001D2F6C /* LabelFieldView.swift */; };
 		35958362288291D8002B6873 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958361288291D8002B6873 /* TabBarViewController.swift */; };
 		359583732882956C002B6873 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 359583722882956C002B6873 /* BaseViewController.swift */; };
 		35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958374288295D9002B6873 /* BaseTableViewCell.swift */; };
@@ -73,6 +75,8 @@
 		35171D0928828C930059F297 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		35171D0B28828C930059F297 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3558AB3828868D2800539C66 /* Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Notification.swift; sourceTree = "<group>"; };
+		356B77E4289457A3001D2F6C /* ParentRegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentRegistrationViewController.swift; sourceTree = "<group>"; };
+		356B77E628945A70001D2F6C /* LabelFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelFieldView.swift; sourceTree = "<group>"; };
 		35958361288291D8002B6873 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		359583722882956C002B6873 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		35958374288295D9002B6873 /* BaseTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseTableViewCell.swift; sourceTree = "<group>"; };
@@ -402,6 +406,8 @@
 			isa = PBXGroup;
 			children = (
 				3595837E2882980C002B6873 /* StartViewController.swift */,
+				356B77E4289457A3001D2F6C /* ParentRegistrationViewController.swift */,
+				356B77E628945A70001D2F6C /* LabelFieldView.swift */,
 			);
 			path = Login;
 			sourceTree = "<group>";
@@ -537,6 +543,7 @@
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
 				8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */,
 				C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */,
+				356B77E5289457A3001D2F6C /* ParentRegistrationViewController.swift in Sources */,
 				359583732882956C002B6873 /* BaseViewController.swift in Sources */,
 				04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */,
 				3595838D28829C6C002B6873 /* TestA.swift in Sources */,
@@ -563,6 +570,7 @@
 				35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */,
 				C0DFFC032885DE32009A1563 /* Message.swift in Sources */,
 				3595837D288297E7002B6873 /* ReceivingViewController.swift in Sources */,
+				356B77E728945A70001D2F6C /* LabelFieldView.swift in Sources */,
 				359583A82882A6F7002B6873 /* Constants.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
