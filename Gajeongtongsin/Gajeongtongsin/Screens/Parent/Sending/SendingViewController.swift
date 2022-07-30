@@ -119,7 +119,7 @@ class SendingViewController: BaseViewController {
         super.viewDidLoad()
         textFieldForReason.delegate = self
         sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
-        navigationBar()
+        self.navigationItem.title = "문자작성"
     }
     
     //MARK: - Funcs
@@ -200,25 +200,22 @@ class SendingViewController: BaseViewController {
 //        }
     }
     
-    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        self.textFieldForReason.endEditing(true)
-        textCheck()
-    }
-    
-    func navigationBar() {
-        self.navigationItem.title = "문자작성"
-    }
-    
-    func msgType() -> MessageType {
-        let msgType = messageTypeButton.currentTitle == "결석" ? MessageType.absence : MessageType.earlyLeave
-        return msgType
-    }
-    
+    //전송버튼 활성화 전 조건 체크
     func textCheck() {
         if textFieldForReason.text != nil {
             sendButton.backgroundColor = .systemBlue
             sendButton.isEnabled = true
         }
+    }
+    //용건 기입 마칠 때 내용있는지 여부 체크해서 전송버튼 활성화
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.textFieldForReason.endEditing(true)
+        textCheck()
+    }
+
+    func msgType() -> MessageType {
+        let msgType = messageTypeButton.currentTitle == "결석" ? MessageType.absence : MessageType.earlyLeave
+        return msgType
     }
     
     @objc func sendAlert() {
