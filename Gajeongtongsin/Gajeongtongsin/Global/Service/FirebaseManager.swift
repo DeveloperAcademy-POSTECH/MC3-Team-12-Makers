@@ -247,18 +247,18 @@ final class FirebaseManager {
             }
     }
     /// 학부모 1명의 메시지들 가져오기 for 학부모
-    func fetchParentMessages(completion: @escaping (([Message]) -> Void)) {
+    func fetchParentMessages(completion: @escaping (([Message]?) -> Void)) {
         
-        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
-        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
+        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {completion(nil); return}
+        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {completion(nil); return}
         
         var messageList: [Message] = []
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
             .observe(.value) { snapshot in
                 
-                guard let dic = snapshot.value as? NSDictionary else { return }
+                guard let dic = snapshot.value as? NSDictionary else { completion(nil); return }
                 
-                let messages = dic["sendingMessages"] as! [String:[String:Any]]   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                guard let messages = dic["sendingMessages"] as? [String:[String:Any]] else {completion(nil); return } // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                 
                 for messageVal in messages.values {
                     
@@ -268,17 +268,22 @@ final class FirebaseManager {
                         let message = try decoder.decode(Message.self, from: messageData)
                         messageList.append(message)
                     } catch let DecodingError.dataCorrupted(context) {
+                        completion(nil);
                         print(context)
                     } catch let DecodingError.keyNotFound(key, context) {
+                        completion(nil);
                         print("Key '\(key)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
                     } catch let DecodingError.valueNotFound(value, context) {
+                        completion(nil);
                         print("Value '\(value)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
                     } catch let DecodingError.typeMismatch(type, context) {
+                        completion(nil);
                         print("Type '\(type)' mismatch:", context.debugDescription)
                         print("codingPath:", context.codingPath)
                     } catch {
+                        completion(nil);
                         print("error: ", error)
                     }
                 }

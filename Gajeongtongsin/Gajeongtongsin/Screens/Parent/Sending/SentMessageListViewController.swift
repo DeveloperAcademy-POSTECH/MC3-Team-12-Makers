@@ -14,7 +14,7 @@ class SentMessageListViewController: BaseViewController {
     var currentParent: ParentUser {
         return mainTeacher.parentUsers[0]
     }
-    
+    var allMessages: [Message] = []
     private let viewTitle: UILabel = {
         let label = UILabel()
         label.text = "전송내역"
@@ -50,6 +50,13 @@ class SentMessageListViewController: BaseViewController {
 
         navigationBar()
         writeMessageButton.addTarget(self, action: #selector(writeButton), for: .touchUpInside)
+        
+        FirebaseManager.shared.fetchParentMessages { [weak self] messages in
+            if let messages = messages {
+                self?.allMessages = messages
+                self?.sentMessageList.reloadData()
+            }
+        }
     }
     
     //MARK: - Funcs
@@ -89,14 +96,15 @@ extension SentMessageListViewController: UITableViewDelegate {
 
 extension SentMessageListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentParent.sendingMessages.count
+        return allMessages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SentMessageTableViewCell", for: indexPath) as! SentMessageTableViewCell
         
-        cell.configure(index: indexPath.row)
 
+//        cell.configure(index: indexPath.row)
+        cell.configure( message: allMessages[indexPath.row])
         return cell
     }
 }
