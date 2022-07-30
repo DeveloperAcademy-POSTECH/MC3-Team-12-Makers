@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CardCollectionViewCell: UICollectionViewCell {
+class CardCollectionViewCell: BaseCollectionViewCell {
     // MARK: - Properties
     static let identifier = "CustomCollectionViewCell"
     
@@ -45,6 +45,14 @@ class CardCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         render()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Funcs
+    override func render(){
         contentView.backgroundColor = .Background
         contentView.layer.cornerRadius = 10
         contentView.frame.size = CGSize(width:140, height:150)
@@ -53,17 +61,6 @@ class CardCollectionViewCell: UICollectionViewCell {
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.shadowOpacity = 0.16
         contentView.layer.shadowRadius = 4.0
-        
-        
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    // MARK: - Funcs
-    func render(){
-        
        
         contentView.addSubview(ScheduleButton)
         ScheduleButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 57).isActive = true
@@ -84,8 +81,7 @@ class CardCollectionViewCell: UICollectionViewCell {
     
     }
     
-    func configure(buttonTitle:String){
+    func configure(buttonTitle:String) {
         ScheduleButton.setTitle(buttonTitle, for: .normal)
     }
-
 }
