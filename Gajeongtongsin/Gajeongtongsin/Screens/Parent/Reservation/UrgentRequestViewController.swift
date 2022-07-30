@@ -9,6 +9,9 @@ import UIKit
 
 class UrgentRequestViewController: BaseViewController {
     //MARK: - Properties
+    let textPlaceHolder: String = "정말 급한 상담인지 한 번 더 생각해주세요!\n선생님의 소중한 개인시간일 수 있습니다."
+
+    
     private let cancelBtn: UIButton = {
         let label = UIButton()
         label.setTitle("취소", for: .normal)
@@ -20,6 +23,7 @@ class UrgentRequestViewController: BaseViewController {
         let label = UIButton()
         label.setTitle("신청", for: .normal)
         label.setTitleColor(UIColor.black, for: .normal)
+        label.isUserInteractionEnabled = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -39,12 +43,12 @@ class UrgentRequestViewController: BaseViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
     private let reasonText: UITextView = {
         let textView = UITextView()
-        textView.text = "정말 급한 상담인지 한 번 더 생각해주세요!\n선생님의 소중한 개인시간일 수 있습니다."
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
-        textView.textColor = UIColor(red: 0.612, green: 0.608, blue: 0.624, alpha: 1)
         textView.isEditable = true
+        textView.textColor = .lightGray
         textView.layer.borderWidth = 1.0
         textView.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.7).cgColor
         textView.layer.cornerRadius = 10
@@ -56,6 +60,7 @@ class UrgentRequestViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        reasonText.text = textPlaceHolder
         reasonText.delegate = self
     }
     
@@ -85,17 +90,16 @@ class UrgentRequestViewController: BaseViewController {
         reasonText.heightAnchor.constraint(equalToConstant: 240).isActive = true
     }
     
+    //신청, 취소 버튼
     override func configUI() {
         view.backgroundColor = .primaryBackground
         cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         submitBtn.addTarget(self, action: #selector(submit), for: .touchUpInside)
 
     }
-    
     @objc func cancel() {
         self.dismiss(animated: true)
     }
-    
     @objc func submit() {
         let emergencyContent = reasonText.text ?? ""
         
@@ -112,16 +116,38 @@ class UrgentRequestViewController: BaseViewController {
         FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
         self.dismiss(animated: true)
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.reasonText.endEditing(true)
+    }
 }
 
 //MARK: - Extensions
 extension UrgentRequestViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        textView.text = nil
-        textView.textColor = .black
+        if textView.text == textPlaceHolder {
+            textView.text = nil
+            textView.textColor = .black
+        }
     }
     
+    
+    //텍스트뷰 편집 종료 시 내용이 있으면 전송버튼 활성화, 내용이 없으면 플레이스홀더 원복시키고 전송버튼 비활성화 (내용 없이 날아가는 긴급요청 방지)
     func textViewDidEndEditing(_ textView: UITextView) {
-        
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = textPlaceHolder
+            textView.textColor = .lightGray
+            submitBtn.isUserInteractionEnabled = false
+        } else {
+            submitBtn.isUserInteractionEnabled = true
+        }
     }
+
+    func textViewDidChange(_ textView: UITextView) {
+        //글자수 300자 제한
+        if reasonText.text.count > 300 {
+            reasonText.deleteBackward()
+        }
+    }
+
 }
