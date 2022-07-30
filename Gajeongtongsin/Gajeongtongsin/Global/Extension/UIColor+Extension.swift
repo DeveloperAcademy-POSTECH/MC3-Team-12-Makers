@@ -33,16 +33,6 @@ extension UIColor {
     static var DarkText: UIColor {
         .load(name: "DarkText")
     }
-    
-    static var opGray: UIColor {
-        return UIColor(hex: "#D9D9D9")
-    }
-    
-    static var titleGray: UIColor {
-        return UIColor(hex: "#5F5E61")
-    }
-   
-
 }
 
 

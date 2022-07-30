@@ -32,7 +32,7 @@ class NotificationViewController: BaseViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(NotificationTableViewCell.self, forCellReuseIdentifier: NotificationTableViewCell.identifier)
         tableView.backgroundColor = .white
-        tableView.separatorColor = .opGray
+        tableView.separatorColor = .darkGray
 
 
         return tableView
@@ -89,7 +89,7 @@ extension NotificationViewController: UITableViewDataSource {
         let title = UILabel()
         title.text = sections[section]
         title.font = UIFont.systemFont(ofSize: 11)
-        title.textColor = UIColor.titleGray
+        title.textColor = UIColor.darkGray
         
         headerContent.addSubview(title)
         title.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +100,7 @@ extension NotificationViewController: UITableViewDataSource {
         
         let separatorView1 = UIView()
         separatorView1.translatesAutoresizingMaskIntoConstraints = false
-        separatorView1.backgroundColor = UIColor.opGray
+        separatorView1.backgroundColor = UIColor.darkGray
         headerContent.addSubview(separatorView1)
         separatorView1.leadingAnchor.constraint(equalTo: headerContent.leadingAnchor, constant: 0).isActive = true
         separatorView1.trailingAnchor.constraint(equalTo: title.leadingAnchor, constant: -13).isActive = true
@@ -109,7 +109,7 @@ extension NotificationViewController: UITableViewDataSource {
         
         let separatorView2 = UIView()
         separatorView2.translatesAutoresizingMaskIntoConstraints = false
-        separatorView2.backgroundColor = UIColor.opGray
+        separatorView2.backgroundColor = UIColor.darkGray
         headerContent.addSubview(separatorView2)
         separatorView2.leadingAnchor.constraint(equalTo: title.trailingAnchor, constant: 13).isActive = true
         separatorView2.trailingAnchor.constraint(equalTo: headerContent.trailingAnchor, constant: 0).isActive = true
@@ -150,10 +150,10 @@ extension NotificationViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
             cell.configure(notification: emergancy[indexPath.row])
-            cell.backgroundColor = UIColor.emergencyAlertColor
+            cell.backgroundColor = UIColor.Urgent
         } else {
             cell.configure(notification: normal[indexPath.row])
-            cell.backgroundColor = UIColor.normalAlertColor
+            cell.backgroundColor = UIColor.Confirm
         }
 
         return cell
