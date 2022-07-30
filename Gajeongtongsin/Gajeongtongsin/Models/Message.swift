@@ -18,3 +18,6 @@ enum MessageType: String, Codable {
     case absence = "결석"
     case earlyLeave = "조퇴"
 }
+
+var messagesWithChildName = mainTeacher.parentUsers.flatMap({$0.getMessagesWithChildName()})
+var sortedMessages = chunkedMessages(messages: messagesWithChildName.sorted(by: {$0.message.sentDate > $1.message.sentDate}))
