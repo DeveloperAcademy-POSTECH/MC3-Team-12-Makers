@@ -40,10 +40,11 @@ class ParentRegistrationViewController: BaseViewController {
     }()
     private let registrationButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .Action
+        button.backgroundColor = .LightLine
         button.setTitle("가입하기", for: .normal)
         button.setTitleColor(UIColor.white, for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 16)
+        button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.cornerRadius = 3
         return button
@@ -113,7 +114,8 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         // TODO: - 서버에 선생님 코드가 존재하는지 안하는지 체크필요함
-        if homeroomTeacherUid.count == MAX_LENGTH && !childName.isEmpty {
+        // FIXME: - MAX_LENGTH에서 -2 안하는 로직 다시.
+        if homeroomTeacherUid.count  >= MAX_LENGTH - 2 && !childName.isEmpty {
             registrationButton.isUserInteractionEnabled = true
             registrationButton.backgroundColor = .Action
         } else {
@@ -143,6 +145,8 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
             childName = text
             return true
         }
+        
+    
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
