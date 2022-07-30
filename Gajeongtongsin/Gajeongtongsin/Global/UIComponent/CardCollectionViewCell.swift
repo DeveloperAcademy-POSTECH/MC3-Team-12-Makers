@@ -41,18 +41,9 @@ class CardCollectionViewCell: BaseCollectionViewCell {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    // MARK: - Init
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        render()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
     
     // MARK: - Funcs
-    override func render(){
+    override func configUI() {
         contentView.backgroundColor = .Background
         contentView.layer.cornerRadius = 10
         contentView.frame.size = CGSize(width:140, height:150)
@@ -61,6 +52,9 @@ class CardCollectionViewCell: BaseCollectionViewCell {
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
         contentView.layer.shadowOpacity = 0.16
         contentView.layer.shadowRadius = 4.0
+    }
+    
+    override func render(){
        
         contentView.addSubview(ScheduleButton)
         ScheduleButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 57).isActive = true
