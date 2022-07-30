@@ -9,12 +9,10 @@ import UIKit
 
 class PrimaryButton: UIButton {
     
+    // MARK: - Init
     init(buttonTitle: String, buttonState: ButtonState) {
         super.init(frame: CGRect(x: 0, y: 0, width: 1000, height: 50))
         
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        self.setTitle("PrimaryButton", for: .normal)  // 버튼 타이틀
-        self.layer.cornerRadius = 3// 버튼 cornerRadius
         switch buttonState {
         case .normal:
             self.setTitleColor(.white, for: .normal) //버튼 타이틀 색깔
@@ -23,12 +21,20 @@ class PrimaryButton: UIButton {
             self.setTitleColor(.lightText, for: .normal) //버튼 타이틀 색깔
             self.backgroundColor = .LightLine      // 버튼 배경화면 색깔
         }
-        self.translatesAutoresizingMaskIntoConstraints = false
-        self.widthAnchor.constraint(equalToConstant: 358).isActive = true
-        self.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Funcs
+    func render() {
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        self.setTitle("PrimaryButton", for: .normal)  // 버튼 타이틀
+        self.layer.cornerRadius = 3// 버튼 cornerRadius
+        
+        self.translatesAutoresizingMaskIntoConstraints = false
+        self.widthAnchor.constraint(equalToConstant: 358).isActive = true
+        self.heightAnchor.constraint(equalToConstant: 50).isActive = true
     }
 }
