@@ -78,7 +78,7 @@ class SendingViewController: BaseViewController {
         button.layer.borderColor = UIColor.systemBlue.cgColor
         button.layer.cornerRadius = 10
         button.backgroundColor = .systemGray
-        button.isEnabled = false
+        button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -103,9 +103,9 @@ class SendingViewController: BaseViewController {
         let leftMargin = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: textF.frame.height))
         textF.isHidden = true
         textF.placeholder = "결석사유를 입력해주세요 (20자)"
-        textF.text = nil
         textF.leftView = leftMargin
         textF.leftViewMode = .always
+        textF.clearButtonMode = .whileEditing
         textF.textColor = .black
         textF.font = .systemFont(ofSize: 17, weight: .medium)
         textF.backgroundColor = .secondarySystemFill
@@ -118,13 +118,11 @@ class SendingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldForReason.delegate = self
-        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
         self.navigationItem.title = "문자작성"
     }
     
     //MARK: - Funcs
     override func render() {
-
         view.addSubview(textLabelPurpose)
         textLabelPurpose.heightAnchor.constraint(equalToConstant: 40).isActive = true
         textLabelPurpose.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
@@ -168,7 +166,8 @@ class SendingViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .primaryBackground
-        
+        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
+
         //Message Type 버튼과 선택에 따른 컴포넌트 노출 차이
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
             UIAction(title: "결석", handler: { [weak self] _ in
@@ -200,17 +199,9 @@ class SendingViewController: BaseViewController {
 //        }
     }
     
-    //전송버튼 활성화 전 조건 체크
-    func textCheck() {
-        if textFieldForReason.text != nil {
-            sendButton.backgroundColor = .systemBlue
-            sendButton.isEnabled = true
-        }
-    }
     //용건 기입 마칠 때 내용있는지 여부 체크해서 전송버튼 활성화
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.textFieldForReason.endEditing(true)
-        textCheck()
     }
 
     func msgType() -> MessageType {
@@ -244,8 +235,19 @@ class SendingViewController: BaseViewController {
     }
 }
 
+//MARK: - Extensions
 extension SendingViewController: UITextFieldDelegate {
-    func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        true
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text != "" {
+            sendButton.backgroundColor = .systemBlue
+            sendButton.isUserInteractionEnabled = true
+        } else {
+            sendButton.backgroundColor = .systemGray
+            sendButton.isUserInteractionEnabled = false
+        }
+    }
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
     }
 }
