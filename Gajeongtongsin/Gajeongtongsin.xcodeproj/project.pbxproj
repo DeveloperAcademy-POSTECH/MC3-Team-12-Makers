@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		040612A428941EE800791763 /* ParentsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040612A328941EE800791763 /* ParentsCollectionViewCell.swift */; };
+		040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040612A528941F2800791763 /* ParentsCollcetionViewCellDelegate.swift */; };
 		045D0DBE2888DDB700778EEC /* ParentsCalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D0DBD2888DDB700778EEC /* ParentsCalenderViewController.swift */; };
 		04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */; };
 		04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D942886A28C00CCCB2D /* CalenderViewCell.swift */; };
@@ -61,6 +63,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		040612A328941EE800791763 /* ParentsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentsCollectionViewCell.swift; sourceTree = "<group>"; };
+		040612A528941F2800791763 /* ParentsCollcetionViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentsCollcetionViewCellDelegate.swift; sourceTree = "<group>"; };
 		045D0DBD2888DDB700778EEC /* ParentsCalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentsCalenderViewController.swift; sourceTree = "<group>"; };
 		04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		04610D942886A28C00CCCB2D /* CalenderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewCell.swift; sourceTree = "<group>"; };
@@ -244,6 +248,7 @@
 			children = (
 				3595838A28829C2C002B6873 /* Test2.swift */,
 				C0B4A4312890E8B9001DC86C /* CutomNavigationBarDelegate.swift */,
+				040612A528941F2800791763 /* ParentsCollcetionViewCellDelegate.swift */,
 			);
 			path = Protocol;
 			sourceTree = "<group>";
@@ -334,6 +339,7 @@
 			isa = PBXGroup;
 			children = (
 				046BFDF52890DD8000591577 /* CalenderTabelViewCell.swift */,
+				040612A328941EE800791763 /* ParentsCollectionViewCell.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -532,8 +538,10 @@
 				C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */,
 				046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */,
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
+				040612A428941EE800791763 /* ParentsCollectionViewCell.swift in Sources */,
 				C0B4A4302890E7AA001DC86C /* CutomNavigationBar.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
+				040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */,
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
 				8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */,
 				C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */,

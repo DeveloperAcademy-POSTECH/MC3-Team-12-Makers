@@ -9,10 +9,11 @@ import Foundation
 
 var mainTeacher = TeacherUser(teacherName: "밀선생", parentUsers: parentList, notificationList: notifications)
 
-var parentList: [ParentUser] = [parent1, parent2, parent3]
+var parentList: [ParentUser] = [parent1, parent2, parent3, parent4]
 var parent1 = ParentUser(id: "1", sendingMessages: messageList1, childName: "김유쓰", schedules: scheduleList1)
 var parent2 = ParentUser(id: "2", sendingMessages: messageList2, childName: "부니카", schedules: scheduleList2)
 var parent3 = ParentUser(id: "3", sendingMessages: messageList3, childName: "최히로", schedules: scheduleList3)
+var parent4 = ParentUser(id: "4", sendingMessages: messageList3, childName: "허결결", schedules: scheduleList4)
 
 var messageList1 = [
     Message(type: .absence, sentDate: "실시간", expectedDate: "7월21일", content: "김유쓰배아픔", isCompleted: false),
@@ -25,6 +26,11 @@ var messageList2 = [
     ]
 
 var messageList3 = [
+    Message(type: .absence, sentDate: "실시간", expectedDate: "7월25일", content: "최히로소개팅", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "실시간", expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false)
+]
+
+var messageList4 = [
     Message(type: .absence, sentDate: "실시간", expectedDate: "7월25일", content: "최히로소개팅", isCompleted: false),
     Message(type: .earlyLeave, sentDate: "실시간", expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false)
 ]
@@ -54,6 +60,15 @@ var scheduleList3 = [
                 ScheduleInfo(consultingDate: "7월26일", startTime: "15시30분", isReserved: false),
                 ScheduleInfo(consultingDate: "7월28일", startTime: "16시00분", isReserved: false)],
              content: "최히로체육성적문의")
+]
+
+var scheduleList4 = [
+    Schedule(reservedDate: "8월3일",
+             scheduleList: [
+                ScheduleInfo(consultingDate: "7월29일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월29일", startTime: "15시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월29일", startTime: "16시00분", isReserved: false)],
+             content: "허결출결문의제발")
 ]
 
 var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]
