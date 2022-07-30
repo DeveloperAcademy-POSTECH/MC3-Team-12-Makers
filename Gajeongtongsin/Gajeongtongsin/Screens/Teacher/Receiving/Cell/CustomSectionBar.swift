@@ -10,7 +10,6 @@ import UIKit
 class CustomSectionBar: UIView {
 
     // MARK: - Properties
-     
     private let title: UILabel = {
         let title = UILabel()
         title.font = UIFont.systemFont(ofSize: 11)
@@ -32,6 +31,7 @@ class CustomSectionBar: UIView {
         return separatorView2
     }()
     
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         render()
