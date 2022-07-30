@@ -82,40 +82,9 @@ extension NotificationViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerContent = UIView()
-        
-        let title = UILabel()
-        title.text = sections[section]
-        title.font = UIFont.systemFont(ofSize: 11)
-        title.textColor = UIColor.darkGray
-        
-        headerContent.addSubview(title)
-        title.translatesAutoresizingMaskIntoConstraints = false
-        title.centerYAnchor.constraint(equalTo: headerContent.centerYAnchor).isActive = true
-        title.centerXAnchor.constraint(equalTo: headerContent.centerXAnchor).isActive = true
-        title.widthAnchor.constraint(equalToConstant: 41).isActive = true
-        title.heightAnchor.constraint(equalToConstant: 18).isActive = true
-        
-        let separatorView1 = UIView()
-        separatorView1.translatesAutoresizingMaskIntoConstraints = false
-        separatorView1.backgroundColor = UIColor.darkGray
-        headerContent.addSubview(separatorView1)
-        separatorView1.leadingAnchor.constraint(equalTo: headerContent.leadingAnchor, constant: 0).isActive = true
-        separatorView1.trailingAnchor.constraint(equalTo: title.leadingAnchor, constant: -13).isActive = true
-        separatorView1.heightAnchor.constraint(equalToConstant: 1).isActive = true
-        separatorView1.centerYAnchor.constraint(equalTo: headerContent.centerYAnchor).isActive = true
-        
-        let separatorView2 = UIView()
-        separatorView2.translatesAutoresizingMaskIntoConstraints = false
-        separatorView2.backgroundColor = UIColor.darkGray
-        headerContent.addSubview(separatorView2)
-        separatorView2.leadingAnchor.constraint(equalTo: title.trailingAnchor, constant: 13).isActive = true
-        separatorView2.trailingAnchor.constraint(equalTo: headerContent.trailingAnchor, constant: 0).isActive = true
-        separatorView2.centerYAnchor.constraint(equalTo: headerContent.centerYAnchor).isActive = true
-        separatorView2.heightAnchor.constraint(equalToConstant: 1).isActive = true
-  
-        
-        return headerContent
+        let customSectionBar = CustomSectionBar()
+        customSectionBar.configUI(section: section)
+        return customSectionBar
     }
     
     
