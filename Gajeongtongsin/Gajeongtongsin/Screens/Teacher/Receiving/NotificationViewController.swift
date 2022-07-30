@@ -46,6 +46,15 @@ class NotificationViewController: BaseViewController {
         view.backgroundColor = .systemBackground
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
+    }
+    
     // MARK: - Funcs
     override func render() {
 
@@ -62,19 +71,8 @@ class NotificationViewController: BaseViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         tableView.separatorInset.left = 0
         tableView.separatorColor = .white
-  //      tableView.contentInset = UIEdgeInsets(top: 7, left: 0, bottom: 0, right: 0)
- 
+
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        navigationController?.navigationBar.isHidden = false
-        tabBarController?.tabBar.isHidden = true
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        tabBarController?.tabBar.isHidden = false
-    }
-    
 }
 
 extension NotificationViewController: UITableViewDataSource {
