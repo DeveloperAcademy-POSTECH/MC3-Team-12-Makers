@@ -68,9 +68,11 @@ class NotificationTableViewCell: BaseTableViewCell {
             sendingTime.textColor = .white
         case .reservation, .message:
             messageInfo.text = notification.type.notificationMessage
-            messageInfo.textColor = .DarkText
+
+            messageInfo.textColor = .black
             senderName.textColor = .black
-            sendingTime.textColor = .DarkText
+            sendingTime.textColor = .black
+
         }
         senderName.text = "\(notification.childName) 학부모님"
         sendingTime.text = "5시간전"

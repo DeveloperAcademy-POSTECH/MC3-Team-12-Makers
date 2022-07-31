@@ -28,7 +28,6 @@
 		35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958382288299AE002B6873 /* UIColor+Extension.swift */; };
 		3595838528829A82002B6873 /* ImageLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595838428829A82002B6873 /* ImageLiteral.swift */; };
 		3595838728829BB6002B6873 /* FirebaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595838628829BB6002B6873 /* FirebaseManager.swift */; };
-		3595838928829C1D002B6873 /* Test.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595838828829C1D002B6873 /* Test.swift */; };
 		3595838B28829C2C002B6873 /* Test2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595838A28829C2C002B6873 /* Test2.swift */; };
 		3595838D28829C6C002B6873 /* TestA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595838C28829C6C002B6873 /* TestA.swift */; };
 		3595839128829C7B002B6873 /* TestC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595839028829C7B002B6873 /* TestC.swift */; };
@@ -63,6 +62,9 @@
 		C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC042885DF05009A1563 /* Schedule.swift */; };
 		C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */; };
 		C0DFFC092885E1A0009A1563 /* TeacherUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC082885E1A0009A1563 /* TeacherUser.swift */; };
+		DDD8A79328936B98002542C5 /* PrimaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A79228936B98002542C5 /* PrimaryButton.swift */; };
+		DDD8A79528936BA3002542C5 /* SecondaryButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A79428936BA2002542C5 /* SecondaryButton.swift */; };
+		DDD8A79728936BCC002542C5 /* CardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDD8A79628936BCC002542C5 /* CardCollectionViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -89,7 +91,6 @@
 		35958382288299AE002B6873 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		3595838428829A82002B6873 /* ImageLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLiteral.swift; sourceTree = "<group>"; };
 		3595838628829BB6002B6873 /* FirebaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseManager.swift; sourceTree = "<group>"; };
-		3595838828829C1D002B6873 /* Test.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test.swift; sourceTree = "<group>"; };
 		3595838A28829C2C002B6873 /* Test2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test2.swift; sourceTree = "<group>"; };
 		3595838C28829C6C002B6873 /* TestA.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestA.swift; sourceTree = "<group>"; };
 		3595839028829C7B002B6873 /* TestC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestC.swift; sourceTree = "<group>"; };
@@ -125,6 +126,9 @@
 		C0DFFC042885DF05009A1563 /* Schedule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Schedule.swift; sourceTree = "<group>"; };
 		C0DFFC062885DFEB009A1563 /* ScheduleInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleInfo.swift; sourceTree = "<group>"; };
 		C0DFFC082885E1A0009A1563 /* TeacherUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherUser.swift; sourceTree = "<group>"; };
+		DDD8A79228936B98002542C5 /* PrimaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButton.swift; sourceTree = "<group>"; };
+		DDD8A79428936BA2002542C5 /* SecondaryButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondaryButton.swift; sourceTree = "<group>"; };
+		DDD8A79628936BCC002542C5 /* CardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,8 +242,10 @@
 		35171D1728828EEA0059F297 /* UIComponent */ = {
 			isa = PBXGroup;
 			children = (
-				3595838828829C1D002B6873 /* Test.swift */,
 				C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */,
+				DDD8A79228936B98002542C5 /* PrimaryButton.swift */,
+				DDD8A79428936BA2002542C5 /* SecondaryButton.swift */,
+				DDD8A79628936BCC002542C5 /* CardCollectionViewCell.swift */,
 			);
 			path = UIComponent;
 			sourceTree = "<group>";
@@ -545,7 +551,6 @@
 				3595839928829C94002B6873 /* TestH.swift in Sources */,
 				C0DFFC052885DF05009A1563 /* Schedule.swift in Sources */,
 				C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */,
-				3595838928829C1D002B6873 /* Test.swift in Sources */,
 				3595839E28829D80002B6873 /* ProfileViewController.swift in Sources */,
 				8C7C924E2892D75E00C878AF /* UrgentRequestViewController.swift in Sources */,
 				C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */,
@@ -563,6 +568,7 @@
 				3595839528829C89002B6873 /* TestF.swift in Sources */,
 				3595837B288297D1002B6873 /* ReservationViewController.swift in Sources */,
 				3595839328829C82002B6873 /* TestD.swift in Sources */,
+				DDD8A79728936BCC002542C5 /* CardCollectionViewCell.swift in Sources */,
 				3558AB3928868D2800539C66 /* Notification.swift in Sources */,
 				C056F6AF288B0A950070EED5 /* MessageTableViewCell.swift in Sources */,
 				35958379288297B9002B6873 /* SendingViewController.swift in Sources */,
@@ -574,6 +580,7 @@
 				04797679288E7855009C0826 /* TeacherCalenderData.swift in Sources */,
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
 				04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */,
+				DDD8A79528936BA3002542C5 /* SecondaryButton.swift in Sources */,
 				C0DFFC092885E1A0009A1563 /* TeacherUser.swift in Sources */,
 				35171D0028828C930059F297 /* SceneDelegate.swift in Sources */,
 				C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */,
@@ -581,6 +588,7 @@
 				359583A428829D99002B6873 /* TestU.swift in Sources */,
 				8C7C924C28919C5500C878AF /* ReservationDetailViewController.swift in Sources */,
 				3595839128829C7B002B6873 /* TestC.swift in Sources */,
+				DDD8A79328936B98002542C5 /* PrimaryButton.swift in Sources */,
 				045D0DBE2888DDB700778EEC /* ParentsCalenderViewController.swift in Sources */,
 				35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */,
 				C0DFFC032885DE32009A1563 /* Message.swift in Sources */,
