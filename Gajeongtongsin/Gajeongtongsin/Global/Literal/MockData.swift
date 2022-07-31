@@ -15,27 +15,30 @@ var parent2 = ParentUser(id: "2", sendingMessages: messageList2, childName: "부
 var parent3 = ParentUser(id: "3", sendingMessages: messageList3, childName: "최히로", schedules: scheduleList3)
 
 var messageList1 = [
-    Message(type: .absence, sentDate: "실시간", expectedDate: "7월21일", content: "김유쓰배아픔", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: "실시간", expectedDate: "7월22일", content: "김유쓰놀이공원", isCompleted: false)
+    Message(type: .absence, sentDate: "2022-03-01", expectedDate: "7월21일", content: "김유쓰배아픔", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-04", expectedDate: "7월22일", content: "김유쓰놀이공원", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-19", expectedDate: "7월28일", content: "김유쓰할머니댁", isCompleted: false)
 ]
 
 var messageList2 = [
-    Message(type: .absence, sentDate: "실시간", expectedDate: "7월23일", content: "부니카제주도", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: "실시간", expectedDate: "7월24일", content: "부니카서울", isCompleted: false)
-    ]
-
-var messageList3 = [
-    Message(type: .absence, sentDate: "실시간", expectedDate: "7월25일", content: "최히로소개팅", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: "실시간", expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false)
+    Message(type: .absence, sentDate: "2022-03-04", expectedDate: "7월23일", content: "부니카제주도", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-07", expectedDate: "7월24일", content: "부니카서울", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-15", expectedDate: "7월24일", content: "부니카애플아카데미", isCompleted: false)
 ]
 
-var scheduleList1 = [
+var messageList3 = [
+    Message(type: .absence, sentDate: "2022-03-01", expectedDate: "7월25일", content: "최히로소개팅", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-07", expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false),
+    Message(type: .earlyLeave, sentDate: "2022-03-15", expectedDate: "7월26일", content: "최히로번개만남", isCompleted: false)
+]
+
+var scheduleList1: [Schedule] = [
     Schedule(reservedDate: "8월1일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월27일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월27일", startTime: "14시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월27일", startTime: "15시00분", isReserved: false)],
-             content: "김유쓰영어성적문의")
+                ScheduleInfo(consultingDate: "7월1일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월2일", startTime: "14시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "7월3일", startTime: "15시00분", isReserved: false)],
+             content: "김유쓰영어 성적문의 김유쓰 영어성적문의 김유쓰 영어 성적문의 김유쓰영어성적 문의 김유쓰 영어성적 문의김유쓰 영어성적문의 김유쓰 영어성적 문의 김유쓰 영어성적 문의 김유 쓰영어성적문의김유쓰 영어성적문의김유쓰영어성적문의김유쓰영어성적 문의김유쓰영 어성적 문의김유 쓰영어성적문의김유쓰 영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문 의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어영어성적 문의김유쓰영 어성적 문의김유 쓰영어성적문의김유쓰 영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문 의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어영어성 적문의김유쓰영어성적문 의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성 적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의김유쓰영어성적문의")
 ]
 
 var scheduleList2 = [

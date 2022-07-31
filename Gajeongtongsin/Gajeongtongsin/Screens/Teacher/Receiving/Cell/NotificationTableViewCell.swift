@@ -8,7 +8,6 @@ import UIKit
 
 class NotificationTableViewCell: BaseTableViewCell {
     
-    
     // MARK: - Properties
     static let identifier: String = "NotificationTableViewCell"
     
@@ -59,6 +58,7 @@ class NotificationTableViewCell: BaseTableViewCell {
         sendingTime.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16).isActive = true
     }
     
+
     func configure(notification: Notification) {
         switch notification.type {
         case .emergency :
@@ -68,9 +68,11 @@ class NotificationTableViewCell: BaseTableViewCell {
             sendingTime.textColor = .white
         case .reservation, .message:
             messageInfo.text = notification.type.notificationMessage
+
             messageInfo.textColor = .black
             senderName.textColor = .black
             sendingTime.textColor = .black
+
         }
         senderName.text = "\(notification.childName) 학부모님"
         sendingTime.text = "5시간전"
