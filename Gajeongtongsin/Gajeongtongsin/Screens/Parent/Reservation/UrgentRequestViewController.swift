@@ -111,7 +111,8 @@ class UrgentRequestViewController: BaseViewController {
                                         postId: "2",
                                         type: .emergency,
                                         childName: childName,
-                                        content: emergencyContent)
+                                         content: emergencyContent,
+                                         time: Date().toString())
 
         FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
         self.dismiss(animated: true)
