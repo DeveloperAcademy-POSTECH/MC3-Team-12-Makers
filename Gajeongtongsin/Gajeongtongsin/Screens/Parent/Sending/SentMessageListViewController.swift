@@ -66,17 +66,16 @@ class SentMessageListViewController: BaseViewController {
     }
     
     func navigationBar() {
-//        self.navigationItem.title = "전송내역nav"
+        self.navigationItem.title = ""
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus.message"), style: .plain, target: self, action: #selector(writeButton))
     }
     
     @objc func writeButton() {
         let vc = SendingViewController()
-        vc.modalPresentationStyle = UIModalPresentationStyle.popover
-        vc.modalTransitionStyle = UIModalTransitionStyle.coverVertical
         vc.delegate = self
-        present(vc, animated: true)
+        navigationController?.pushViewController(vc, animated: true)
+
     }
    
 }
