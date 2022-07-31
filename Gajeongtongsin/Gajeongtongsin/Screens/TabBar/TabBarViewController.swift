@@ -43,7 +43,7 @@ class TabBarViewController: UITabBarController {
         case .teacher:
              vc1 =  UINavigationController(rootViewController: ConsultationViewController())
              vc2 =  UINavigationController(rootViewController: MessageViewController())
-             vc3 =  UINavigationController(rootViewController: NotificationViewController())
+             vc3 =  UINavigationController(rootViewController: ProfileViewController())
         }
        
         guard let vc1 = vc1 else {return}
@@ -63,7 +63,7 @@ class TabBarViewController: UITabBarController {
         tabBar.tintColor = .systemBlue
         tabBar.backgroundColor = .white
         tabBar.layer.borderWidth = 2
-        tabBar.layer.borderColor = UIColor.borderGray.cgColor
+        tabBar.layer.borderColor = UIColor.LightLine.cgColor
         setViewControllers([vc1,vc2,vc3], animated: true)
     }
 

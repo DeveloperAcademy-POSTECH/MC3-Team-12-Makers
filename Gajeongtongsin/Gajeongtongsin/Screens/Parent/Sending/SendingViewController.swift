@@ -165,9 +165,10 @@ class SendingViewController: BaseViewController {
     }
 
     override func configUI() {
-        view.backgroundColor = .primaryBackground
-        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
 
+        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
+        view.backgroundColor = .Background
+        
         //Message Type 버튼과 선택에 따른 컴포넌트 노출 차이
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
             UIAction(title: "결석", handler: { [weak self] _ in
@@ -222,7 +223,7 @@ class SendingViewController: BaseViewController {
   
     func sendMessage() {
         let newMsg = Message(type: msgType(),
-                             sentDate: "Date()",
+                             sentDate: "2022-03-21",
                              expectedDate: "\(datePicker.date)",
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)

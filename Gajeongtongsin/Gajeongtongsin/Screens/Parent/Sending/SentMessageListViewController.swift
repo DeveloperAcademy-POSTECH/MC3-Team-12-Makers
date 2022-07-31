@@ -62,7 +62,7 @@ class SentMessageListViewController: BaseViewController {
     }
     
     override func configUI() {
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = .Background
     }
     
     func navigationBar() {

@@ -33,6 +33,12 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
+    private var customNavigationBar: CutomNavigationBar = {
+        let customNavigationBar = CutomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
+        customNavigationBar.backgroundColor = .white
+        customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+        return customNavigationBar
+    }()
     //displayData에 추가될 데이터 포멧
     private var calenderData: [TeacherCalenderData] = [
         TeacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green),
@@ -76,17 +82,29 @@ class ConsultationViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        calenderView.delegate = self
-        calenderView.dataSource = self
-        
-        tableView.dataSource = self
-        tableView.delegate = self
+        render()
+        configUI()
+        setDelegations()
+
 
         seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    
     //MARK: - Funcs
     
+    func setDelegations() {
+        calenderView.delegate = self
+        calenderView.dataSource = self
+        customNavigationBar.delegate = self
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
+
     func acceptedData() -> [TeacherCalenderData] {
         var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [Int] = []
@@ -122,7 +140,7 @@ class ConsultationViewController: BaseViewController {
     }
     
     
-    
+
     //선택한 학부모의 신청 요일(날자)를 리스트로 반환해주는 함수
     func dateStringToIndex(parentUserIds: Int) -> [Int] {
         var dateString: [String] = []
@@ -211,15 +229,31 @@ class ConsultationViewController: BaseViewController {
         seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 320).isActive = true
         seeAll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         
+
+        view.addSubview(customNavigationBar)
+        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        customNavigationBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
+
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 350).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+
     }
 
     override func configUI() {
         view.backgroundColor = .white
+        setupNavigationBackButton()
+    }
+    
+    func setupNavigationBackButton() {
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+        navigationController?.navigationBar.tintColor = .black
     }
 }
 
@@ -243,6 +277,7 @@ extension ConsultationViewController: UICollectionViewDelegate{
         }
         return cell
     }
+
     
     //cell 클릭 액션
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -253,7 +288,7 @@ extension ConsultationViewController: UICollectionViewDelegate{
             mainTeacher.parentUsers[parentId!].schedules[0].scheduleList = [mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[selectedIndex!]]
             mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[0].isReserved = true
             
-            calenderData[parentId!].cellColor = .borderGray // 예약확정된 셀은 연회색
+            calenderData[parentId!].cellColor = .LightLine // 예약확정된 셀은 연회색
             clickedCell = nil // 선택해제
 
             //onTapButton 함수 실행 -> 수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
@@ -278,6 +313,7 @@ extension ConsultationViewController: UICollectionViewDelegate{
         }
         calenderView.reloadData()
     }
+
 }
 
 extension ConsultationViewController: UICollectionViewDataSource {
@@ -306,6 +342,13 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
+
+extension ConsultationViewController : CustomNavigationBarDelegate {
+    func tapButton() {
+        let vc = NotificationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+}
 
 //학부모 테이블뷰
 extension ConsultationViewController: UITableViewDataSource {
@@ -341,12 +384,14 @@ extension ConsultationViewController: UITableViewDelegate {
         calenderView.reloadData()
     }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?){
-        deSelectTableRow(selectedTableRow: selectedTableRow!)
+        guard let selectedRow = selectedTableRow else {return}
+        deSelectTableRow(selectedTableRow: selectedRow)
     }
     
     func deSelectTableRow(selectedTableRow: IndexPath) {
         tableView.deselectRow(at: selectedTableRow, animated: true)
         displayData = acceptedData()
         calenderView.reloadData()
+
     }
 }
