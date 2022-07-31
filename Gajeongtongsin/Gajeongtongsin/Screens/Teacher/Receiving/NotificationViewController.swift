@@ -28,9 +28,13 @@ class NotificationViewController: BaseViewController {
     }()
     
     private let tableView: UITableView = {
-        let tableView = UITableView(frame: .zero, style: .plain)
+        let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(NotificationTableViewCell.self, forCellReuseIdentifier: NotificationTableViewCell.identifier)
+        tableView.backgroundColor = .white
+        tableView.separatorColor = .darkGray
+
+
         return tableView
     }()
 
@@ -42,24 +46,6 @@ class NotificationViewController: BaseViewController {
         view.backgroundColor = .systemBackground
     }
     
-    // MARK: - Funcs
-    override func render() {
-
-        view.addSubview(notificationLabel)
-        notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0).isActive = true
-        notificationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        notificationLabel.widthAnchor.constraint(equalToConstant: 343).isActive = true
-        notificationLabel.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        
-        view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 0).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
- 
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
         tabBarController?.tabBar.isHidden = true
@@ -67,6 +53,25 @@ class NotificationViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         tabBarController?.tabBar.isHidden = false
+    }
+    
+    // MARK: - Funcs
+    override func render() {
+
+        view.addSubview(notificationLabel)
+        notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13).isActive = true
+        notificationLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        notificationLabel.widthAnchor.constraint(equalToConstant: 343).isActive = true
+        notificationLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        view.addSubview(tableView)
+        tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 10).isActive = true
+        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        tableView.separatorInset.left = 0
+        tableView.separatorColor = .white
+
     }
 }
 
@@ -76,10 +81,30 @@ extension NotificationViewController: UITableViewDataSource {
         return sections.count
     }
     
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let customSectionBar = CustomSectionBar()
+        customSectionBar.configure(section: section)
+        return customSectionBar
+    }
+    
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return sections[section]
     }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        UIView()
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        .leastNonzeroMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        38
+    }
+    
+   
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -118,4 +143,6 @@ extension NotificationViewController: UITableViewDelegate {
             present(alret, animated: true, completion: nil)
         }
     }
+    
+    
 }
