@@ -208,41 +208,51 @@ final class FirebaseManager {
     
     
     /// 학부모 여러명의 메시지들 가져오기 for 선생님
-    func fetchParentsMessages(completion: @escaping (([Message]) -> Void)) {
-        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+    func fetchParentsMessages(completion: @escaping (([(String,Message)]?) -> Void)) {
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else { completion(nil); return}
         
-        var allMessages: [Message] = []
+        var allMessages: [(String,Message)] = []
         
         db.child("TeacherUsers/\(teacherUserId)/parentUsers")
             .observe(.value) { snapshot in
                 let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
                 
                 for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
-                    
-                    let sendimgMessasges = parent["sendingMessages"] as! [String: [String:Any]] // [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
-                    for key in sendimgMessasges.keys {
+                    var parentMessages: [(String,Message)] = []
+                    guard let sendimgMessasges = parent["sendingMessages"] as? [String: [String:Any]]  else { completion(nil); return }// [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                    let childName = parent["childName"] as! String
+                    for messageVal in sendimgMessasges.values {
                         
                         do {
-                            let messageData = try JSONSerialization.data(withJSONObject: sendimgMessasges[key]!, options: [])
+                            let messageData = try JSONSerialization.data(withJSONObject: messageVal, options: [])
                             let decoder = JSONDecoder()
                             let message = try decoder.decode(Message.self, from: messageData)
-                            allMessages.append(message)
+                            parentMessages.append((childName,message))
                         } catch let DecodingError.dataCorrupted(context) {
+                            completion(nil);
                             print(context)
                         } catch let DecodingError.keyNotFound(key, context) {
+                            completion(nil);
                             print("Key '\(key)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
                         } catch let DecodingError.valueNotFound(value, context) {
+                            completion(nil);
                             print("Value '\(value)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
                         } catch let DecodingError.typeMismatch(type, context) {
+                            completion(nil);
                             print("Type '\(type)' mismatch:", context.debugDescription)
                             print("codingPath:", context.codingPath)
                         } catch {
+                            completion(nil);
                             print("error: ", error)
                         }
                     }
+                    allMessages += parentMessages
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allMessages)
+
                 }
             }
     }

@@ -87,10 +87,14 @@ class MessageTableViewCell: BaseTableViewCell {
     }
 
     
-    func configure(indexPath: IndexPath) {
-        let message: MessagesWithChildName = sortedMessages[indexPath.section]
-        messageInfo.text = "\(message[indexPath.row].message.expectedDate) \(message[indexPath.row].message.type.rawValue) \(message[indexPath.row].childName)"
-        content.text = "\(message[indexPath.row].message.content)"
+//    func configure(indexPath: IndexPath) {
+//        let message: MessagesWithChildName = sortedMessages[indexPath.section]
+//        messageInfo.text = "\(message[indexPath.row].message.expectedDate) \(message[indexPath.row].message.type.rawValue) \(message[indexPath.row].childName)"
+//        content.text = "\(message[indexPath.row].message.content)"
+//    }
+    func configure(childName: String, message:Message){
+        messageInfo.text = "\(message.expectedDate) \(message.type.rawValue) \(childName)"
+                content.text = "\(message.content)"
     }
     
     func changeState() {

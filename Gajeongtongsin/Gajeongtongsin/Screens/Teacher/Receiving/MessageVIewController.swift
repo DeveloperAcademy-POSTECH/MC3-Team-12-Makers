@@ -20,12 +20,24 @@ class MessageViewController: BaseViewController {
         return tableView
     }()
     
+    private var allMessages: MessagesWithChildName = []
+    
+    var sortedMessages:[MessagesWithChildName] {
+         chunkedMessages(messages: allMessages.sorted(by: {$0.message.sentDate > $1.message.sentDate}))
+    }
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
         navigationBar()
+        
+        FirebaseManager.shared.fetchParentsMessages { messages in
+            if let messages = messages {
+                self.allMessages = messages
+                self.tableView.reloadData()
+            }
+        }
     }
     
     override func render() {
@@ -57,14 +69,23 @@ extension MessageViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        
+        if !sortedMessages[section].isEmpty {
         return "\(sortedMessages[section][0].message.sentDate)에 수신하신 쪽지입니다"
+        }
+        return nil
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: MessageTableViewCell.identifier, for: indexPath) as? MessageTableViewCell else { return UITableViewCell()}
     
-        cell.configure(indexPath: indexPath)
+        let messageTuple: MessagesWithChildName = sortedMessages[indexPath.section]
+        let childName = messageTuple[indexPath.row].childName
+        let message = messageTuple[indexPath.row].message
+        cell.configure(childName: childName, message: message)
+        
+
         
         return cell
     }
@@ -94,7 +115,7 @@ extension MessageViewController: UITableViewDelegate {
     }
 }
 
-func chunkedMessages(messages: MessagesWithChildName) -> [MessagesWithChildName] {
+func chunkedMessages(messages: [(childName: String, message: Message)]) -> [MessagesWithChildName] {
     var messagesByDate: [MessagesWithChildName] = []
     var currentDateMessages: MessagesWithChildName = []
     
@@ -111,3 +132,20 @@ func chunkedMessages(messages: MessagesWithChildName) -> [MessagesWithChildName]
     return messagesByDate
     
 }
+//func chunkedMessages(messages: MessagesWithChildName) -> [MessagesWithChildName] {
+//    var messagesByDate: [MessagesWithChildName] = []
+//    var currentDateMessages: MessagesWithChildName = []
+//
+//    for message in messages {
+//        if let lastElement = currentDateMessages.last {
+//            if lastElement.message.sentDate != message.message.sentDate {
+//                messagesByDate.append(currentDateMessages)
+//                currentDateMessages = []
+//            }
+//        }
+//        currentDateMessages.append(message)
+//    }
+//    messagesByDate.append(currentDateMessages)  //마지막 리스트도 추가하고 리턴해야함
+//    return messagesByDate
+//
+//}
