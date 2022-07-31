@@ -72,16 +72,9 @@ class StartViewController: BaseViewController {
     
     @objc func parentTap() {
         UserDefaults.standard.set(getUid(), forKey: "ParentUser")
-        let vc = TabBarViewController(role: .parent)
+        let vc = ParentRegistrationViewController()
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
-        // 파이어베이스 부모 초기화 업로드
-        let homeroomTeacherUid = getUid() // 일단은 선생님, 부모님 uid 같음.  선생님 id 받는 뷰가 필요할듯.
-        let childName = "김유쓰" // 아이 이름을 받는 뷰가 필요할 듯.
-        UserDefaults.standard.set(homeroomTeacherUid, forKey: "HomeroomTeacher")
-        UserDefaults.standard.set(childName, forKey: "ChildName")
-
-        FirebaseManager.shared.initializeParent()
         present(vc, animated: true)
     }
     @objc func teacherTap() {

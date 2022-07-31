@@ -84,6 +84,7 @@ extension MessageViewController: UITableViewDelegate {
         let okayAction = UIAlertAction(title: "확인", style: .default) { _ in
             let cell = tableView.cellForRow(at: indexPath) as? MessageTableViewCell
             cell?.changeState()
+            cell?.selectionStyle = .none
         }
         alert.addAction(cancelAction)
         alert.addAction(okayAction)
