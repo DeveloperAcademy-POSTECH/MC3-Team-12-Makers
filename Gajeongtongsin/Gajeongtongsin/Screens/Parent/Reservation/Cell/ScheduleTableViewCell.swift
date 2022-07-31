@@ -63,7 +63,7 @@ class ScheduleTableViewCell: BaseTableViewCell {
     
     func configure(index: IndexPath) {
 
-        var appointment: Schedule = currentParent.schedules[index.row]
+        let appointment: Schedule = currentParent.schedules[index.row]
         
         scheduleInfo.text = "예약 \(index.row + 1)"
         
