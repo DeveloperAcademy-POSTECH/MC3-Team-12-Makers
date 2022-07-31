@@ -45,6 +45,8 @@
 		35AA44BB288FD985000573B8 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 35AA44BA288FD985000573B8 /* FirebaseDatabaseSwift */; };
 		8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */; };
 		8C40E867288B7BC100DECACA /* SentMessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C40E866288B7BC100DECACA /* SentMessageTableViewCell.swift */; };
+		8C7C924C28919C5500C878AF /* ReservationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7C924B28919C5500C878AF /* ReservationDetailViewController.swift */; };
+		8C7C924E2892D75E00C878AF /* UrgentRequestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C7C924D2892D75E00C878AF /* UrgentRequestViewController.swift */; };
 		8CBD1521288F900500510610 /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CBD1520288F900500510610 /* ScheduleTableViewCell.swift */; };
 		C01FA466289406B300A1E4DB /* Date+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FA465289406B300A1E4DB /* Date+Extension.swift */; };
 		C01FA468289406C700A1E4DB /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C01FA467289406C700A1E4DB /* String+Extension.swift */; };
@@ -101,6 +103,8 @@
 		35AA44B4288F8609000573B8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageListViewController.swift; sourceTree = "<group>"; };
 		8C40E866288B7BC100DECACA /* SentMessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageTableViewCell.swift; sourceTree = "<group>"; };
+		8C7C924B28919C5500C878AF /* ReservationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationDetailViewController.swift; sourceTree = "<group>"; };
+		8C7C924D2892D75E00C878AF /* UrgentRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgentRequestViewController.swift; sourceTree = "<group>"; };
 		8CBD1520288F900500510610 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		C01FA465289406B300A1E4DB /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		C01FA467289406C700A1E4DB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
@@ -280,7 +284,9 @@
 				3595836D288294DB002B6873 /* Component */,
 				3595836C288294D6002B6873 /* Cell */,
 				3595837A288297D1002B6873 /* ReservationViewController.swift */,
+				8C7C924B28919C5500C878AF /* ReservationDetailViewController.swift */,
 				045D0DBD2888DDB700778EEC /* ParentsCalenderViewController.swift */,
+				8C7C924D2892D75E00C878AF /* UrgentRequestViewController.swift */,
 			);
 			path = Reservation;
 			sourceTree = "<group>";
@@ -535,6 +541,7 @@
 				C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */,
 				3595838928829C1D002B6873 /* Test.swift in Sources */,
 				3595839E28829D80002B6873 /* ProfileViewController.swift in Sources */,
+				8C7C924E2892D75E00C878AF /* UrgentRequestViewController.swift in Sources */,
 				C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */,
 				046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */,
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
@@ -565,6 +572,7 @@
 				35171D0028828C930059F297 /* SceneDelegate.swift in Sources */,
 				C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */,
 				359583A428829D99002B6873 /* TestU.swift in Sources */,
+				8C7C924C28919C5500C878AF /* ReservationDetailViewController.swift in Sources */,
 				3595839128829C7B002B6873 /* TestC.swift in Sources */,
 				045D0DBE2888DDB700778EEC /* ParentsCalenderViewController.swift in Sources */,
 				35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */,
