@@ -92,7 +92,7 @@ class UrgentRequestViewController: BaseViewController {
     
     //신청, 취소 버튼
     override func configUI() {
-        view.backgroundColor = .primaryBackground
+        view.backgroundColor = .Background
         cancelBtn.addTarget(self, action: #selector(cancel), for: .touchUpInside)
         submitBtn.addTarget(self, action: #selector(submit), for: .touchUpInside)
 

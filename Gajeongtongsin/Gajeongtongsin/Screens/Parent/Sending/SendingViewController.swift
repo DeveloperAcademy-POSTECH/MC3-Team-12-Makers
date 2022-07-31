@@ -52,7 +52,7 @@ class SendingViewController: BaseViewController {
     //메시지 버튼 내 text와 image 간격 조정, 사이 구분선 삽입
     private let messageTypeButton: UIButton = {
         let button = UIButton()
-        button.setTitle("용건 선택", for: .normal)
+        button.setTitle("용건 선택   ", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.backgroundColor = .secondarySystemFill
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
@@ -88,7 +88,8 @@ class SendingViewController: BaseViewController {
         let picker = UIDatePicker()
         picker.isHidden = true
         picker.preferredDatePickerStyle = .compact
-        picker.locale = Locale(identifier: "ko-KR")
+        picker.locale = Locale(identifier: "ko_KR")
+        picker.timeZone = TimeZone(identifier: "ko_KR")
         picker.minuteInterval = 30
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
@@ -210,21 +211,26 @@ class SendingViewController: BaseViewController {
         return msgType
     }
     
+    func dateType() -> String {
+        let dateType = messageTypeButton.currentTitle == "결석" ? "\(datePicker.date.toString())" : "\(datePicker.date.toStringWithTime())"
+        return dateType
+    }
+    
     @objc func sendAlert() {
-        let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
+        let alert = UIAlertController(title: "쪽지를 전송하시겠습니까?", message: nil, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
+        let okayAction = UIAlertAction(title: "전송", style: .default) { _ in
             self.sendMessage()
         }
         alert.addAction(cancelAction)
         alert.addAction(okayAction)
         self.present(alert, animated: true)
     }
-  
+    
     func sendMessage() {
         let newMsg = Message(type: msgType(),
                              sentDate: "2022-03-21",
-                             expectedDate: "\(datePicker.date)",
+                             expectedDate: dateType(),
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
         
@@ -234,6 +240,7 @@ class SendingViewController: BaseViewController {
         delegate?.reloadTable()
         navigationController?.popViewController(animated: true)
     }
+
 }
 
 //MARK: - Extensions
@@ -251,4 +258,5 @@ extension SendingViewController: UITextFieldDelegate {
         textField.resignFirstResponder()
         return true
     }
+    
 }
