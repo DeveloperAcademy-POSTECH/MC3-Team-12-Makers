@@ -12,12 +12,14 @@ class NotificationViewController: BaseViewController {
     
     // MARK: - Properties
     var emergancy: [Notification] {
-        mainTeacher.notificationList.filter { $0.type == .emergency }
+        allNotifications.filter { $0.type == .emergency }
     }
     
     var normal: [Notification] {
-        mainTeacher.notificationList.filter { $0.type != .emergency }
+        allNotifications.filter { $0.type != .emergency }
     }
+    
+    private var allNotifications: [Notification] = []
     
     private let notificationLabel: UILabel = {
        let label = UILabel()
@@ -44,6 +46,15 @@ class NotificationViewController: BaseViewController {
         tableView.dataSource = self
         tableView.delegate = self
         view.backgroundColor = .systemBackground
+        
+        FirebaseManager.shared.fetchNotifications { [weak self] notifications in
+            if let notifications = notifications {
+                self?.allNotifications = notifications
+                self?.tableView.reloadData()
+            }
+          
+            
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -118,7 +129,7 @@ extension NotificationViewController: UITableViewDataSource {
         if indexPath.section == 0 {
             cell.configure(notification: emergancy[indexPath.row])
 
-            cell.backgroundColor = UIColor.Confirm
+            cell.backgroundColor = UIColor.Urgent
 
         } else {
             cell.configure(notification: normal[indexPath.row])
@@ -136,9 +147,9 @@ extension NotificationViewController: UITableViewDataSource {
 
 extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let currentMessage = emergancy[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
+            let currentMessage = emergancy[indexPath.row]
             let alret = UIAlertController(title: "\(currentMessage.childName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
             let okayAction = UIAlertAction(title: "확인", style: .default)
             alret.addAction(okayAction)
