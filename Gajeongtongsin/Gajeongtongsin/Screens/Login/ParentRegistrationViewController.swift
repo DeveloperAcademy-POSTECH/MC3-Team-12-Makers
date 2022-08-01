@@ -29,6 +29,9 @@ class ParentRegistrationViewController: BaseViewController {
         let view = LabelFieldView(titleLabel: "초대 코드",
                                   placeholder: "초대코드 6자리를 입력해주세요.")
         view.setTag(0)
+        view.getTextField().autocapitalizationType = .allCharacters
+        view.getTextField().textContentType
+
         view.translatesAutoresizingMaskIntoConstraints = false // 필요한가
         return view
     }()
@@ -96,7 +99,7 @@ class ParentRegistrationViewController: BaseViewController {
     
     @objc func registerTap(){
         
-        homeroomTeacherUid = invitationCodeView.getContent() ?? ""
+        homeroomTeacherUid = invitationCodeView.getContent()?.uppercased() ?? ""
         childName = childNameView.getContent() ?? ""
         UserDefaults.standard.set(homeroomTeacherUid, forKey: "HomeroomTeacher")
         UserDefaults.standard.set(childName, forKey: "ChildName")
