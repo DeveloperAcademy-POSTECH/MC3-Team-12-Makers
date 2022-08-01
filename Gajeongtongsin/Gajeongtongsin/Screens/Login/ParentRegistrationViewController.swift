@@ -30,7 +30,6 @@ class ParentRegistrationViewController: BaseViewController {
                                   placeholder: "초대코드 6자리를 입력해주세요.")
         view.setTag(0)
         view.getTextField().autocapitalizationType = .allCharacters
-        view.getTextField().textContentType
 
         view.translatesAutoresizingMaskIntoConstraints = false // 필요한가
         return view
