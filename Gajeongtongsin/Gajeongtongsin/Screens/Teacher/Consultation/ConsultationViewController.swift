@@ -21,14 +21,14 @@ class ConsultationViewController: BaseViewController {
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM-dd"
+        formatter.dateFormat = "M-dd"
         var nextWeek = [String]()
          
         for dayCount in 0..<weekDays+2 { //주말 이틀 추가(weekDays==5)
 //            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek +7)) //캘린더뷰가 다음주를 표시하는 경우 +7
             let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            nextWeek.append(oneDayString[0]+oneDayString[1]+"일")
+            nextWeek.append(oneDayString[0]+"월"+oneDayString[1]+"일")
         }
         return nextWeek
     }
@@ -60,13 +60,14 @@ class ConsultationViewController: BaseViewController {
     func scheduledParentsListMaker() -> [ParentUser] {
         var scheduledParentsList: [ParentUser] = []
         for parentsIndex in 0..<mainTeacher.parentUsers.count {
-            for scheduleIndex in 0..<mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList.count {
-                if mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[scheduleIndex].isReserved == false {
+            
+                if mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[0].isReserved == false {
                     scheduledParentsList.append(mainTeacher.parentUsers[parentsIndex])
-                    break
+                    
                 }
-            }
+           
         }
+        
         return scheduledParentsList
     }
     
@@ -152,7 +153,11 @@ class ConsultationViewController: BaseViewController {
             for scheduleIndex in 0..<mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList.count { //하단 funcs 참고
                 if mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
-                    calenderIndex.append(timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays + dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex])
+                    
+                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
+                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
+                    calenderIndex.append(rowIndex + columnIndex)
+
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                     acceptedData[acceptedData.count-1].cellColor = .lightGray
                 }
@@ -162,17 +167,22 @@ class ConsultationViewController: BaseViewController {
         return acceptedData
     }
     
-    //모든 신청 예약 데이터를 인덱스로 만들어주는 함수 : 연산 프로퍼티로 하기에는 다시 입력/로드되어야 하는 경우가 있어 함수로 수정
+    //모든 신청 예약 데이터를 인덱스로 만들어주는 함수
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
         
-        for parentIdx in 0..<mainTeacher.parentUsers.count {
+        for parentsIndex in 0..<mainTeacher.parentUsers.count {
             calenderIndex = []
-            for scheduleIndex in 0..<mainTeacher.parentUsers[parentIdx].schedules[0].scheduleList.count{ //하단 funcs 참고
-                calenderIndex.append(timeStringToIndex(parentIndex: parentIdx)[scheduleIndex] * weekDays + dateStringToIndex(parentsIndex: parentIdx)[scheduleIndex])
+            for scheduleIndex in 0..<mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList.count{ //하단 funcs 참고
+                if mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[scheduleIndex].isReserved == false {
+                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
+                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
+                    calenderIndex.append(rowIndex + columnIndex)
+                }
             }
-            calenderData[parentIdx].calenderIndex = calenderIndex
+            calenderData[parentsIndex].calenderIndex = calenderIndex
         }
+        print(calenderData[0])
         return calenderData
     }
     
@@ -263,6 +273,12 @@ extension ConsultationViewController: UICollectionViewDelegate {
                     cell.backgroundColor = clickedCell == indexPath.item ? .black : $0.cellColor
                 }
             }
+            
+            acceptedData().forEach {
+                if $0.calenderIndex.contains(indexPath.item) {
+                    cell.backgroundColor = $0.cellColor
+                }
+            }
             return cell
             
         } else {
@@ -273,12 +289,11 @@ extension ConsultationViewController: UICollectionViewDelegate {
             }
             
             cell.delegate = self
-//            cell.backgroundColor = .gray
+            
             
             let parent = scheduledParentsList[indexPath.item]
             cell.configure(childName: parent.childName, schedule: parent.schedules[0])
             
-            displayData = acceptedData()
             displayData.append(submittedData()[indexPath.item])
             cell.sendDataToCell(displayData: displayData)
             displayData = []
@@ -302,7 +317,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
                 displayData = acceptedData() //수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
                 calenderView.reloadData()
                 
-                scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
+//                scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
                 parentsCollectionView.reloadData()
                 return
             }
