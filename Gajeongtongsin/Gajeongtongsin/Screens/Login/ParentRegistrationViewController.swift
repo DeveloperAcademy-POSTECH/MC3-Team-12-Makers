@@ -1,3 +1,5 @@
+
+
 //
 //  ParentRegistrationViewController.swift
 //  Gajeongtongsin
@@ -27,6 +29,8 @@ class ParentRegistrationViewController: BaseViewController {
         let view = LabelFieldView(titleLabel: "초대 코드",
                                   placeholder: "초대코드 6자리를 입력해주세요.")
         view.setTag(0)
+        view.getTextField().autocapitalizationType = .allCharacters
+
         view.translatesAutoresizingMaskIntoConstraints = false // 필요한가
         return view
     }()
@@ -60,6 +64,8 @@ class ParentRegistrationViewController: BaseViewController {
         registrationButton.addTarget(self,
                                      action: #selector(registerTap),
                                      for: .touchUpInside)
+        invitationCodeView.getTextField().addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
+        childNameView.getTextField().addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         
     }
     // MARK: - Funcs
@@ -92,7 +98,7 @@ class ParentRegistrationViewController: BaseViewController {
     
     @objc func registerTap(){
         
-        homeroomTeacherUid = invitationCodeView.getContent() ?? ""
+        homeroomTeacherUid = invitationCodeView.getContent()?.uppercased() ?? ""
         childName = childNameView.getContent() ?? ""
         UserDefaults.standard.set(homeroomTeacherUid, forKey: "HomeroomTeacher")
         UserDefaults.standard.set(childName, forKey: "ChildName")
@@ -108,14 +114,12 @@ class ParentRegistrationViewController: BaseViewController {
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
-}
-// MARK: - Extensions
-extension ParentRegistrationViewController : UITextFieldDelegate {
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        
-        // TODO: - 서버에 선생님 코드가 존재하는지 안하는지 체크필요함
-        // FIXME: - MAX_LENGTH에서 -2 안하는 로직 다시.
-        if homeroomTeacherUid.count  >= MAX_LENGTH - 2 && !childName.isEmpty {
+    
+    @objc func textFieldDidChange(_ sender: Any?){
+        homeroomTeacherUid = invitationCodeView.getTextField().text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        childName = childNameView.getTextField().text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+
+        if homeroomTeacherUid.count >= MAX_LENGTH && !childName.isEmpty{
             registrationButton.isUserInteractionEnabled = true
             registrationButton.backgroundColor = .Action
         } else {
@@ -123,12 +127,14 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
             registrationButton.backgroundColor = .LightLine
             
         }
+    }
+    
+}
+// MARK: - Extensions
+extension ParentRegistrationViewController : UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         
         if textField.tag == 0 {
-            
-            guard let text = textField.text else {return false}
-            homeroomTeacherUid = text
-            
             // backSpace 허용
             if let char = string.cString(using: String.Encoding.utf8) {
                 let isBackSpace = strcmp(char, "\\b")
@@ -137,12 +143,10 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
                 }
             }
             // 글자수 6글자를 넘어가면 입력제한
-            return text.count >= MAX_LENGTH ? false : true
+            return homeroomTeacherUid.count >= MAX_LENGTH ? false : true
             
             
         } else {
-            guard let text = textField.text else {return false}
-            childName = text
             return true
         }
         
