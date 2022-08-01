@@ -45,32 +45,6 @@ class ConsultationViewController: BaseViewController {
 
     private lazy var calenderData = calenderDataMaker()
     
-    func getRandomColor() -> [UIColor] { //학부모별 슬롯 색상 자동화
-        var colorList: [UIColor] = []
-        for _ in 0..<mainTeacher.parentUsers.count {
-            let red:CGFloat = CGFloat(drand48())
-            let green:CGFloat = CGFloat(drand48())
-            let blue:CGFloat = CGFloat(drand48())
-            colorList.append(UIColor(red: red, green: green, blue: blue, alpha: 1.0))
-        }
-        return colorList
-    }
-    
-    // 학부모 컬렉션뷰 데이터
-    func scheduledParentsListMaker() -> [ParentUser] {
-        var scheduledParentsList: [ParentUser] = []
-        for parentsIndex in 0..<mainTeacher.parentUsers.count {
-            
-                if mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[0].isReserved == false {
-                    scheduledParentsList.append(mainTeacher.parentUsers[parentsIndex])
-                    
-                }
-           
-        }
-        
-        return scheduledParentsList
-    }
-    
     private lazy var scheduledParentsList = scheduledParentsListMaker() //학부모 리스트 뷰는 모두 scheduledparentslist로 관리, 데이터에는 리스트 만들 때 빼곤 접근하지 않음
     
     
@@ -130,6 +104,32 @@ class ConsultationViewController: BaseViewController {
         
         calenderView.delegate = self
         calenderView.dataSource = self
+    }
+    
+    func getRandomColor() -> [UIColor] { //학부모별 슬롯 색상 자동화
+        var colorList: [UIColor] = []
+        for _ in 0..<mainTeacher.parentUsers.count {
+            let red:CGFloat = CGFloat(drand48())
+            let green:CGFloat = CGFloat(drand48())
+            let blue:CGFloat = CGFloat(drand48())
+            colorList.append(UIColor(red: red, green: green, blue: blue, alpha: 1.0))
+        }
+        return colorList
+    }
+    
+    // 학부모 컬렉션뷰 데이터
+    func scheduledParentsListMaker() -> [ParentUser] {
+        var scheduledParentsList: [ParentUser] = []
+        for parentsIndex in 0..<mainTeacher.parentUsers.count {
+            
+                if mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[0].isReserved == false {
+                    scheduledParentsList.append(mainTeacher.parentUsers[parentsIndex])
+                    
+                }
+           
+        }
+        
+        return scheduledParentsList
     }
     
     //예약이 확정된 데이터를 저장. 확정 시에는 submittedData에 있던 3개 스케줄이 지워지고 acceptedData에 확정된 1개의 스케줄만 등록됨
