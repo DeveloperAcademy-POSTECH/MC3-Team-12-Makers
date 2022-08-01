@@ -114,8 +114,8 @@ class ParentRegistrationViewController: BaseViewController {
     }
     
     @objc func textFieldDidChange(_ sender: Any?){
-        homeroomTeacherUid = invitationCodeView.getTextField().text ?? ""
-        childName = childNameView.getTextField().text ?? ""
+        homeroomTeacherUid = invitationCodeView.getTextField().text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        childName = childNameView.getTextField().text.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         if homeroomTeacherUid.count >= MAX_LENGTH && !childName.isEmpty{
             registrationButton.isUserInteractionEnabled = true
