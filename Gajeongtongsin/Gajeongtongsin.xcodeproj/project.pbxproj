@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		040612A428941EE800791763 /* ParentsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040612A328941EE800791763 /* ParentsCollectionViewCell.swift */; };
 		040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040612A528941F2800791763 /* ParentsCollcetionViewCellDelegate.swift */; };
+		0446C4402896EE400052E408 /* CardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0446C43F2896EE400052E408 /* CardCollectionViewCell.swift */; };
 		045D0DBE2888DDB700778EEC /* ParentsCalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D0DBD2888DDB700778EEC /* ParentsCalenderViewController.swift */; };
 		04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */; };
 		04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D942886A28C00CCCB2D /* CalenderViewCell.swift */; };
@@ -65,6 +66,7 @@
 /* Begin PBXFileReference section */
 		040612A328941EE800791763 /* ParentsCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentsCollectionViewCell.swift; sourceTree = "<group>"; };
 		040612A528941F2800791763 /* ParentsCollcetionViewCellDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentsCollcetionViewCellDelegate.swift; sourceTree = "<group>"; };
+		0446C43F2896EE400052E408 /* CardCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardCollectionViewCell.swift; sourceTree = "<group>"; };
 		045D0DBD2888DDB700778EEC /* ParentsCalenderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentsCalenderViewController.swift; sourceTree = "<group>"; };
 		04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseCollectionViewCell.swift; sourceTree = "<group>"; };
 		04610D942886A28C00CCCB2D /* CalenderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewCell.swift; sourceTree = "<group>"; };
@@ -231,6 +233,7 @@
 			children = (
 				3595838828829C1D002B6873 /* Test.swift */,
 				C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */,
+				0446C43F2896EE400052E408 /* CardCollectionViewCell.swift */,
 			);
 			path = UIComponent;
 			sourceTree = "<group>";
@@ -561,6 +564,7 @@
 				35958362288291D8002B6873 /* TabBarViewController.swift in Sources */,
 				04797679288E7855009C0826 /* TeacherCalenderData.swift in Sources */,
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
+				0446C4402896EE400052E408 /* CardCollectionViewCell.swift in Sources */,
 				04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */,
 				C0DFFC092885E1A0009A1563 /* TeacherUser.swift in Sources */,
 				35171D0028828C930059F297 /* SceneDelegate.swift in Sources */,

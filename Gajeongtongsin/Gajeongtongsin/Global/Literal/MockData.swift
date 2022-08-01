@@ -38,36 +38,36 @@ var messageList4 = [
 var scheduleList1 = [
     Schedule(reservedDate: "8월1일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월27일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월27일", startTime: "14시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월27일", startTime: "15시00분", isReserved: false)],
+                ScheduleInfo(consultingDate: "8월01일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월01일", startTime: "14시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월01일", startTime: "15시00분", isReserved: false)],
              content: "김유쓰영어성적문의")
 ]
 
 var scheduleList2 = [
     Schedule(reservedDate: "8월2일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월27일", startTime: "15시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월26일", startTime: "16시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월25일", startTime: "16시30분", isReserved: false)],
+                ScheduleInfo(consultingDate: "8월02일", startTime: "15시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월02일", startTime: "16시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월02일", startTime: "16시30분", isReserved: false)],
              content: "부니카수학성적문의")
 ]
 
 var scheduleList3 = [
     Schedule(reservedDate: "8월3일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월25일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월26일", startTime: "15시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월28일", startTime: "16시00분", isReserved: false)],
+                ScheduleInfo(consultingDate: "8월03일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월03일", startTime: "15시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월03일", startTime: "16시00분", isReserved: false)],
              content: "최히로체육성적문의")
 ]
 
 var scheduleList4 = [
     Schedule(reservedDate: "8월3일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "7월29일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월29일", startTime: "15시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "7월29일", startTime: "16시00분", isReserved: false)],
+                ScheduleInfo(consultingDate: "8월04일", startTime: "14시00분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월04일", startTime: "15시30분", isReserved: false),
+                ScheduleInfo(consultingDate: "8월04일", startTime: "16시00분", isReserved: false)],
              content: "허결출결문의제발")
 ]
 

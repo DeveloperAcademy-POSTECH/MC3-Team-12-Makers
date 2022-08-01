@@ -79,9 +79,6 @@ class ConsultationViewController: BaseViewController {
         return tableView
     }()
     
-    
-
-    
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -177,11 +174,10 @@ class ConsultationViewController: BaseViewController {
     func dateStringToIndex(parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        for i in 0..<mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList.count {
-            dateString.append(mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList[i].consultingDate)
-
+        mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList.forEach{
+            dateString.append($0.consultingDate)
         }
-        
+        print(dateString)
         for day in 0..<dateString.count { //String을 Index로 바꿔줌
             for nextWeekDay in 0..<nextWeek.count {
                 if dateString[day] == nextWeek[nextWeekDay] {
@@ -324,10 +320,9 @@ extension ConsultationViewController: UICollectionViewDelegate {
             calenderView.reloadData()
 
         } else if collectionView == parentsCollectionView {
-            selectedTableRow = indexPath
+
             displayData = acceptedData()
             displayData.append(submittedData()[indexPath.item])
-            
             
             calenderView.reloadData()
         }
