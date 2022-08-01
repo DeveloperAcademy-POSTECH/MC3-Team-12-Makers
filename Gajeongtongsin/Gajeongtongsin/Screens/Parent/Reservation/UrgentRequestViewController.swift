@@ -15,14 +15,14 @@ class UrgentRequestViewController: BaseViewController {
     private let cancelBtn: UIButton = {
         let label = UIButton()
         label.setTitle("취소", for: .normal)
-        label.setTitleColor(UIColor.black, for: .normal)
+        label.setTitleColor(UIColor.Action, for: .normal)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     private let submitBtn: UIButton = {
         let label = UIButton()
         label.setTitle("신청", for: .normal)
-        label.setTitleColor(UIColor.black, for: .normal)
+        label.setTitleColor(UIColor.Action, for: .normal)
         label.isUserInteractionEnabled = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label

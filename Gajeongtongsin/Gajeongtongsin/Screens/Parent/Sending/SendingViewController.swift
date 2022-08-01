@@ -67,19 +67,9 @@ class SendingViewController: BaseViewController {
         return button
     }()
     
-    //메시지 내용 전송 버튼
-    private let sendButton: UIButton = {
-        let button = UIButton()
-        button.isHidden = true
-        button.setTitle("전송", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-        button.layer.borderWidth = 0
-        button.layer.borderColor = UIColor.systemBlue.cgColor
-        button.layer.cornerRadius = 10
-        button.backgroundColor = .systemGray
-        button.isUserInteractionEnabled = false
-        button.translatesAutoresizingMaskIntoConstraints = false
+    //메시지 전송 버튼 (primary button 활용)
+    private var sendButton: PrimaryButton = {
+        let button = PrimaryButton(buttonTitle: "전송", buttonState: .disabled)
         return button
     }()
     
@@ -120,6 +110,7 @@ class SendingViewController: BaseViewController {
         super.viewDidLoad()
         textFieldForReason.delegate = self
         self.navigationItem.title = "문자작성"
+        textFieldForReason.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
     //MARK: - Funcs
@@ -159,16 +150,12 @@ class SendingViewController: BaseViewController {
         
         view.addSubview(sendButton)
         sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
-        sendButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 350).isActive = true
-        sendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-
+        sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
 
     override func configUI() {
-
-        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
         view.backgroundColor = .Background
+        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
         
         //Message Type 버튼과 선택에 따른 컴포넌트 노출 차이
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
@@ -191,14 +178,6 @@ class SendingViewController: BaseViewController {
                 self?.sendButton.isHidden = false
             })
         ])
-        
-        //프로퍼티 옵저버 구현 고려 중 (날짜, 시간 값이 세팅되어야 사유 입력창 등장)
-//        var selectedDate: Date = datePicker.date {
-//            didSet {
-//                self.textLabelReason.isHidden = false
-//                self.textFieldForReason.isHidden = false
-//            }
-//        }
     }
     
     //용건 기입 마칠 때 내용있는지 여부 체크해서 전송버튼 활성화
@@ -240,23 +219,51 @@ class SendingViewController: BaseViewController {
         delegate?.reloadTable()
         navigationController?.popViewController(animated: true)
     }
+    
+    //텍스트 필드 검사 후 변경 적용
+    @objc func textFieldDidChange() {
+        if textFieldForReason.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+            sendButton.changeState(buttonState: .normal)
+        } else {
+            sendButton.changeState(buttonState: .disabled)
+        }
+    }
 
 }
 
 //MARK: - Extensions
 extension SendingViewController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField.text != "" {
-            sendButton.backgroundColor = .systemBlue
-            sendButton.isUserInteractionEnabled = true
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        //글자수 20자 도달했을 때 백스페이스 감지 (코드 이해 못함)
+        if let char = string.cString(using: String.Encoding.utf8) {
+            let isBackSpace = strcmp(char, "\\b")
+            if isBackSpace == -92 {
+                return true
+            }
+        }
+        //글자수 20자 제한
+        guard textField.text?.count ?? 0 < 20 else { return false }
+
+        let textDetector = textFieldForReason.text
+        if textDetector?.count != 0 {
+            sendButton.changeState(buttonState: .normal)
         } else {
-            sendButton.backgroundColor = .systemGray
-            sendButton.isUserInteractionEnabled = false
+            sendButton.changeState(buttonState: .disabled)
+        }
+
+        return true
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        if textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+            sendButton.changeState(buttonState: .normal)
+        } else {
+            sendButton.changeState(buttonState: .disabled)
         }
     }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
     }
-    
 }
