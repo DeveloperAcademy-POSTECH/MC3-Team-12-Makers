@@ -152,14 +152,9 @@ extension UrgentRequestViewController: UITextViewDelegate {
     
     //텍스트뷰 편집 종료 시 내용이 있으면 전송버튼 활성화, 내용이 없으면 플레이스홀더 원복시키고 전송버튼 비활성화 (내용 없이 날아가는 긴급요청 방지)
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.isEmpty {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
             textView.text = textPlaceHolder
             textView.textColor = .lightGray
-            submitBtn.setTitleColor(.black, for: .normal)
-            submitBtn.isUserInteractionEnabled = false
-        } else {
-            submitBtn.setTitleColor(.Action, for: .normal)
-            submitBtn.isUserInteractionEnabled = true
         }
     }
 
@@ -176,8 +171,11 @@ extension UrgentRequestViewController: UITextViewDelegate {
             submitBtn.setTitleColor(.black, for: .normal)
             submitBtn.isUserInteractionEnabled = false
         } else {
-            submitBtn.setTitleColor(.Action, for: .normal)
-            submitBtn.isUserInteractionEnabled = true
+            if !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                submitBtn.setTitleColor(.Action, for: .normal)
+                submitBtn.isUserInteractionEnabled = true
+            }
+           
         }
 
     }
