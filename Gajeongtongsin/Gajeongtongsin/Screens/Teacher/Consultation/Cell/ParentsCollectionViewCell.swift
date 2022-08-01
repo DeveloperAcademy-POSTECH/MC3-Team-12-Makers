@@ -11,14 +11,15 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
     
 
     static let identifier = "ParentsCollectionViewCell"
+    var newData: [TeacherCalenderData] = []
     var delegate: ParentsCollcetionViewCellDelegate?
     
     private let messageInfo: UILabel = {
-       let messageInfo = UILabel()
-        messageInfo.translatesAutoresizingMaskIntoConstraints = false
-        messageInfo.font = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        messageInfo.textColor = UIColor.black
-        return messageInfo
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 17, weight: .regular)
+        label.text = "OOO 학부모님"
+        label.textColor = .black
+        return label
     }()
     
     private let content: UILabel = {
@@ -29,12 +30,26 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
         return content
     }()
     
-    private let seeContent: UIButton = {
+    
+    private let ScheduleButton: UIButton = {
         let button = UIButton()
+        button.setTitle("예약일정", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        button.layer.cornerRadius = 10
+        button.setTitleColor(UIColor.white, for: .normal )
+        button.backgroundColor = .Action
         button.translatesAutoresizingMaskIntoConstraints = false
-        button.tintColor = .lightGray
-        button.setTitle("용건보기", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        return button
+    }()
+    
+    private let ContentButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("내용확인", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        button.layer.cornerRadius = 10
+        button.setTitleColor(UIColor.white, for: .normal )
+        button.backgroundColor = .Action
+        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
 
@@ -51,27 +66,46 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
 // MARK: - Funcs
     
     override func render() {
+        
+        contentView.addSubview(ScheduleButton)
+        ScheduleButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 57).isActive = true
+        ScheduleButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        ScheduleButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        ScheduleButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
+        contentView.addSubview(ContentButton)
+        ContentButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -18).isActive = true
+        ContentButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        ContentButton.widthAnchor.constraint(equalToConstant: 100).isActive = true
+        ContentButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
+        
         contentView.addSubview(messageInfo)
-        messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 28).isActive = true
-        messageInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        messageInfo.translatesAutoresizingMaskIntoConstraints = false
+        messageInfo.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20).isActive = true
+        messageInfo.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         
-        contentView.addSubview(seeContent)
-        seeContent.topAnchor.constraint(equalTo: messageInfo.bottomAnchor, constant: 10).isActive = true
-        seeContent.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
-        seeContent.addTarget(self, action: #selector(seeContentOnTapButton), for: .touchUpInside)
-        
+        ContentButton.addTarget(self, action: #selector(contentOnTapButton), for: .touchUpInside)
+        ScheduleButton.addTarget(self, action: #selector(scheduleOnTapButton), for: .touchUpInside)
     }
     
-    @objc func seeContentOnTapButton() {
+    @objc func contentOnTapButton() {
         delegate?.present(message: content.text!)
     }
     
+    @objc func scheduleOnTapButton() {
+        delegate?.drowDisplayData(cellSchedulData: newData)
+    }
     
     override func configUI() {
-        // Override ConfigUI
-        self.backgroundColor = .gray
-        contentView.layer.borderWidth = 0.5
-        contentView.layer.borderColor = .init(gray: 255, alpha: 255)
+        
+        contentView.backgroundColor = .Background
+        contentView.layer.cornerRadius = 10
+//        contentView.frame.size = CGSize(width:140, height:150)
+        contentView.layer.masksToBounds = false
+        contentView.layer.shadowColor = UIColor.black.cgColor
+        contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
+        contentView.layer.shadowOpacity = 0.16
+        contentView.layer.shadowRadius = 4.0
     }
     
     func configure(childName: String, schedule: Schedule) {
@@ -90,5 +124,10 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
         messageInfo.text = "\(childName)"
         content.text = "\(schedule.content)"
         
+    }
+    
+    func sendDataToCell(displayData: [TeacherCalenderData]) {
+
+        newData = displayData
     }
 }

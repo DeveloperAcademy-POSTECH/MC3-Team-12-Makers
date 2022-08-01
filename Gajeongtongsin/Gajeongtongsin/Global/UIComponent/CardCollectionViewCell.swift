@@ -71,9 +71,7 @@ class CardCollectionViewCell: BaseCollectionViewCell {
         contentView.addSubview(CardLabel)
         CardLabel.translatesAutoresizingMaskIntoConstraints = false
         CardLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 20).isActive = true
-        CardLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
-    
-    }
+        CardLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true}
     
     func configure(buttonTitle:String) {
         ScheduleButton.setTitle(buttonTitle, for: .normal)
