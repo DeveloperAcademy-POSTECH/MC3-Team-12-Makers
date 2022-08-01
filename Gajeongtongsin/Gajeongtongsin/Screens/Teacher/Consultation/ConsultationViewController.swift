@@ -33,15 +33,7 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
-    //displayData에 추가될 데이터 포멧
-    func calenderDataMaker() -> [TeacherCalenderData] {
-        var calenderData: [TeacherCalenderData] = []
-        for parentsIndex in 0..<mainTeacher.parentUsers.count {
-            calenderData.append(TeacherCalenderData(parentsIndex: parentsIndex, calenderIndex: [], cellColor: .white))
-            calenderData[parentsIndex].cellColor = getRandomColor()[parentsIndex]
-        }
-        return calenderData
-    }
+  
 
     private lazy var calenderData = calenderDataMaker()
     
@@ -104,6 +96,16 @@ class ConsultationViewController: BaseViewController {
         
         calenderView.delegate = self
         calenderView.dataSource = self
+    }
+    
+    //displayData에 추가될 데이터 포멧
+    func calenderDataMaker() -> [TeacherCalenderData] {
+        var calenderData: [TeacherCalenderData] = []
+        for parentsIndex in 0..<mainTeacher.parentUsers.count {
+            calenderData.append(TeacherCalenderData(parentsIndex: parentsIndex, calenderIndex: [], cellColor: .white))
+            calenderData[parentsIndex].cellColor = getRandomColor()[parentsIndex]
+        }
+        return calenderData
     }
     
     func getRandomColor() -> [UIColor] { //학부모별 슬롯 색상 자동화
