@@ -60,3 +60,10 @@ var todayOfTheWeek: Int{
 
 // 최대 글자수 
 let MAX_LENGTH = 6
+
+// Button 활성화 여부
+enum ButtonState {
+    case normal
+    case disabled
+    
+}
