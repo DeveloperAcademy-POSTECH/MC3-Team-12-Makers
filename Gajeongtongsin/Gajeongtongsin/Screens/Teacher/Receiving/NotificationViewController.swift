@@ -11,7 +11,7 @@ let sections = ["긴급알림", "일반알림"]
 class NotificationViewController: BaseViewController {
     
     // MARK: - Properties
-    var emergancy: [Notification] {
+    var emergency: [Notification] {
         mainTeacher.notificationList.filter { $0.type == .emergency }
     }
     
@@ -108,7 +108,7 @@ extension NotificationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return emergancy.count
+            return emergency.count
         }
         return normal.count
     }
@@ -116,7 +116,7 @@ extension NotificationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
-            cell.configure(notification: emergancy[indexPath.row])
+            cell.configure(notification: emergency[indexPath.row])
 
             cell.backgroundColor = UIColor.Confirm
 
@@ -136,7 +136,7 @@ extension NotificationViewController: UITableViewDataSource {
 
 extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let currentMessage = emergancy[indexPath.row]
+        let currentMessage = emergency[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         if indexPath.section == 0 {
             let alret = UIAlertController(title: "\(currentMessage.childName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
