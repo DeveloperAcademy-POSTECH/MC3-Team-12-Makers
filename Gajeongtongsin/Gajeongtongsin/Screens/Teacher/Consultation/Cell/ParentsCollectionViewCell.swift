@@ -11,7 +11,7 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
     
 
     static let identifier = "ParentsCollectionViewCell"
-    var newData: [TeacherCalenderData] = []
+    var cellData: [TeacherCalenderData] = []
     var delegate: ParentsCollcetionViewCellDelegate?
     
     private let messageInfo: UILabel = {
@@ -93,14 +93,13 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
     }
     
     @objc func scheduleOnTapButton() {
-        delegate?.drowDisplayData(cellSchedulData: newData)
+        delegate?.drowDisplayData(cellSchedulData: cellData)
     }
     
     override func configUI() {
         
         contentView.backgroundColor = .Background
         contentView.layer.cornerRadius = 10
-//        contentView.frame.size = CGSize(width:140, height:150)
         contentView.layer.masksToBounds = false
         contentView.layer.shadowColor = UIColor.black.cgColor
         contentView.layer.shadowOffset = CGSize(width: 0, height: 4)
@@ -108,26 +107,13 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
         contentView.layer.shadowRadius = 4.0
     }
     
-    func configure(childName: String, schedule: Schedule) {
-        
-        var dateAndTime: String {
-            var dateAndTime: String = ""
-            var specificSchedule: String = ""
-            
-            schedule.scheduleList.forEach {
-                specificSchedule = $0.consultingDate+", "+$0.startTime
-                dateAndTime += " | "+specificSchedule
-            }
-            return dateAndTime
-        }
-        
+    //delegate에 필요한 함수들, 뷰컨트롤러에서 실행됨
+    func configure(childName: String, schedule: Schedule) { //TODO: 상위 데이터 하나만 받아서 나누는 방법이 있을듯함
         messageInfo.text = "\(childName)"
         content.text = "\(schedule.content)"
-        
     }
     
     func sendDataToCell(displayData: [TeacherCalenderData]) {
-
-        newData = displayData
+        cellData = displayData //컨트롤러에서 displaydata를 셀에 맞게 만든 후 cellData로 넘겨줌
     }
 }

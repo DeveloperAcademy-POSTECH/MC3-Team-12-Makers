@@ -36,9 +36,9 @@ class ConsultationViewController: BaseViewController {
     //displayData에 추가될 데이터 포멧
     func calenderDataMaker() -> [TeacherCalenderData] {
         var calenderData: [TeacherCalenderData] = []
-        for parentIds in 0..<mainTeacher.parentUsers.count {
-            calenderData.append(TeacherCalenderData(parentIds: parentIds, calenderIndex: [], cellColor: .white))
-            calenderData[parentIds].cellColor = getRandomColor()[parentIds]
+        for parentsIndex in 0..<mainTeacher.parentUsers.count {
+            calenderData.append(TeacherCalenderData(parentsIndex: parentsIndex, calenderIndex: [], cellColor: .white))
+            calenderData[parentsIndex].cellColor = getRandomColor()[parentsIndex]
         }
         return calenderData
     }
@@ -131,16 +131,6 @@ class ConsultationViewController: BaseViewController {
         calenderView.delegate = self
         calenderView.dataSource = self
     }
-//    var calenderData: [TeacherCalenderData] = []
-//
-//    func calenderDataMaker(){
-//        var calenderDataMade: [TeacherCalenderData] = []
-//        for parentIds in 0..<mainTeacher.parentUsers.count {
-//            calenderDataMade.append(TeacherCalenderData(parentIds: parentIds, calenderIndex: [], cellColor: .white))
-//            calenderDataMade[parentIds].cellColor = getRandomColor()[parentIds]
-//        }
-//        calenderData = calenderDataMade
-//    }
     
     //예약이 확정된 데이터를 저장. 확정 시에는 submittedData에 있던 3개 스케줄이 지워지고 acceptedData에 확정된 1개의 스케줄만 등록됨
     func acceptedData() -> [TeacherCalenderData] {
@@ -288,15 +278,15 @@ extension ConsultationViewController: UICollectionViewDelegate {
                 return UICollectionViewCell()
             }
             
-            cell.delegate = self
+            cell.delegate = self //학부모 컬렉션 셀 델리게이트 지정
             
-            
+            var eachCellData: [TeacherCalenderData] = [] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
             let parent = scheduledParentsList[indexPath.item]
-            cell.configure(childName: parent.childName, schedule: parent.schedules[0])
             
-            displayData.append(submittedData()[indexPath.item])
-            cell.sendDataToCell(displayData: displayData)
-            displayData = []
+            eachCellData.append(submittedData()[indexPath.item]) //각 셀에 해당하는 데이터 배정
+            cell.sendDataToCell(displayData: eachCellData) //셀 내부 함수를 통해 셀에 데이터 넣어줌
+            
+            cell.configure(childName: parent.childName, schedule: parent.schedules[0]) //정보 표시에 필요한 함수
             return cell
         }
     }
@@ -304,52 +294,50 @@ extension ConsultationViewController: UICollectionViewDelegate {
     //cell 클릭 액션
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        if collectionView == calenderView {
-            //더블클릭한 경우
-            if indexPath.item == clickedCell {
-                // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
-                mainTeacher.parentUsers[parentId!].schedules[0].scheduleList = [mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[selectedIndex!]]
-                mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[0].isReserved = true
-                
-                calenderData[parentId!].cellColor = .lightGray // 예약확정된 셀은 연회색
-                clickedCell = nil // 선택해제
-
-                displayData = acceptedData() //수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
-                calenderView.reloadData()
-                
-//                scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
-                parentsCollectionView.reloadData()
+        //더블클릭한 경우
+        if indexPath.item == clickedCell {
+            // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
+            mainTeacher.parentUsers[parentId!].schedules[0].scheduleList = [mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[selectedIndex!]]
+            mainTeacher.parentUsers[parentId!].schedules[0].scheduleList[0].isReserved = true
+            
+            calenderData[parentId!].cellColor = .lightGray // 예약확정된 셀은 연회색
+            clickedCell = nil // 선택해제
+            
+            displayData = acceptedData() //수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
+            calenderView.reloadData()
+            
+            //TODO: 확정된 예약에 대해 카드를 어떻게 처리하는지 논의 필요
+//          scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
+            parentsCollectionView.reloadData()
+            return
+        }
+        
+        //예약확정된 슬롯 클릭한 경우
+        //카드의 용건보기 버튼과 동일한 액션
+        acceptedData().forEach {
+            if $0.calenderIndex.contains(indexPath.item) {
+                let alert = UIAlertController(title: "상담용건", message: mainTeacher.parentUsers[$0.parentsIndex].schedules[0].content, preferredStyle: .alert)
+                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                alert.addAction(cancelAction)
+                present(alert, animated: true, completion: nil)
+                clickedCell = nil
                 return
             }
-            //예약확인된 슬롯 클릭
-            acceptedData().forEach {
-                if $0.calenderIndex.contains(indexPath.item) { //TODO: delegate 커스텀해서 카드 버튼 누를때와 함께 관리하기
-                    let alert = UIAlertController(title: "상담용건", message: mainTeacher.parentUsers[$0.parentIds].schedules[0].content, preferredStyle: .alert)
-                    let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-                    alert.addAction(cancelAction)
-                    present(alert, animated: true, completion: nil)
-                    clickedCell = nil
-                    return
-                }
-            }
-            //미확정 슬롯 처음 클릭한 경우 (3중 1)
-            displayData.forEach {
-                if $0.calenderIndex.contains(indexPath.item) {
-                    selectedIndex = $0.calenderIndex.firstIndex(of: indexPath.item)
-                    parentId = $0.parentIds
-
-                    clickedCell = indexPath.item
-                    calenderView.reloadData()
-                    return
-                }
-                clickedCell = nil // 신청된 슬롯 외 클릭하면 선택해제
-            }
-            calenderView.reloadData()
-
-        } else if collectionView == parentsCollectionView {
-
-            
         }
+        //미확정 슬롯 클릭한 경우 (3중 1)
+        //예약 확정 버튼이 클릭한 슬롯에 표시됨
+        displayData.forEach {
+            if $0.calenderIndex.contains(indexPath.item) {
+                selectedIndex = $0.calenderIndex.firstIndex(of: indexPath.item)
+                parentId = $0.parentsIndex
+                
+                clickedCell = indexPath.item
+                calenderView.reloadData()
+                return
+            }
+            clickedCell = nil // 신청된 슬롯 외 클릭하면 선택해제
+        }
+        calenderView.reloadData()
     }
 }
 
@@ -359,12 +347,10 @@ extension ConsultationViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
             return choicedCells.count
-        } else if collectionView == parentsCollectionView {
+        } else {
             return scheduledParentsList.count
         }
-        return 0
     }
-    
  }
 
 extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
@@ -391,7 +377,7 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
         if collectionView == calenderView {
             return CGFloat(0)
         } else {
-            return CGFloat(10) //카드 간격 얼마지?
+            return CGFloat(10)
         }
     }
 }
