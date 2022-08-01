@@ -78,6 +78,7 @@ final class FirebaseManager {
         guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
         
         let data : [String: Any] = [
+            "id": parentUid,
             "type": message.type.rawValue,
             "sentDate": message.sentDate,
             "expectedDate": message.expectedDate,
@@ -88,6 +89,23 @@ final class FirebaseManager {
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)/sendingMessages").childByAutoId()
             .updateChildValues(data)
         
+    }
+    
+    /// 메시지 처리완료 업로드하기 for 선생님
+    func uploadMessageComplete(message: Message?) {
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        guard let message = message else {return}
+        db.child("TeacherUsers/\(teacherUserId)/parentUsers/\(message.id ?? "")/sendingMessages/\(message.msgId ?? "")")
+            
+        
+            .updateChildValues(["isCompleted" : message.isCompleted]){ error, _ in
+                                if let error = error {
+                                    print("Error writing user document: \(error)")
+                                } else {
+                                    print("User document successfsiully written!")
+                                }
+                            }
+
     }
     
     /// 알림 업로드하기 for 학부모
@@ -215,37 +233,44 @@ final class FirebaseManager {
         
         db.child("TeacherUsers/\(teacherUserId)/parentUsers")
             .observe(.value) { snapshot in
-                let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
-                
-                for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
+                allMessages = []
+                guard let parents = snapshot.value as? [String: [String:Any]] else { completion(nil); return }  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
+                 for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
+ 
                     var parentMessages: [(String,Message)] = []
-                    guard let sendimgMessasges = parent["sendingMessages"] as? [String: [String:Any]]  else { completion(nil); return }// [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
-                    let childName = parent["childName"] as! String
-                    for messageVal in sendimgMessasges.values {
+                    guard let sendingMessasges = parent["sendingMessages"] as? [String: [String:Any]]  else { print("sendingMessageserror"); completion(nil); return }// [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                    guard let childName = parent["childName"] as? String else { print("childNameerror");completion(nil); return }
+                    for messageKey in sendingMessasges.keys {
                         
                         do {
-                            let messageData = try JSONSerialization.data(withJSONObject: messageVal, options: [])
+                            
+                            let messageData = try JSONSerialization.data(withJSONObject: sendingMessasges[messageKey]!, options: []) // FIXME: - 강제 언래핑
                             let decoder = JSONDecoder()
-                            let message = try decoder.decode(Message.self, from: messageData)
+                            var message = try decoder.decode(Message.self, from: messageData)
+                            message.msgId = messageKey // FIXME: - 임시방편. id를 저장하는 완전한 로직 필요.
                             parentMessages.append((childName,message))
                         } catch let DecodingError.dataCorrupted(context) {
-                            completion(nil);
                             print(context)
-                        } catch let DecodingError.keyNotFound(key, context) {
                             completion(nil);
+                        } catch let DecodingError.keyNotFound(key, context) {
                             print("Key '\(key)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
-                        } catch let DecodingError.valueNotFound(value, context) {
                             completion(nil);
+
+                        } catch let DecodingError.valueNotFound(value, context) {
                             print("Value '\(value)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
-                        } catch let DecodingError.typeMismatch(type, context) {
                             completion(nil);
+
+                        } catch let DecodingError.typeMismatch(type, context) {
                             print("Type '\(type)' mismatch:", context.debugDescription)
                             print("codingPath:", context.codingPath)
-                        } catch {
                             completion(nil);
+
+                        } catch {
                             print("error: ", error)
+                            completion(nil);
+
                         }
                     }
                     allMessages += parentMessages
@@ -265,7 +290,7 @@ final class FirebaseManager {
         var messageList: [Message] = []
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
             .observe(.value) { snapshot in
-                
+                messageList = []
                 guard let dic = snapshot.value as? NSDictionary else { completion(nil); return }
                 
                 guard let messages = dic["sendingMessages"] as? [String:[String:Any]] else {completion(nil); return } // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]

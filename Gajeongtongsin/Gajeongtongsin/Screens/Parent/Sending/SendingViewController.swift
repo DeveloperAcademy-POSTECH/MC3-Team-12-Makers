@@ -16,9 +16,9 @@ class SendingViewController: BaseViewController {
     //MARK: - Properties
     weak var delegate: SendingViewControllerDelegate?
     
-    var currentParent: ParentUser {
-        return mainTeacher.parentUsers[0]
-    }
+//    var currentParent: ParentUser {
+//        return mainTeacher.parentUsers[0]
+//    }
     
     //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
     private let textLabelPurpose: UILabel = {
@@ -206,6 +206,7 @@ class SendingViewController: BaseViewController {
     }
   
     @objc func sendMessage() {
+        
         let newMsg = Message(type: msgType(),
                              sentDate: Date().toString(),
                              expectedDate: "\(datePicker.date.toString())",

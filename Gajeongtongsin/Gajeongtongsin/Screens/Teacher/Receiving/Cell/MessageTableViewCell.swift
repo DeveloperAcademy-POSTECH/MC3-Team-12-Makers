@@ -16,9 +16,14 @@ class MessageTableViewCell: BaseTableViewCell {
                 checkBox.backgroundColor = UIColor.Confirm
                 stateLabel.text = "처리완료"
                 stateLabel.textColor = UIColor.DarkText
+            } else {
+                checkBox.backgroundColor = UIColor.Action
+                stateLabel.text = "처리하기"
+                stateLabel.textColor = UIColor.white
             }
         }
     }
+    private var msg: Message?
 
     static let identifier = "ProfileTableViewCell"
     
@@ -93,12 +98,30 @@ class MessageTableViewCell: BaseTableViewCell {
 //        content.text = "\(message[indexPath.row].message.content)"
 //    }
     func configure(childName: String, message:Message){
-        messageInfo.text = "\(message.expectedDate) \(message.type.rawValue) \(childName)"
-                content.text = "\(message.content)"
+        
+        msg = message
+        guard let msg = msg else {return}
+        
+        messageInfo.text = "\(msg.expectedDate) \(msg.type.rawValue) \(childName)"
+                content.text = "\(msg.content)"
+        
+
+        stateLabel.text = msg.isCompleted ? "처리완료" : "처리하기"
+        stateLabel.textColor = msg.isCompleted ? .DarkText : .white
+        checkBox.backgroundColor = msg.isCompleted ? .Confirm : .Action
+        isChecked = msg.isCompleted
     }
     
     func changeState() {
         self.isChecked = true
         
+    }
+    
+    func getMessage() -> Message? {
+        return msg
+    }
+    
+    func messageCompleted() {
+        msg?.isCompleted = true
     }
 }
