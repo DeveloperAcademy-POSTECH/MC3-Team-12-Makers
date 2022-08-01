@@ -87,8 +87,6 @@ class SendingViewController: BaseViewController {
     
     
     //사유 입력하는 Text Field View
-    //TODO: -
-    //Text Field 내 여백 padding 값 조절, 글자수 제한, 박스 외부 클릭했을 때 커서와 키보드 사라지게 등등
     private let textFieldForReason: UITextField = {
         let textF = UITextField()
         let leftMargin = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: textF.frame.height))
@@ -252,14 +250,6 @@ extension SendingViewController: UITextFieldDelegate {
         }
 
         return true
-    }
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
-            sendButton.changeState(buttonState: .normal)
-        } else {
-            sendButton.changeState(buttonState: .disabled)
-        }
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

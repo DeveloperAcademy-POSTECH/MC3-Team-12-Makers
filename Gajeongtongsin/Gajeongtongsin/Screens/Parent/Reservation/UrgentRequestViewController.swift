@@ -22,7 +22,7 @@ class UrgentRequestViewController: BaseViewController {
     private let submitBtn: UIButton = {
         let label = UIButton()
         label.setTitle("신청", for: .normal)
-        label.setTitleColor(UIColor.Action, for: .normal)
+        label.setTitleColor(UIColor.black, for: .normal)
         label.isUserInteractionEnabled = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -150,14 +150,15 @@ extension UrgentRequestViewController: UITextViewDelegate {
         }
     }
     
-    
     //텍스트뷰 편집 종료 시 내용이 있으면 전송버튼 활성화, 내용이 없으면 플레이스홀더 원복시키고 전송버튼 비활성화 (내용 없이 날아가는 긴급요청 방지)
     func textViewDidEndEditing(_ textView: UITextView) {
-        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+        if textView.text.isEmpty {
             textView.text = textPlaceHolder
             textView.textColor = .lightGray
+            submitBtn.setTitleColor(.black, for: .normal)
             submitBtn.isUserInteractionEnabled = false
         } else {
+            submitBtn.setTitleColor(.Action, for: .normal)
             submitBtn.isUserInteractionEnabled = true
         }
     }
@@ -167,6 +168,17 @@ extension UrgentRequestViewController: UITextViewDelegate {
         if reasonText.text.count > 300 {
             reasonText.deleteBackward()
         }
-    }
+        
+        if textView.text.isEmpty {
+            textView.text = textPlaceHolder
+            textView.textColor = .lightGray
+            textView.resignFirstResponder()
+            submitBtn.setTitleColor(.black, for: .normal)
+            submitBtn.isUserInteractionEnabled = false
+        } else {
+            submitBtn.setTitleColor(.Action, for: .normal)
+            submitBtn.isUserInteractionEnabled = true
+        }
 
+    }
 }
