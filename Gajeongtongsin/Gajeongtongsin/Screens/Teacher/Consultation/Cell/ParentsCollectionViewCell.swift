@@ -9,7 +9,7 @@ import UIKit
 
 class ParentsCollectionViewCell: BaseCollectionViewCell {
     
-
+    // MARK: - Properties
     static let identifier = "ParentsCollectionViewCell"
     var cellData: [TeacherCalenderData] = []
     var delegate: ParentsCollcetionViewCellDelegate?

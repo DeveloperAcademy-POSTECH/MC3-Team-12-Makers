@@ -122,44 +122,57 @@ final class FirebaseManager {
     // 파이어베이스가져오기 함수
     
     /// 학부모 여러명의 예약정보들 가져오기 for 선생님
-    func fetchParentsReservations(completion: @escaping (([Schedule]) -> Void)) {
+    func fetchParentsReservations(completion: @escaping (([String:[Schedule]]?) -> Void)) {
         
         guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
         
-        var allSchedules: [Schedule] = []
+        var allSchedules: [String:[Schedule]] = [:]
         
         db.child("TeacherUsers/\(teacherUserId)/parentUsers")
             .observe(.value) { snapshot in
-                let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
+                guard let parents = snapshot.value as? [String: [String:Any]] else {completion(nil); return}  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
                 print(parents)
                 for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
                     
-                    let schedules = parent["schedules"] as! [String: [String:Any]] // [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                    guard let childName = parent["childName"] as? String else { completion(nil);return }
+                    guard let schedules = parent["schedules"] as? [String: [String:Any]] else { completion(nil); return }// [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                     print(schedules)
+                    var parentSchedules: [Schedule] = []
+
                     for key in schedules.keys {
-                        
                         do {
                             let scheduleData = try JSONSerialization.data(withJSONObject: schedules[key]!, options: [])
                             let decoder = JSONDecoder()
                             let schedule = try decoder.decode(Schedule.self, from: scheduleData)
-                            allSchedules.append(schedule)
+                            parentSchedules.append(schedule)
                         } catch let DecodingError.dataCorrupted(context) {
                             print(context)
+                            completion(nil)
                         } catch let DecodingError.keyNotFound(key, context) {
                             print("Key '\(key)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil)
                         } catch let DecodingError.valueNotFound(value, context) {
                             print("Value '\(value)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil)
                         } catch let DecodingError.typeMismatch(type, context) {
                             print("Type '\(type)' mismatch:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil)
                         } catch {
                             print("error: ", error)
+                            completion(nil)
                         }
                     }
+                    allSchedules[childName] = parentSchedules
+
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
                 }
+
             }
     }
     /// 학부모 1명의 예약정보 가져오기 for 학부모

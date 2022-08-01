@@ -140,6 +140,7 @@ class ParentsCalenderViewController: BaseViewController {
 
         choicedCells = Array(repeating: false, count:30)
         calenderView.reloadData()
+        self.dismiss(animated: true)
     }
     
     override func render() {
