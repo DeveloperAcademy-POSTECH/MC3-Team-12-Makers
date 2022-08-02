@@ -130,6 +130,7 @@ class ReservationDetailViewController: BaseViewController {
        if appointment.scheduleList[index.row].isReserved {
            statusIndicator.setTitle("확정", for: .normal)
            statusIndicator.changeState(buttonState: .disabled)
+           scheduleTitle.text = scheduleCandidates.text
         }
     }
 }
