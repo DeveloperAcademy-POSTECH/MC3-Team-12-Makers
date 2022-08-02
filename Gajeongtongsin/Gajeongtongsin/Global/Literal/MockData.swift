@@ -41,9 +41,7 @@ var messageList4 = [
 var scheduleList1 = [
     Schedule(reservedDate: "8월1일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "8월01일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "8월01일", startTime: "14시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "8월01일", startTime: "15시00분", isReserved: false)],
+                ScheduleInfo(consultingDate: "8월01일", startTime: "14시00분", isReserved: true)],
              content: "김유쓰영어성적문의")
 ]
 
