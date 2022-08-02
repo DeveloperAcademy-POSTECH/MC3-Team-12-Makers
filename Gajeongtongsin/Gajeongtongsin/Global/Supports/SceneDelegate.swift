@@ -18,7 +18,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
-        
+        window?.overrideUserInterfaceStyle = .light
         
         
         if UserDefaults.standard.string(forKey: "ChildName") != nil {

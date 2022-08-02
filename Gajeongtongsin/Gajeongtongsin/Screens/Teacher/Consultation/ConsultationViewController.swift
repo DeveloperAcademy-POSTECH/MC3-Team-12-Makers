@@ -18,9 +18,8 @@ class ConsultationViewController: BaseViewController {
     private var parentId: Int = -1
     private var selectedTableRow:IndexPath?
     
-    //private var childName: String = ""
-  //  private var allSchedules: [String:[Schedule]] = [:]
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
+    
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
@@ -39,7 +38,6 @@ class ConsultationViewController: BaseViewController {
     // FIXME: - 수정이 필요해보임
     private lazy var calenderData: [TeacherCalenderData] = calenderDataMaker()
 
-    
     private var scheduledParentList: [(name: String, schedule: [Schedule]?)] = []
     
     // 캘린더뷰
@@ -92,9 +90,9 @@ class ConsultationViewController: BaseViewController {
         FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
             if let schedules = schedules {
                 self?.allSchedules = []
+                self?.scheduledParentList = []
                 self?.allSchedules = self!.scheduledParentsListConVerter(schedules)
                 self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
-                
                 self?.parentsCollectionView.reloadData()
                 self?.calenderView.reloadData()
             }
@@ -106,7 +104,6 @@ class ConsultationViewController: BaseViewController {
     func setDelegations(){
         parentsCollectionView.delegate = self
         parentsCollectionView.dataSource = self
-        
         calenderView.delegate = self
         calenderView.dataSource = self
     }
@@ -130,7 +127,7 @@ class ConsultationViewController: BaseViewController {
         }
         return colorList
     }
-    //컨버터
+    ///컨버터
     func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
         for key in allSchedules.keys {
@@ -138,6 +135,7 @@ class ConsultationViewController: BaseViewController {
         }
         return scheduledParentsList
     }
+    
     func scheduledParentsListMaker(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
         for key in allSchedules.keys {
@@ -147,7 +145,7 @@ class ConsultationViewController: BaseViewController {
         }
         return scheduledParentsList
     }
-    //예약이 확정된 데이터를 저장. 확정 시에는 submittedData에 있던 3개 스케줄이 지워지고 acceptedData에 확정된 1개의 스케줄만 등록됨
+    ///예약이 확정된 데이터를 저장. 확정 시에는 submittedData에 있던 3개 스케줄이 지워지고 acceptedData에 확정된 1개의 스케줄만 등록됨
     func acceptedData() -> [TeacherCalenderData] {
         var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [Int] = []
@@ -173,8 +171,8 @@ class ConsultationViewController: BaseViewController {
         return acceptedData
     }
     
-    //모든 신청 예약 데이터를 인덱스로 만들어주는 함수
     // FIXME: - 로직 단순화 필요
+    ///모든 신청 예약 데이터를 인덱스로 만들어주는 함수
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
         
@@ -192,12 +190,10 @@ class ConsultationViewController: BaseViewController {
             }
             calenderData[parentsIndex].calenderIndex = calenderIndex
         }
-//        print(calenderData[0]) // TODO: - 삭제
         return calenderData
     }
     
-    
-    //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
+    ///선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
     func dateStringToIndex(parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
@@ -215,7 +211,7 @@ class ConsultationViewController: BaseViewController {
         return dateIndex
     }
     
-    //선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
+    ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
     func timeStringToIndex(parentIndex: Int) -> [Int] {
         var startTime:[Int] = []
         
@@ -230,7 +226,7 @@ class ConsultationViewController: BaseViewController {
         return startTime
     }
 
-    //버튼 누르면 모든 신청시간 색상별 display
+    ///버튼 누르면 모든 신청시간 색상별 display
     @objc func seeAllOnTapButton() {
         displayData = acceptedData()
         displayData += submittedData()
@@ -279,8 +275,6 @@ extension ConsultationViewController: UICollectionViewDataSource {
 
 extension ConsultationViewController: UICollectionViewDelegate {
    
-    
-    
     //cell 로드
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
@@ -427,6 +421,7 @@ extension ConsultationViewController: ParentsCollcetionViewCellDelegate {
     func drowDisplayData(cellSchedulData: [TeacherCalenderData]) {
         self.displayData = cellSchedulData
         calenderView.reloadData()
+        parentsCollectionView.reloadData()
     }
 }
 

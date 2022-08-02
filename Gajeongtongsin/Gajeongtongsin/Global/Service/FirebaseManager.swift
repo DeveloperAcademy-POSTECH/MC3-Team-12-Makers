@@ -199,23 +199,24 @@ final class FirebaseManager {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
+                    print("112")
                 }
 
             }
     }
     /// 학부모 1명의 예약정보 가져오기 for 학부모
-    func fetchParentReservations(completion: @escaping (([Schedule]) -> Void)) {
-        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
-        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
+    func fetchParentReservations(completion: @escaping (([Schedule]?) -> Void)) {
+        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {completion(nil) ; return}
+        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else { completion(nil) ; return}
         
         var scheduleList: [Schedule] = []
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
             .observe(.value) { snapshot in
                 
-                guard let dic = snapshot.value as? NSDictionary else { print("모야") ;return }
+                guard let dic = snapshot.value as? NSDictionary else { completion(nil) ;return }
                 
                 
-                let schedules = dic["schedules"] as! [String:[String:Any]]   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                guard let schedules = dic["schedules"] as? [String:[String:Any]] else { completion(nil); return }   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                 
                 for scheduleVal in schedules.values {
                     
@@ -227,17 +228,22 @@ final class FirebaseManager {
                         scheduleList.append(schedule)
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)
+                        completion(nil)
                     } catch let DecodingError.keyNotFound(key, context) {
                         print("Key '\(key)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch let DecodingError.valueNotFound(value, context) {
                         print("Value '\(value)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch let DecodingError.typeMismatch(type, context) {
                         print("Type '\(type)' mismatch:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch {
                         print("error: ", error)
+                        completion(nil)
                     }
                 }
                 completion(scheduleList)

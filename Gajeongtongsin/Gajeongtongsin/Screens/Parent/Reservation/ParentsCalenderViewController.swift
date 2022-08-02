@@ -130,11 +130,7 @@ class ParentsCalenderViewController: BaseViewController {
         
         FirebaseManager.shared.uploadNotification(notification: reservationNoti)
         
-        parentList[0].schedules.append(Schedule(
-            reservedDate: "7월22일",
-            scheduleList: appendScheduleList,
-            content: "테스트")
-            )
+
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 

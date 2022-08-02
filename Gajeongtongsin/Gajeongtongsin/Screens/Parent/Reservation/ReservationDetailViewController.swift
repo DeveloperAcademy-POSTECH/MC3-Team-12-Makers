@@ -98,26 +98,27 @@ class ReservationDetailViewController: BaseViewController {
         navigationController?.navigationBar.tintColor = .black
     }
     
-    func configure(index: IndexPath) {
+    func configure(row: Int, schedules: [Schedule]) {
         scheduleLabel.text = "신청 내역"
         reasonLabel.text = "예약 용건"
-        scheduleTitle.text = "예약 \(index.row + 1)"
+        scheduleTitle.text = "예약 \(row + 1)"
         
-        let appointment: Schedule = currentParent.schedules[index.row]
+        let appointment = schedules[row]
         reasonContent.text = appointment.content
 
         //스케줄 리스트 데이터의 갯수만큼 text 정보를 추가해서 여러 줄로 예약 대기 스케줄 표기
-        func printSchedule() {
-            var text = ""
-            for i in 0..<appointment.scheduleList.count {
-                text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
-            }
-            scheduleCandidates.text = text
-        }
-        printSchedule()
-
+        printSchedule(appointment)
+        
         //인디케이터 디자인 확정 후 변경
 //        guard appointment.scheduleList[index.row].isReserved == true else {return}
 //        checkIndicator.text = "확정"
+    }
+    
+    func printSchedule(_ appointment:Schedule) {
+        var text = ""
+        for i in 0..<appointment.scheduleList.count {
+            text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
+        }
+        scheduleCandidates.text = text
     }
 }

@@ -10,9 +10,8 @@ import UIKit
 class ReservationViewController: BaseViewController {
     //MARK: - Properties
     //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
-    var currentParent: ParentUser {
-        return mainTeacher.parentUsers[0]
-    }
+  
+    var allSchedules: [Schedule] = []
     
     private let viewTitle: UILabel = {
         let label = UILabel()
@@ -28,6 +27,7 @@ class ReservationViewController: BaseViewController {
         label.text = "예정된 상담이 없어요 :)"
         label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         label.textColor = .black
+        label.isHidden = true
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
@@ -54,8 +54,15 @@ class ReservationViewController: BaseViewController {
         super.viewDidLoad()
         reservedScheduleList.delegate = self
         reservedScheduleList.dataSource = self
-        scheduleToggle()
         navigationController?.navigationBar.topItem?.title = ""
+        
+        FirebaseManager.shared.fetchParentReservations { [weak self] schedules in
+            if let schedules = schedules {
+                self?.allSchedules = schedules
+                self?.reservedScheduleList.reloadData()
+            }
+            self?.scheduleToggle()
+        }
     }
 
     //MARK: - Funcs
@@ -81,12 +88,12 @@ class ReservationViewController: BaseViewController {
         view.backgroundColor = .Background
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
-        scheduleToggle()
+      //  scheduleToggle()
         calendarBtnAct()
     }
     
     func scheduleToggle() {
-        if currentParent.schedules.isEmpty {
+        if allSchedules.isEmpty {
             reservedScheduleList.isHidden = true
             noScheduleLabel.isHidden = false
         } else {
@@ -115,19 +122,19 @@ class ReservationViewController: BaseViewController {
 extension ReservationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = ReservationDetailViewController()
-        vc.configure(index: indexPath)
+        vc.configure(row: indexPath.row,schedules: allSchedules)
         navigationController?.pushViewController(vc, animated: true)
     }
 }
 
 extension ReservationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentParent.schedules.count
+        return allSchedules.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ScheduleTableViewCell", for: indexPath) as! ScheduleTableViewCell
-        cell.configure(index: indexPath)
+        cell.configure(indexPath.row, allSchedules[indexPath.row])
         return cell
     }
 }
