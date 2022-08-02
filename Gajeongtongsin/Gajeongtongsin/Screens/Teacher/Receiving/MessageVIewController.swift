@@ -38,7 +38,6 @@ class MessageViewController: BaseViewController {
         tableView.delegate = self
         customNavigationBar.delegate = self
         configUI()
-        navigationBar()
         
         FirebaseManager.shared.fetchParentsMessages { [weak self] messages in
             if let messages = messages {
