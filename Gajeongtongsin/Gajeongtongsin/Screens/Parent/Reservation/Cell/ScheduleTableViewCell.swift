@@ -28,25 +28,29 @@ class ScheduleTableViewCell: BaseTableViewCell {
         return content
     }()
     
-    private let checkIndicator: UILabel = {
-        let label = UILabel()
-        label.text = "대기중"
-        label.backgroundColor = .systemBlue
-        label.frame.size = CGSize(width: 50, height: 20)
-        label.layer.cornerRadius = 10
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private var statusIndicator: SecondaryButton = {
+        let btn = SecondaryButton(buttonTitle: "대기중", buttonState: .normal)
+        return btn
     }()
     
     //MARK: - Funcs
     override func render() {
+        contentView.addSubview(statusIndicator)
+        statusIndicator.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        statusIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        statusIndicator.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        statusIndicator.heightAnchor.constraint(equalToConstant: 20).isActive = true
+
+        
         contentView.addSubview(scheduleInfo)
         scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
 
-        contentView.addSubview(checkIndicator)
-        checkIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
-        checkIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+//        contentView.addSubview(content)
+//        content.topAnchor.constraint(equalTo: scheduleInfo.bottomAnchor, constant: 10).isActive = true
+//        content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
+        
+
     }
     
     override func configUI() {

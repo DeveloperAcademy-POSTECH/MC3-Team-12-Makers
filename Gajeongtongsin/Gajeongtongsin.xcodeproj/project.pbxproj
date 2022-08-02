@@ -27,7 +27,6 @@
 		35958377288297A7002B6873 /* ConsultationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958376288297A7002B6873 /* ConsultationViewController.swift */; };
 		35958379288297B9002B6873 /* SendingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958378288297B9002B6873 /* SendingViewController.swift */; };
 		3595837B288297D1002B6873 /* ReservationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595837A288297D1002B6873 /* ReservationViewController.swift */; };
-		3595837D288297E7002B6873 /* ReceivingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595837C288297E7002B6873 /* ReceivingViewController.swift */; };
 		3595837F2882980C002B6873 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595837E2882980C002B6873 /* StartViewController.swift */; };
 		35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35958382288299AE002B6873 /* UIColor+Extension.swift */; };
 		3595838528829A82002B6873 /* ImageLiteral.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3595838428829A82002B6873 /* ImageLiteral.swift */; };
@@ -95,7 +94,6 @@
 		35958376288297A7002B6873 /* ConsultationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConsultationViewController.swift; sourceTree = "<group>"; };
 		35958378288297B9002B6873 /* SendingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SendingViewController.swift; sourceTree = "<group>"; };
 		3595837A288297D1002B6873 /* ReservationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationViewController.swift; sourceTree = "<group>"; };
-		3595837C288297E7002B6873 /* ReceivingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceivingViewController.swift; sourceTree = "<group>"; };
 		3595837E2882980C002B6873 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		35958382288299AE002B6873 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
 		3595838428829A82002B6873 /* ImageLiteral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLiteral.swift; sourceTree = "<group>"; };
@@ -323,8 +321,8 @@
 			children = (
 				3595836F288294EA002B6873 /* Cell */,
 				3595836E288294E5002B6873 /* Component */,
-				35958378288297B9002B6873 /* SendingViewController.swift */,
 				8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */,
+				35958378288297B9002B6873 /* SendingViewController.swift */,
 			);
 			path = Sending;
 			sourceTree = "<group>";
@@ -362,7 +360,6 @@
 			children = (
 				35958371288294F4002B6873 /* Component */,
 				35958370288294F0002B6873 /* Cell */,
-				3595837C288297E7002B6873 /* ReceivingViewController.swift */,
 				C056F6AC288B0A770070EED5 /* MessageVIewController.swift */,
 				C054017C288D04F6002BF33B /* NotificationViewController.swift */,
 			);
@@ -614,7 +611,6 @@
 				045D0DBE2888DDB700778EEC /* ParentsCalenderViewController.swift in Sources */,
 				35958383288299AE002B6873 /* UIColor+Extension.swift in Sources */,
 				C0DFFC032885DE32009A1563 /* Message.swift in Sources */,
-				3595837D288297E7002B6873 /* ReceivingViewController.swift in Sources */,
 				C01FA466289406B300A1E4DB /* Date+Extension.swift in Sources */,
 				356B77E728945A70001D2F6C /* LabelFieldView.swift in Sources */,
 				359583A82882A6F7002B6873 /* Constants.swift in Sources */,

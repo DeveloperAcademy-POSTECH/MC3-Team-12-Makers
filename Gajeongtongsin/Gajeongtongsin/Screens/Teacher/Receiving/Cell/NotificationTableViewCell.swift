@@ -73,7 +73,7 @@ class NotificationTableViewCell: BaseTableViewCell {
             sendingTime.textColor = .gray
         }
         senderName.text = "\(notification.childName) 학부모님"
-        sendingTime.text = "5시간전"
+        sendingTime.text = "\(notification.time)"
     }
 
 }

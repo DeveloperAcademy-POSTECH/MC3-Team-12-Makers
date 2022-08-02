@@ -126,7 +126,8 @@ class ParentsCalenderViewController: BaseViewController {
                                            postId: "2", // FIXME: - 수정 필요
                                            type: .reservation,
                                            childName: childName, 
-                                           content: reasonNote.text)
+                                           content: reasonNote.text,
+                                           time: Date().toString())
         
         FirebaseManager.shared.uploadNotification(notification: reservationNoti)
         

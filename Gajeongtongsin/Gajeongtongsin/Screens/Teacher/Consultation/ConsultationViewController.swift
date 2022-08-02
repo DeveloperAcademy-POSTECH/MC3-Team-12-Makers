@@ -235,8 +235,16 @@ class ConsultationViewController: BaseViewController {
     }
     
     override func render() {
+    
+        
+
+        view.addSubview(customNavigationBar)
+        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
         view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 100).isActive = true
+        calenderView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor, constant: 50).isActive = true
         calenderView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true

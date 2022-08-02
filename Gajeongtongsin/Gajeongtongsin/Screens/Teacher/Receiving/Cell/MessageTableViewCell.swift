@@ -16,9 +16,14 @@ class MessageTableViewCell: BaseTableViewCell {
                 checkBox.backgroundColor = UIColor.Confirm
                 stateLabel.text = "처리완료"
                 stateLabel.textColor = UIColor.DarkText
+            } else {
+                checkBox.backgroundColor = UIColor.Action
+                stateLabel.text = "처리하기"
+                stateLabel.textColor = UIColor.white
             }
         }
     }
+    private var msg: Message?
 
     static let identifier = "ProfileTableViewCell"
     
@@ -87,14 +92,36 @@ class MessageTableViewCell: BaseTableViewCell {
     }
 
     
-    func configure(indexPath: IndexPath) {
-        let message: MessagesWithChildName = sortedMessages[indexPath.section]
-        messageInfo.text = "\(message[indexPath.row].message.expectedDate) \(message[indexPath.row].message.type.rawValue) \(message[indexPath.row].childName)"
-        content.text = "\(message[indexPath.row].message.content)"
+//    func configure(indexPath: IndexPath) {
+//        let message: MessagesWithChildName = sortedMessages[indexPath.section]
+//        messageInfo.text = "\(message[indexPath.row].message.expectedDate) \(message[indexPath.row].message.type.rawValue) \(message[indexPath.row].childName)"
+//        content.text = "\(message[indexPath.row].message.content)"
+//    }
+    func configure(childName: String, message:Message){
+        
+        msg = message
+        guard let msg = msg else {return}
+        
+        messageInfo.text = "\(msg.expectedDate) \(msg.type.rawValue) \(childName)"
+                content.text = "\(msg.content)"
+        
+
+        stateLabel.text = msg.isCompleted ? "처리완료" : "처리하기"
+        stateLabel.textColor = msg.isCompleted ? .DarkText : .white
+        checkBox.backgroundColor = msg.isCompleted ? .Confirm : .Action
+        isChecked = msg.isCompleted
     }
     
     func changeState() {
         self.isChecked = true
         
+    }
+    
+    func getMessage() -> Message? {
+        return msg
+    }
+    
+    func messageCompleted() {
+        msg?.isCompleted = true
     }
 }

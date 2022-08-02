@@ -84,6 +84,7 @@ final class FirebaseManager {
         guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
         
         let data : [String: Any] = [
+            "id": parentUid,
             "type": message.type.rawValue,
             "sentDate": message.sentDate,
             "expectedDate": message.expectedDate,
@@ -96,6 +97,23 @@ final class FirebaseManager {
         
     }
     
+    /// 메시지 처리완료 업로드하기 for 선생님
+    func uploadMessageComplete(message: Message?) {
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        guard let message = message else {return}
+        db.child("TeacherUsers/\(teacherUserId)/parentUsers/\(message.id ?? "")/sendingMessages/\(message.msgId ?? "")")
+            
+        
+            .updateChildValues(["isCompleted" : message.isCompleted]){ error, _ in
+                                if let error = error {
+                                    print("Error writing user document: \(error)")
+                                } else {
+                                    print("User document successfsiully written!")
+                                }
+                            }
+
+    }
+    
     /// 알림 업로드하기 for 학부모
     func uploadNotification(notification: Notification){
         guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
@@ -106,7 +124,7 @@ final class FirebaseManager {
             "type" : notification.type.rawValue,
             "childName" : notification.childName,
             "content" : notification.content,
-            "time" : "7월20일" // 수정 필요
+            "time" : notification.time // 수정 필요
         ]
         
         db.child("Notifications/\(homeroomTeacherUid)").child("notificationList").childByAutoId()
@@ -255,57 +273,74 @@ final class FirebaseManager {
     
     
     /// 학부모 여러명의 메시지들 가져오기 for 선생님
-    func fetchParentsMessages(completion: @escaping (([Message]) -> Void)) {
-        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+    func fetchParentsMessages(completion: @escaping (([(String,Message)]?) -> Void)) {
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else { completion(nil); return}
         
-        var allMessages: [Message] = []
+        var allMessages: [(String,Message)] = []
         
         db.child("TeacherUsers/\(teacherUserId)/parentUsers")
             .observe(.value) { snapshot in
-                let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
-                
-                for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
-                    
-                    let sendimgMessasges = parent["sendingMessages"] as! [String: [String:Any]] // [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
-                    for key in sendimgMessasges.keys {
+                allMessages = []
+                guard let parents = snapshot.value as? [String: [String:Any]] else { completion(nil); return }  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
+                 for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
+ 
+                    var parentMessages: [(String,Message)] = []
+                    guard let sendingMessasges = parent["sendingMessages"] as? [String: [String:Any]]  else { print("sendingMessageserror"); completion(nil); return }// [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                    guard let childName = parent["childName"] as? String else { print("childNameerror");completion(nil); return }
+                    for messageKey in sendingMessasges.keys {
                         
                         do {
-                            let messageData = try JSONSerialization.data(withJSONObject: sendimgMessasges[key]!, options: [])
+                            
+                            let messageData = try JSONSerialization.data(withJSONObject: sendingMessasges[messageKey]!, options: []) // FIXME: - 강제 언래핑
                             let decoder = JSONDecoder()
-                            let message = try decoder.decode(Message.self, from: messageData)
-                            allMessages.append(message)
+                            var message = try decoder.decode(Message.self, from: messageData)
+                            message.msgId = messageKey // FIXME: - 임시방편. id를 저장하는 완전한 로직 필요.
+                            parentMessages.append((childName,message))
                         } catch let DecodingError.dataCorrupted(context) {
                             print(context)
+                            completion(nil);
                         } catch let DecodingError.keyNotFound(key, context) {
                             print("Key '\(key)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil);
+
                         } catch let DecodingError.valueNotFound(value, context) {
                             print("Value '\(value)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil);
+
                         } catch let DecodingError.typeMismatch(type, context) {
                             print("Type '\(type)' mismatch:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil);
+
                         } catch {
                             print("error: ", error)
+                            completion(nil);
+
                         }
                     }
+                    allMessages += parentMessages
+                }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allMessages)
+
                 }
             }
     }
     /// 학부모 1명의 메시지들 가져오기 for 학부모
-    func fetchParentMessages(completion: @escaping (([Message]) -> Void)) {
+    func fetchParentMessages(completion: @escaping (([Message]?) -> Void)) {
         
-        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
-        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
+        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {completion(nil); return}
+        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {completion(nil); return}
         
         var messageList: [Message] = []
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
             .observe(.value) { snapshot in
+                messageList = []
+                guard let dic = snapshot.value as? NSDictionary else { completion(nil); return }
                 
-                guard let dic = snapshot.value as? NSDictionary else { return }
-                
-                let messages = dic["sendingMessages"] as! [String:[String:Any]]   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                guard let messages = dic["sendingMessages"] as? [String:[String:Any]] else {completion(nil); return } // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                 
                 for messageVal in messages.values {
                     
@@ -315,17 +350,22 @@ final class FirebaseManager {
                         let message = try decoder.decode(Message.self, from: messageData)
                         messageList.append(message)
                     } catch let DecodingError.dataCorrupted(context) {
+                        completion(nil);
                         print(context)
                     } catch let DecodingError.keyNotFound(key, context) {
+                        completion(nil);
                         print("Key '\(key)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
                     } catch let DecodingError.valueNotFound(value, context) {
+                        completion(nil);
                         print("Value '\(value)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
                     } catch let DecodingError.typeMismatch(type, context) {
+                        completion(nil);
                         print("Type '\(type)' mismatch:", context.debugDescription)
                         print("codingPath:", context.codingPath)
                     } catch {
+                        completion(nil);
                         print("error: ", error)
                     }
                 }
@@ -334,18 +374,17 @@ final class FirebaseManager {
     }
     
     /// 알림들 가져오기 for 선생님
-    func fetchNotifications(completion: @escaping ([Notification])->Void)   {
+    func fetchNotifications(completion: @escaping ([Notification]?)->Void)   {
         
-        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else { completion(nil); return }
         var notificationsList: [Notification] = []
         db.child("Notifications/\(teacherUserId)/notificationList")
             .observe(.value) { snapshot in
                 
-                let notifications = snapshot.value as! [String: [String:Any]]  // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                guard let notifications = snapshot.value as? [String: [String:Any]] else{ completion(nil); return } // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                 
                 
                 for notificationVal in notifications.values {
-                    
                     do {
                         let notificationData = try JSONSerialization.data(withJSONObject: notificationVal, options: [])
                         let decoder = JSONDecoder()
@@ -353,17 +392,25 @@ final class FirebaseManager {
                         notificationsList.append(notification)
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)
+                        completion(nil)
                     } catch let DecodingError.keyNotFound(key, context) {
                         print("Key '\(key)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
+
                     } catch let DecodingError.valueNotFound(value, context) {
                         print("Value '\(value)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch let DecodingError.typeMismatch(type, context) {
                         print("Type '\(type)' mismatch:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
+
                     } catch {
                         print("error: ", error)
+                        completion(nil)
+
                     }
                 }
                 completion(notificationsList)
