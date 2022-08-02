@@ -25,7 +25,7 @@ class SecondaryButton: UIButton {
     
     // MARK: - Funcs
     func render() {
-        self.titleLabel?.font = UIFont.systemFont(ofSize: 15, weight: .regular)
+        self.titleLabel?.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         self.layer.cornerRadius = 10
         
         self.translatesAutoresizingMaskIntoConstraints = false
@@ -40,8 +40,8 @@ class SecondaryButton: UIButton {
             self.backgroundColor = .Action      // 버튼 배경화면 색깔
             self.isUserInteractionEnabled = true // disabled 상태였던 버튼을 normal로 바꾸는 동시에 클릭 가능하게 변경
         case .disabled:
-            self.setTitleColor(.Confirm, for: .normal) //버튼 타이틀 색깔
-            self.backgroundColor = .black      // 버튼 배경화면 색깔
+            self.setTitleColor(.black, for: .normal) //버튼 타이틀 색깔
+            self.backgroundColor = .Confirm      // 버튼 배경화면 색깔
             self.isUserInteractionEnabled = false // disabled 상태에서는 클릭 불가
         }
     }
