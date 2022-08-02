@@ -217,7 +217,6 @@ final class FirebaseManager {
                 
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
-                    print("112")
                 }
 
             }
