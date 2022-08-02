@@ -63,12 +63,18 @@ final class FirebaseManager {
             
             scheduleInfoCollection.append(scheduleInfoData)
         }
-        let data : [String: Any] = [
-            "reservedDate": schedule.reservedDate ,
-            "content": schedule.content,
-            "scheduleList": scheduleInfoCollection]
         
         let scheduleDB = db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)/schedules/").childByAutoId()
+        
+        let data : [String: Any] = [
+            "id": parentUid,
+            "scheduleId": scheduleDB.key!,
+            "reservedDate": schedule.reservedDate ,
+            "content": schedule.content,
+            "scheduleList": scheduleInfoCollection,
+            
+        ]
+        
         scheduleDB.setValue(data)
     }
     
@@ -117,7 +123,29 @@ final class FirebaseManager {
     }
     
     /// 선생님 확정된 예약 업로드하기
-    func uploadConfirmedReservation(){}
+    func uploadConfirmedReservation(childName: String,reservedSchedule: Schedule?,selectedIndex: Int){
+        guard let teacherUid = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        guard let reservedSchedule = reservedSchedule else { return }
+
+        var scheduleInfoCollection : [[String : Any]] = []
+        
+        for scheduleInfo in reservedSchedule.scheduleList {
+            let scheduleInfoData : [String: Any] = [
+                "consultingDate": scheduleInfo.consultingDate,
+                "startTime" : scheduleInfo.startTime,
+                "isReserved" : scheduleInfo.isReserved ]
+            
+            scheduleInfoCollection.append(scheduleInfoData)
+        }
+        
+        db.child("TeacherUsers/\(teacherUid)/parentUsers/\(reservedSchedule.id!)/schedules/\(reservedSchedule.scheduleId!)/scheduleList")
+            .setValue(scheduleInfoCollection)
+        
+//        db.child("TeacherUsers/\(teacherUid)/parentUsers/\(reservedSchedule.id!)/schedules/\(reservedSchedule.scheduleId!)/scheduleList/\(selectedIndex)")
+//            .updateChildValues(["isReserved":reservedSchedule.scheduleList[0].isReserved])
+
+
+    }
     
     // 파이어베이스가져오기 함수
     
