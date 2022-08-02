@@ -19,17 +19,25 @@ class MessageViewController: BaseViewController {
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: MessageTableViewCell.identifier)
         return tableView
     }()
-    
+    private var customNavigationBar: CutomNavigationBar = {
+        let customNavigationBar = CutomNavigationBar(title: "수신내역", imageName: "bell", imageSize: 20)
+        customNavigationBar.backgroundColor = .white
+        customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+        return customNavigationBar
+    }()
     private var allMessages: MessagesWithChildName = []
     
     var sortedMessages:[MessagesWithChildName] {
          chunkedMessages(messages: allMessages.sorted(by: {$0.message.sentDate > $1.message.sentDate}))
     }
+
     // MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
+        customNavigationBar.delegate = self
+        configUI()
         navigationBar()
         
         FirebaseManager.shared.fetchParentsMessages { [weak self] messages in
@@ -41,21 +49,38 @@ class MessageViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
+
+    
     override func render() {
         
+        view.addSubview(customNavigationBar)
+        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        customNavigationBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        
         view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
         tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-    
     }
     
     // MARK: - Funcs
-    func navigationBar() {
-        self.navigationItem.title = "수신내역"
-        self.navigationController?.navigationBar.tintColor = .black
-        self.navigationController?.navigationBar.prefersLargeTitles = true
+    
+    func setupNavigationBackButton() {
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+        navigationController?.navigationBar.tintColor = .black
+    }
+    
+    override func configUI() {
+        setupNavigationBackButton()
+        view.backgroundColor = .systemBackground
     }
 }
 
@@ -135,4 +160,11 @@ func chunkedMessages(messages: [(childName: String, message: Message)]) -> [Mess
     messagesByDate.append(currentDateMessages)  //마지막 리스트도 추가하고 리턴해야함
     return messagesByDate
     
+}
+
+extension MessageViewController : CustomNavigationBarDelegate {
+    func tapButton() {
+        let vc = NotificationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
 }
