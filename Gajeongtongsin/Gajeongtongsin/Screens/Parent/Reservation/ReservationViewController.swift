@@ -58,6 +58,7 @@ class ReservationViewController: BaseViewController {
         
         FirebaseManager.shared.fetchParentReservations { [weak self] schedules in
             if let schedules = schedules {
+                self?.allSchedules = []
                 self?.allSchedules = schedules
                 self?.reservedScheduleList.reloadData()
             }

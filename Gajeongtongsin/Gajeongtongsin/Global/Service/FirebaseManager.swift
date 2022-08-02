@@ -227,10 +227,9 @@ final class FirebaseManager {
         guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {completion(nil) ; return}
         guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else { completion(nil) ; return}
         
-        var scheduleList: [Schedule] = []
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
             .observe(.value) { snapshot in
-                
+                var scheduleList: [Schedule] = []
                 guard let dic = snapshot.value as? NSDictionary else { completion(nil) ;return }
                 
                 

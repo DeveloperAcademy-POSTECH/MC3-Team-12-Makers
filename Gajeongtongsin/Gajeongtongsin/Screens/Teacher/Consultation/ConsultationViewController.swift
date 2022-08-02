@@ -34,6 +34,13 @@ class ConsultationViewController: BaseViewController {
         }
         return nextWeek
     }
+    private var customNavigationBar: CustomNavigationBar = {
+         let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
+         customNavigationBar.backgroundColor = .white
+         customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+         return customNavigationBar
+     }()
+    
     
     // FIXME: - 수정이 필요해보임
     private lazy var calenderData: [TeacherCalenderData] = calenderDataMaker()
@@ -236,8 +243,6 @@ class ConsultationViewController: BaseViewController {
     
     override func render() {
     
-        
-
         view.addSubview(customNavigationBar)
         customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true

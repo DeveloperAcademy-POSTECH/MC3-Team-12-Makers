@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CutomNavigationBar: UIView {
+class CustomNavigationBar: UIView {
     
     // MARK: - Properties
     var delegate: CustomNavigationBarDelegate?

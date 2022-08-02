@@ -76,4 +76,4 @@ var scheduleList4 = [
              content: "허결출결문의제발")
 ]
 
-var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]
+//var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]

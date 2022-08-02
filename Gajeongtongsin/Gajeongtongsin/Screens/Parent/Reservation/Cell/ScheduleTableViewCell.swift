@@ -45,10 +45,6 @@ class ScheduleTableViewCell: BaseTableViewCell {
         contentView.addSubview(scheduleInfo)
         scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
-
-//        contentView.addSubview(content)
-//        content.topAnchor.constraint(equalTo: scheduleInfo.bottomAnchor, constant: 10).isActive = true
-//        content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         
 
     }
@@ -61,7 +57,8 @@ class ScheduleTableViewCell: BaseTableViewCell {
         scheduleInfo.text = "예약 \(row + 1)"
         for scheduleInfo in schedule.scheduleList {
             if scheduleInfo.isReserved {
-                checkIndicator.text = "확정"
+                statusIndicator.setTitle("확정", for: .normal)
+                statusIndicator.changeState(buttonState: .disabled)
                 break
             }
         }
