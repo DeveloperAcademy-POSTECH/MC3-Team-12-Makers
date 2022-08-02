@@ -113,7 +113,7 @@ class ConsultationViewController: BaseViewController {
     
     func calenderDataMaker() -> [TeacherCalenderData] {
         var calenderData: [TeacherCalenderData] = []
-        for parentsIndex in 0..<scheduledParentList.count {
+        for parentsIndex in 0..<allSchedules.count {
             calenderData.append(TeacherCalenderData(parentsIndex: parentsIndex, calenderIndex: [], cellColor: .white))
             calenderData[parentsIndex].cellColor = getRandomColor()[parentsIndex]
         }
@@ -122,7 +122,7 @@ class ConsultationViewController: BaseViewController {
     
     func getRandomColor() -> [UIColor] { //학부모별 슬롯 색상 자동화
         var colorList: [UIColor] = []
-        for _ in 0..<scheduledParentList.count {
+        for _ in 0..<allSchedules.count {
             let red:CGFloat = CGFloat(drand48())
             let green:CGFloat = CGFloat(drand48())
             let blue:CGFloat = CGFloat(drand48())
@@ -336,12 +336,12 @@ extension ConsultationViewController: UICollectionViewDelegate {
         if indexPath.item == clickedCell {
             // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
             //guard var parentSchedules = scheduledParentList[parentId!].schedule else {return}
-            guard var selectedSchedule = scheduledParentList[parentId].schedule?[0].scheduleList[selectedIndex!] else { return}
+            guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return}
             selectedSchedule.isReserved = true
-            scheduledParentList[parentId].schedule?[0].scheduleList = []
-            scheduledParentList[parentId].schedule?[0].scheduleList.append(selectedSchedule)
-            FirebaseManager.shared.uploadConfirmedReservation(childName: scheduledParentList[parentId].name,
-                                                              reservedSchedule: scheduledParentList[parentId].schedule?[0],selectedIndex: selectedIndex!)
+            allSchedules[parentId].schedule?[0].scheduleList = []
+            allSchedules[parentId].schedule?[0].scheduleList.append(selectedSchedule)
+            FirebaseManager.shared.uploadConfirmedReservation(childName: allSchedules[parentId].name,
+                                                              reservedSchedule: allSchedules[parentId].schedule?[0],selectedIndex: selectedIndex!)
             calenderData[parentId].cellColor = .lightGray // 예약확정된 셀은 연회색
             clickedCell = nil // 선택해제
             
@@ -358,7 +358,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
         //카드의 용건보기 버튼과 동일한 액션
         acceptedData().forEach {
             if $0.calenderIndex.contains(indexPath.item) {
-                guard let parentSchedules = scheduledParentList[$0.parentsIndex].schedule else {return}
+                guard let parentSchedules = allSchedules[$0.parentsIndex].schedule else {return}
                 let alert = UIAlertController(title: "상담용건", message: parentSchedules[0].content, preferredStyle: .alert)
                 let cancelAction = UIAlertAction(title: "취소", style: .cancel)
                 alert.addAction(cancelAction)
