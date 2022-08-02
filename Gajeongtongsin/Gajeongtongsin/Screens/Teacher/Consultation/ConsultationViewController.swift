@@ -41,7 +41,6 @@ class ConsultationViewController: BaseViewController {
 
     
     private var scheduledParentList: [(name: String, schedule: [Schedule]?)] = []
-
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -97,6 +96,7 @@ class ConsultationViewController: BaseViewController {
                 self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
                 
                 self?.parentsCollectionView.reloadData()
+                self?.calenderView.reloadData()
             }
         }
     }
@@ -152,10 +152,10 @@ class ConsultationViewController: BaseViewController {
         var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [Int] = []
 
-        for parentsIndex in 0..<scheduledParentList.count {
+        for parentsIndex in 0..<allSchedules.count {
             calenderIndex = []
             
-            guard let parentSchedules = scheduledParentList[parentsIndex].schedule else { return [] }
+            guard let parentSchedules = allSchedules[parentsIndex].schedule else { return [] }
             for scheduleIndex in 0..<parentSchedules[0].scheduleList.count { //하단 funcs 참고
                 if parentSchedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
@@ -178,9 +178,9 @@ class ConsultationViewController: BaseViewController {
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
         
-        for parentsIndex in 0 ..< scheduledParentList.count {
+        for parentsIndex in 0 ..< allSchedules.count {
             calenderIndex = []
-            guard let parentShedules = scheduledParentList[parentsIndex].schedule else { return []}
+            guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             for scheduleIndex in
                     0 ..< parentShedules[0].scheduleList.count {
                 
@@ -201,7 +201,7 @@ class ConsultationViewController: BaseViewController {
     func dateStringToIndex(parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        guard let parentSchedules = scheduledParentList[parentsIndex].schedule else { return []}
+        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
         parentSchedules[0].scheduleList.forEach{
             dateString.append($0.consultingDate)
         }
@@ -219,7 +219,7 @@ class ConsultationViewController: BaseViewController {
     func timeStringToIndex(parentIndex: Int) -> [Int] {
         var startTime:[Int] = []
         
-        guard let parentSchedules = scheduledParentList[parentIndex].schedule else { return [] }
+        guard let parentSchedules = allSchedules[parentIndex].schedule else { return [] }
         parentSchedules[0].scheduleList.forEach{
             let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
             let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
