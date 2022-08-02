@@ -38,6 +38,7 @@ class CutomNavigationBar: UIView {
         super.init(frame: .zero)
         render()
         configUI()
+        self.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         rightButtonItem.addTarget(self, action: #selector(tapButton), for: .touchUpInside)
     }

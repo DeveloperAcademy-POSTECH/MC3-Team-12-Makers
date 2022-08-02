@@ -47,7 +47,7 @@ class MessageViewController: BaseViewController {
         customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        customNavigationBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
+//        customNavigationBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
         
         view.addSubview(tableView)
         tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 70).isActive = true
