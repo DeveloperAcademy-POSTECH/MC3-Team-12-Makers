@@ -11,7 +11,8 @@ let sections = ["긴급알림", "일반알림"]
 class NotificationViewController: BaseViewController {
     
     // MARK: - Properties
-    var emergancy: [Notification] {
+
+    var emergency: [Notification] {
         allNotifications.filter { $0.type == .emergency }
     }
     
@@ -119,7 +120,7 @@ extension NotificationViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return emergancy.count
+            return emergency.count
         }
         return normal.count
     }
@@ -127,7 +128,7 @@ extension NotificationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
-            cell.configure(notification: emergancy[indexPath.row])
+            cell.configure(notification: emergency[indexPath.row])
 
             cell.backgroundColor = UIColor.Urgent
 
