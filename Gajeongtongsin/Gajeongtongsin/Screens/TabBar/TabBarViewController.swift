@@ -60,7 +60,7 @@ class TabBarViewController: UITabBarController {
                                       image: TabPage.profile.getTabBarIcon(),
                                        tag: 2)
 
-        tabBar.tintColor = .systemBlue
+        tabBar.tintColor = .Action
         tabBar.backgroundColor = .white
         tabBar.layer.borderWidth = 2
         tabBar.layer.borderColor = UIColor.LightLine.cgColor

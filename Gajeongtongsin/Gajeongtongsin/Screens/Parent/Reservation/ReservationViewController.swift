@@ -35,7 +35,7 @@ class ReservationViewController: BaseViewController {
     private let reserveButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.tintColor = .Action
         button.showsMenuAsPrimaryAction = true
         button.translatesAutoresizingMaskIntoConstraints = false
         return button

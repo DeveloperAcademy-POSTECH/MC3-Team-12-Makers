@@ -52,7 +52,7 @@ class SendingViewController: BaseViewController {
     //메시지 버튼 내 text와 image 간격 조정, 사이 구분선 삽입
     private let messageTypeButton: UIButton = {
         let button = UIButton()
-        button.setTitle("용건 선택", for: .normal)
+        button.setTitle("용건 선택   ", for: .normal)
         button.setTitleColor(UIColor.black, for: .normal)
         button.backgroundColor = .secondarySystemFill
         button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
@@ -67,19 +67,9 @@ class SendingViewController: BaseViewController {
         return button
     }()
     
-    //메시지 내용 전송 버튼
-    private let sendButton: UIButton = {
-        let button = UIButton()
-        button.isHidden = true
-        button.setTitle("전송", for: .normal)
-        button.setTitleColor(UIColor.white, for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .medium)
-        button.layer.borderWidth = 0
-        button.layer.borderColor = UIColor.systemBlue.cgColor
-        button.layer.cornerRadius = 10
-        button.backgroundColor = .systemGray
-        button.isUserInteractionEnabled = false
-        button.translatesAutoresizingMaskIntoConstraints = false
+    //메시지 전송 버튼 (primary button 활용)
+    private var sendButton: PrimaryButton = {
+        let button = PrimaryButton(buttonTitle: "전송", buttonState: .disabled)
         return button
     }()
     
@@ -88,7 +78,8 @@ class SendingViewController: BaseViewController {
         let picker = UIDatePicker()
         picker.isHidden = true
         picker.preferredDatePickerStyle = .compact
-        picker.locale = Locale(identifier: "ko-KR")
+        picker.locale = Locale(identifier: "ko_KR")
+        picker.timeZone = TimeZone(identifier: "ko_KR")
         picker.minuteInterval = 30
         picker.translatesAutoresizingMaskIntoConstraints = false
         return picker
@@ -96,8 +87,6 @@ class SendingViewController: BaseViewController {
     
     
     //사유 입력하는 Text Field View
-    //TODO: -
-    //Text Field 내 여백 padding 값 조절, 글자수 제한, 박스 외부 클릭했을 때 커서와 키보드 사라지게 등등
     private let textFieldForReason: UITextField = {
         let textF = UITextField()
         let leftMargin = UIView(frame: CGRect(x: 0, y: 0, width: 5, height: textF.frame.height))
@@ -119,6 +108,7 @@ class SendingViewController: BaseViewController {
         super.viewDidLoad()
         textFieldForReason.delegate = self
         self.navigationItem.title = "문자작성"
+        textFieldForReason.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
     }
     
     //MARK: - Funcs
@@ -158,16 +148,12 @@ class SendingViewController: BaseViewController {
         
         view.addSubview(sendButton)
         sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
-        sendButton.heightAnchor.constraint(equalToConstant: 40).isActive = true
-        sendButton.widthAnchor.constraint(equalToConstant: 350).isActive = true
-        sendButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-
+        sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
 
     override func configUI() {
-
-        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
         view.backgroundColor = .Background
+        sendButton.addTarget(self, action: #selector(sendAlert), for: .touchUpInside)
         
         //Message Type 버튼과 선택에 따른 컴포넌트 노출 차이
         messageTypeButton.menu = UIMenu(options: .displayInline, children: [
@@ -190,14 +176,6 @@ class SendingViewController: BaseViewController {
                 self?.sendButton.isHidden = false
             })
         ])
-        
-        //프로퍼티 옵저버 구현 고려 중 (날짜, 시간 값이 세팅되어야 사유 입력창 등장)
-//        var selectedDate: Date = datePicker.date {
-//            didSet {
-//                self.textLabelReason.isHidden = false
-//                self.textFieldForReason.isHidden = false
-//            }
-//        }
     }
     
     //용건 기입 마칠 때 내용있는지 여부 체크해서 전송버튼 활성화
@@ -210,21 +188,27 @@ class SendingViewController: BaseViewController {
         return msgType
     }
     
+    func dateType() -> String {
+        let dateType = messageTypeButton.currentTitle == "결석" ? "\(datePicker.date.toString())" : "\(datePicker.date.toStringWithTime())"
+        return dateType
+    }
+    
     @objc func sendAlert() {
-        let alert = UIAlertController(title: "긴급 상담 요청", message: "정말 급한 상담인지 다시 한 번 생각해주세요", preferredStyle: .alert)
+        let alert = UIAlertController(title: "쪽지를 전송하시겠습니까?", message: nil, preferredStyle: .alert)
         let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-        let okayAction = UIAlertAction(title: "신청", style: .default) { _ in
+        let okayAction = UIAlertAction(title: "전송", style: .default) { _ in
             self.sendMessage()
         }
         alert.addAction(cancelAction)
         alert.addAction(okayAction)
         self.present(alert, animated: true)
     }
-  
+    
     func sendMessage() {
         let newMsg = Message(type: msgType(),
+
                              sentDate: Date().toString(),
-                             expectedDate: "\(datePicker.date.toString())",
+                             expectedDate: dateType(),
                              content: textFieldForReason.text ?? "",
                              isCompleted: false)
         
@@ -234,19 +218,41 @@ class SendingViewController: BaseViewController {
         delegate?.reloadTable()
         navigationController?.popViewController(animated: true)
     }
+    
+    //텍스트 필드 검사 후 변경 적용
+    @objc func textFieldDidChange() {
+        if textFieldForReason.text?.trimmingCharacters(in: .whitespacesAndNewlines) != "" {
+            sendButton.changeState(buttonState: .normal)
+        } else {
+            sendButton.changeState(buttonState: .disabled)
+        }
+    }
+
 }
 
 //MARK: - Extensions
 extension SendingViewController: UITextFieldDelegate {
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        if textField.text != "" {
-            sendButton.backgroundColor = .systemBlue
-            sendButton.isUserInteractionEnabled = true
-        } else {
-            sendButton.backgroundColor = .systemGray
-            sendButton.isUserInteractionEnabled = false
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        //글자수 20자 도달했을 때 백스페이스 감지 (코드 이해 못함)
+        if let char = string.cString(using: String.Encoding.utf8) {
+            let isBackSpace = strcmp(char, "\\b")
+            if isBackSpace == -92 {
+                return true
+            }
         }
+        //글자수 20자 제한
+        guard textField.text?.count ?? 0 < 20 else { return false }
+
+        let textDetector = textFieldForReason.text
+        if textDetector?.count != 0 {
+            sendButton.changeState(buttonState: .normal)
+        } else {
+            sendButton.changeState(buttonState: .disabled)
+        }
+
+        return true
     }
+    
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true

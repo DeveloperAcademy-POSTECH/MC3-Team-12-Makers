@@ -110,12 +110,9 @@
 		8C7C924B28919C5500C878AF /* ReservationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReservationDetailViewController.swift; sourceTree = "<group>"; };
 		8C7C924D2892D75E00C878AF /* UrgentRequestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UrgentRequestViewController.swift; sourceTree = "<group>"; };
 		8CBD1520288F900500510610 /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
-
 		C01FA46328936D4F00A1E4DB /* CustomSectionBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSectionBar.swift; sourceTree = "<group>"; };
-
 		C01FA465289406B300A1E4DB /* Date+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extension.swift"; sourceTree = "<group>"; };
 		C01FA467289406C700A1E4DB /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
-
 		C04B547E2887C6250097EE88 /* MockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockData.swift; sourceTree = "<group>"; };
 		C054017C288D04F6002BF33B /* NotificationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationViewController.swift; sourceTree = "<group>"; };
 		C054017E288D0520002BF33B /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };

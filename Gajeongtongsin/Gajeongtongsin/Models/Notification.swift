@@ -15,6 +15,7 @@ struct Notification: Codable {
     let type: NotificationType
     let childName: String
     let content: String
+    let time : String
     //var time: Date? = Date() //    임시로 옵셔널 및 값 넣음.
     
 }
