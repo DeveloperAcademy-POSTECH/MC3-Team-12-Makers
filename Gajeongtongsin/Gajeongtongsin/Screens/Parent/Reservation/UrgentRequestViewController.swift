@@ -174,6 +174,7 @@ extension UrgentRequestViewController: UITextViewDelegate {
         } else {
             if !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 submitBtn.setTitleColor(.Action, for: .normal)
+                submitBtn.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
                 submitBtn.isUserInteractionEnabled = true
             }
            
