@@ -59,6 +59,11 @@ class ReservationDetailViewController: BaseViewController {
         return content
     }()
     
+    private var statusIndicator: SecondaryButton = {
+        let btn = SecondaryButton(buttonTitle: "대기중", buttonState: .normal)
+        return btn
+    }()
+    
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -74,7 +79,12 @@ class ReservationDetailViewController: BaseViewController {
         view.addSubview(scheduleLabel)
         scheduleLabel.topAnchor.constraint(equalTo: scheduleTitle.bottomAnchor, constant: 35).isActive = true
         scheduleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        scheduleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+        
+        view.addSubview(statusIndicator)
+        statusIndicator.topAnchor.constraint(equalTo: scheduleTitle.bottomAnchor, constant: 35).isActive = true
+        statusIndicator.leadingAnchor.constraint(equalTo: scheduleLabel.trailingAnchor, constant: 20).isActive = true
+        statusIndicator.widthAnchor.constraint(equalToConstant: 70).isActive = true
+        statusIndicator.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         view.addSubview(scheduleCandidates)
         scheduleCandidates.topAnchor.constraint(equalTo: scheduleLabel.bottomAnchor, constant: 20).isActive = true
@@ -116,8 +126,10 @@ class ReservationDetailViewController: BaseViewController {
         }
         printSchedule()
 
-        //인디케이터 디자인 확정 후 변경
-//        guard appointment.scheduleList[index.row].isReserved == true else {return}
-//        checkIndicator.text = "확정"
+        //인디케이터
+       if appointment.scheduleList[index.row].isReserved {
+           statusIndicator.setTitle("확정", for: .normal)
+           statusIndicator.changeState(buttonState: .disabled)
+        }
     }
 }
