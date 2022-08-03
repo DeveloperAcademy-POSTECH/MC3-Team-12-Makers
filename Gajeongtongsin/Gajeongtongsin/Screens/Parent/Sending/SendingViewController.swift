@@ -157,7 +157,7 @@ class SendingViewController: BaseViewController {
         textFieldForReason.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         
         view.addSubview(sendButton)
-        sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -100).isActive = true
+        sendButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -50).isActive = true
         sendButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
     }
 
