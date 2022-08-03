@@ -12,10 +12,6 @@ class ScheduleTableViewCell: BaseTableViewCell {
     //MARK: - Properties
     static let identifier = "ScheduleTableViewCell"
     
-    var currentParent: ParentUser {
-        return mainTeacher.parentUsers[0]
-    }
-    
     private let scheduleInfo: UILabel = {
         let scheduleInfo = UILabel()
         scheduleInfo.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
@@ -49,10 +45,6 @@ class ScheduleTableViewCell: BaseTableViewCell {
         contentView.addSubview(scheduleInfo)
         scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
-
-//        contentView.addSubview(content)
-//        content.topAnchor.constraint(equalTo: scheduleInfo.bottomAnchor, constant: 10).isActive = true
-//        content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
         
 
     }
@@ -61,19 +53,29 @@ class ScheduleTableViewCell: BaseTableViewCell {
 
     }
     
-    func configure(index: IndexPath) {
-
-        let appointment: Schedule = currentParent.schedules[index.row]
-        
-        scheduleInfo.text = "예약 \(index.row + 1)"
-        
-//        //약속시간 중 첫 번째가 교사에 의해 확정되었다고 가정할 때 indicator 변화 확인하기 위한 시험 코드 (추후 삭제)
-//        appointment.scheduleList[0].isReserved = true
-        
-        //인디케이터
-       if appointment.scheduleList[index.row].isReserved {
-           statusIndicator.setTitle("확정", for: .normal)
-           statusIndicator.changeState(buttonState: .disabled)
+    func configure(_ row: Int,_ schedule: Schedule){
+        scheduleInfo.text = "예약 \(row + 1)"
+        for scheduleInfo in schedule.scheduleList {
+            if scheduleInfo.isReserved {
+                statusIndicator.setTitle("확정", for: .normal)
+                statusIndicator.changeState(buttonState: .disabled)
+                break
+            }
         }
+
     }
+//    func configure(index: IndexPath) {
+//
+//        let appointment: Schedule = currentParent.schedules[index.row]
+//
+//        scheduleInfo.text = "예약 \(index.row + 1)"
+//
+////        //약속시간 중 첫 번째가 교사에 의해 확정되었다고 가정할 때 indicator 변화 확인하기 위한 시험 코드 (추후 삭제)
+////        appointment.scheduleList[0].isReserved = true
+//
+//        //인디케이터 디자인 확정 후 변경
+//               if appointment.scheduleList[index.row].isReserved {
+//            checkIndicator.text = "확정"
+//        }
+//    }
 }

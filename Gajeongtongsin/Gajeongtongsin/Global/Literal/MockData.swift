@@ -33,7 +33,6 @@ var messageList3 = [
     Message(type: .earlyLeave, sentDate: "2022-03-15", expectedDate: "7월26일", content: "최히로번개만남", isCompleted: false)
 ]
 
-
 var messageList4 = [
     Message(type: .absence, sentDate: "실시간", expectedDate: "7월25일", content: "최히로소개팅", isCompleted: false),
     Message(type: .earlyLeave, sentDate: "실시간", expectedDate: "7월26일", content: "최히로레브랑데이트", isCompleted: false)
@@ -65,7 +64,6 @@ var scheduleList3 = [
 ]
 var notifications: [Notification] = []
 //var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]
-
 
 var scheduleList4 = [
     Schedule(reservedDate: "8월3일",

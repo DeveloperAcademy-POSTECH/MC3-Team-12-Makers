@@ -9,5 +9,5 @@ import Foundation
 
 protocol ParentsCollcetionViewCellDelegate{
     func present(message: String )
-    func drowDisplayData(cellSchedulData: [TeacherCalenderData])
+    func drawDisplayData(cellSchedulData: [TeacherCalenderData])
 }

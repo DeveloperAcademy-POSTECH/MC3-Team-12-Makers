@@ -63,12 +63,18 @@ final class FirebaseManager {
             
             scheduleInfoCollection.append(scheduleInfoData)
         }
-        let data : [String: Any] = [
-            "reservedDate": schedule.reservedDate ,
-            "content": schedule.content,
-            "scheduleList": scheduleInfoCollection]
         
         let scheduleDB = db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)/schedules/").childByAutoId()
+        
+        let data : [String: Any] = [
+            "id": parentUid,
+            "scheduleId": scheduleDB.key!,
+            "reservedDate": schedule.reservedDate ,
+            "content": schedule.content,
+            "scheduleList": scheduleInfoCollection,
+            
+        ]
+        
         scheduleDB.setValue(data)
     }
     
@@ -135,64 +141,98 @@ final class FirebaseManager {
     }
     
     /// 선생님 확정된 예약 업로드하기
-    func uploadConfirmedReservation(){}
+    func uploadConfirmedReservation(childName: String,reservedSchedule: Schedule?,selectedIndex: Int){
+        guard let teacherUid = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        guard let reservedSchedule = reservedSchedule else { return }
+
+        var scheduleInfoCollection : [[String : Any]] = []
+        
+        for scheduleInfo in reservedSchedule.scheduleList {
+            let scheduleInfoData : [String: Any] = [
+                "consultingDate": scheduleInfo.consultingDate,
+                "startTime" : scheduleInfo.startTime,
+                "isReserved" : scheduleInfo.isReserved ]
+            
+            scheduleInfoCollection.append(scheduleInfoData)
+        }
+        
+        db.child("TeacherUsers/\(teacherUid)/parentUsers/\(reservedSchedule.id!)/schedules/\(reservedSchedule.scheduleId!)/scheduleList")
+            .setValue(scheduleInfoCollection)
+        
+//        db.child("TeacherUsers/\(teacherUid)/parentUsers/\(reservedSchedule.id!)/schedules/\(reservedSchedule.scheduleId!)/scheduleList/\(selectedIndex)")
+//            .updateChildValues(["isReserved":reservedSchedule.scheduleList[0].isReserved])
+
+
+    }
     
     // 파이어베이스가져오기 함수
     
     /// 학부모 여러명의 예약정보들 가져오기 for 선생님
-    func fetchParentsReservations(completion: @escaping (([Schedule]) -> Void)) {
+    func fetchParentsReservations(completion: @escaping (([String:[Schedule]]?) -> Void)) {
         
         guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
         
-        var allSchedules: [Schedule] = []
+        var allSchedules: [String:[Schedule]] = [:]
         
         db.child("TeacherUsers/\(teacherUserId)/parentUsers")
             .observe(.value) { snapshot in
-                let parents = snapshot.value as! [String: [String:Any]]  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
+                guard let parents = snapshot.value as? [String: [String:Any]] else {completion(nil); return}  // [오토키1 : ["키1":"값1", "키2":"값2", 등등], 오토키2 : ~]
                 print(parents)
                 for parent in parents.values {            //  ["키1":"값1", "키2":"값2",등등    ]
                     
-                    let schedules = parent["schedules"] as! [String: [String:Any]] // [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                    guard let childName = parent["childName"] as? String else { completion(nil);return }
+                    guard let schedules = parent["schedules"] as? [String: [String:Any]] else { completion(nil); return }// [메시지오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                     print(schedules)
+                    var parentSchedules: [Schedule] = []
+
                     for key in schedules.keys {
-                        
                         do {
                             let scheduleData = try JSONSerialization.data(withJSONObject: schedules[key]!, options: [])
                             let decoder = JSONDecoder()
                             let schedule = try decoder.decode(Schedule.self, from: scheduleData)
-                            allSchedules.append(schedule)
+                            parentSchedules.append(schedule)
                         } catch let DecodingError.dataCorrupted(context) {
                             print(context)
+                            completion(nil)
                         } catch let DecodingError.keyNotFound(key, context) {
                             print("Key '\(key)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil)
                         } catch let DecodingError.valueNotFound(value, context) {
                             print("Value '\(value)' not found:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil)
                         } catch let DecodingError.typeMismatch(type, context) {
                             print("Type '\(type)' mismatch:", context.debugDescription)
                             print("codingPath:", context.codingPath)
+                            completion(nil)
                         } catch {
                             print("error: ", error)
+                            completion(nil)
                         }
                     }
+                    allSchedules[childName] = parentSchedules
+
+                }
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
                 }
+
             }
     }
     /// 학부모 1명의 예약정보 가져오기 for 학부모
-    func fetchParentReservations(completion: @escaping (([Schedule]) -> Void)) {
-        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {return}
-        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else {return}
+    func fetchParentReservations(completion: @escaping (([Schedule]?) -> Void)) {
+        guard let homeroomTeacherUid = UserDefaults.standard.string(forKey: "HomeroomTeacher") else {completion(nil) ; return}
+        guard let parentUid = UserDefaults.standard.string(forKey: "ParentUser") else { completion(nil) ; return}
         
-        var scheduleList: [Schedule] = []
         db.child("TeacherUsers/\(homeroomTeacherUid)/parentUsers/\(parentUid)")
             .observe(.value) { snapshot in
+                var scheduleList: [Schedule] = []
+                guard let dic = snapshot.value as? NSDictionary else { completion(nil) ;return }
                 
-                guard let dic = snapshot.value as? NSDictionary else { print("모야") ;return }
                 
-                
-                let schedules = dic["schedules"] as! [String:[String:Any]]   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
+                guard let schedules = dic["schedules"] as? [String:[String:Any]] else { completion(nil); return }   // [오토키 : ["키1":"값1", "키2":"값2", 등등   ]]
                 
                 for scheduleVal in schedules.values {
                     
@@ -204,17 +244,22 @@ final class FirebaseManager {
                         scheduleList.append(schedule)
                     } catch let DecodingError.dataCorrupted(context) {
                         print(context)
+                        completion(nil)
                     } catch let DecodingError.keyNotFound(key, context) {
                         print("Key '\(key)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch let DecodingError.valueNotFound(value, context) {
                         print("Value '\(value)' not found:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch let DecodingError.typeMismatch(type, context) {
                         print("Type '\(type)' mismatch:", context.debugDescription)
                         print("codingPath:", context.codingPath)
+                        completion(nil)
                     } catch {
                         print("error: ", error)
+                        completion(nil)
                     }
                 }
                 completion(scheduleList)

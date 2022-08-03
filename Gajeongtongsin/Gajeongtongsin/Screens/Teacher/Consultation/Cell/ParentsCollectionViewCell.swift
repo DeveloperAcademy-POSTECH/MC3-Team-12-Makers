@@ -9,7 +9,7 @@ import UIKit
 
 class ParentsCollectionViewCell: BaseCollectionViewCell {
     
-
+    // MARK: - Properties
     static let identifier = "ParentsCollectionViewCell"
     var cellData: [TeacherCalenderData] = []
     var delegate: ParentsCollcetionViewCellDelegate?
@@ -93,7 +93,7 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
     }
     
     @objc func scheduleOnTapButton() {
-        delegate?.drowDisplayData(cellSchedulData: cellData)
+        delegate?.drawDisplayData(cellSchedulData: cellData)
     }
     
     override func configUI() {

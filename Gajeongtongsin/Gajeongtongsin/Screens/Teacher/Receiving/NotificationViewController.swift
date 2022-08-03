@@ -128,7 +128,6 @@ extension NotificationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
         if indexPath.section == 0 {
-
             cell.configure(notification: emergency[indexPath.row])
 
             cell.backgroundColor = UIColor.Urgent
@@ -136,7 +135,6 @@ extension NotificationViewController: UITableViewDataSource {
         } else {
             cell.configure(notification: normal[indexPath.row])
             cell.backgroundColor = UIColor.Confirm
-
         }
 
         return cell

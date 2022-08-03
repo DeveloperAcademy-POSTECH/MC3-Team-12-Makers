@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		040612A428941EE800791763 /* ParentsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040612A328941EE800791763 /* ParentsCollectionViewCell.swift */; };
 		040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 040612A528941F2800791763 /* ParentsCollcetionViewCellDelegate.swift */; };
-		0446C4402896EE400052E408 /* CardCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0446C43F2896EE400052E408 /* CardCollectionViewCell.swift */; };
 		045D0DBE2888DDB700778EEC /* ParentsCalenderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 045D0DBD2888DDB700778EEC /* ParentsCalenderViewController.swift */; };
 		04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D9228868C5E00CCCB2D /* BaseCollectionViewCell.swift */; };
 		04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D942886A28C00CCCB2D /* CalenderViewCell.swift */; };
@@ -59,7 +58,7 @@
 		C054017F288D0520002BF33B /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C054017E288D0520002BF33B /* NotificationTableViewCell.swift */; };
 		C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056F6AC288B0A770070EED5 /* MessageVIewController.swift */; };
 		C056F6AF288B0A950070EED5 /* MessageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */; };
-		C0B4A4302890E7AA001DC86C /* CutomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */; };
+		C0B4A4302890E7AA001DC86C /* CustomNavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B4A42F2890E7AA001DC86C /* CustomNavigationBar.swift */; };
 		C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0B4A4312890E8B9001DC86C /* CutomNavigationBarDelegate.swift */; };
 		C0DFFBFD2885DC86009A1563 /* ParentUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFBFC2885DC86009A1563 /* ParentUser.swift */; };
 		C0DFFC032885DE32009A1563 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0DFFC022885DE32009A1563 /* Message.swift */; };
@@ -124,7 +123,7 @@
 		C054017E288D0520002BF33B /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		C056F6AC288B0A770070EED5 /* MessageVIewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageVIewController.swift; sourceTree = "<group>"; };
 		C056F6AE288B0A950070EED5 /* MessageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageTableViewCell.swift; sourceTree = "<group>"; };
-		C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutomNavigationBar.swift; sourceTree = "<group>"; };
+		C0B4A42F2890E7AA001DC86C /* CustomNavigationBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomNavigationBar.swift; sourceTree = "<group>"; };
 		C0B4A4312890E8B9001DC86C /* CutomNavigationBarDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CutomNavigationBarDelegate.swift; sourceTree = "<group>"; };
 		C0DFFBFC2885DC86009A1563 /* ParentUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentUser.swift; sourceTree = "<group>"; };
 		C0DFFC022885DE32009A1563 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -154,6 +153,7 @@
 			children = (
 				35171CFC28828C930059F297 /* Gajeongtongsin */,
 				35171CFB28828C930059F297 /* Products */,
+				351E50582898067A00DC718F /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -247,10 +247,10 @@
 		35171D1728828EEA0059F297 /* UIComponent */ = {
 			isa = PBXGroup;
 			children = (
-				C0B4A42F2890E7AA001DC86C /* CutomNavigationBar.swift */,
-				0446C43F2896EE400052E408 /* CardCollectionViewCell.swift */,
+				C0B4A42F2890E7AA001DC86C /* CustomNavigationBar.swift */,
 				DDD8A79228936B98002542C5 /* PrimaryButton.swift */,
 				DDD8A79428936BA2002542C5 /* SecondaryButton.swift */,
+				DDD8A79628936BCC002542C5 /* CardCollectionViewCell.swift */,
 			);
 			path = UIComponent;
 			sourceTree = "<group>";
@@ -293,6 +293,14 @@
 				C04B547E2887C6250097EE88 /* MockData.swift */,
 			);
 			path = Literal;
+			sourceTree = "<group>";
+		};
+		351E50582898067A00DC718F /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+				0446C43F2896EE400052E408 /* CardCollectionViewCell.swift */,
+			);
+			name = "Recovered References";
 			sourceTree = "<group>";
 		};
 		359583632882929F002B6873 /* Reservation */ = {
@@ -565,13 +573,10 @@
 				046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */,
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
 				040612A428941EE800791763 /* ParentsCollectionViewCell.swift in Sources */,
-				C0B4A4302890E7AA001DC86C /* CutomNavigationBar.swift in Sources */,
+				C0B4A4302890E7AA001DC86C /* CustomNavigationBar.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
-
 				040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */,
-
 				C01FA468289406C700A1E4DB /* String+Extension.swift in Sources */,
-
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
 				8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */,
 				C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */,
@@ -593,7 +598,6 @@
 				35958362288291D8002B6873 /* TabBarViewController.swift in Sources */,
 				04797679288E7855009C0826 /* TeacherCalenderData.swift in Sources */,
 				35958375288295D9002B6873 /* BaseTableViewCell.swift in Sources */,
-				0446C4402896EE400052E408 /* CardCollectionViewCell.swift in Sources */,
 				04610D9328868C5E00CCCB2D /* BaseCollectionViewCell.swift in Sources */,
 				DDD8A79528936BA3002542C5 /* SecondaryButton.swift in Sources */,
 				C0DFFC092885E1A0009A1563 /* TeacherUser.swift in Sources */,
@@ -748,7 +752,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = J85NQ6YL4V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gajeongtongsin/Global/Supports/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -777,7 +781,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = J85NQ6YL4V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Gajeongtongsin/Global/Supports/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

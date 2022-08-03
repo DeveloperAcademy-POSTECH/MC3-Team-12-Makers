@@ -19,8 +19,8 @@ class MessageViewController: BaseViewController {
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: MessageTableViewCell.identifier)
         return tableView
     }()
-    private var customNavigationBar: CutomNavigationBar = {
-        let customNavigationBar = CutomNavigationBar(title: "수신내역", imageName: "bell", imageSize: 20)
+    private var customNavigationBar: CustomNavigationBar = {
+        let customNavigationBar = CustomNavigationBar(title: "수신내역", imageName: "bell", imageSize: 20)
         customNavigationBar.backgroundColor = .white
         customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
         return customNavigationBar
