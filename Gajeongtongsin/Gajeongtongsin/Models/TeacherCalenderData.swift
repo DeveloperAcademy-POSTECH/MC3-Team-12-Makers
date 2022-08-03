@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 struct TeacherCalenderData {
-    var parentIds: Int
+    var parentsIndex: Int
 //    var calenderIndex: calenderIndex
     var calenderIndex: [Int]
     var cellColor: UIColor

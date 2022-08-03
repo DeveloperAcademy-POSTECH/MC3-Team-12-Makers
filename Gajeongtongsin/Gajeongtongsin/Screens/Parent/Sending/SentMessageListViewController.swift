@@ -10,10 +10,7 @@ import UIKit
 class SentMessageListViewController: BaseViewController {
     //MARK: - Properties
     
-    //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
-    var currentParent: ParentUser {
-        return mainTeacher.parentUsers[0]
-    }
+    var allMessages: [Message] = []
     
     private let navBar: CustomNavigationBar = {
         let bar = CustomNavigationBar(title: "전송내역", imageName: "plus.message", imageSize: 20)
@@ -40,6 +37,14 @@ class SentMessageListViewController: BaseViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        
+        FirebaseManager.shared.fetchParentMessages { [weak self] messages in
+            if let messages = messages {
+                self?.allMessages = []
+                self?.allMessages = messages
+                self?.sentMessageList.reloadData()
+            }
+        }
     }
     
     //MARK: - Funcs
@@ -70,14 +75,15 @@ extension SentMessageListViewController: UITableViewDelegate {
 
 extension SentMessageListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currentParent.sendingMessages.count
+        return allMessages.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SentMessageTableViewCell", for: indexPath) as! SentMessageTableViewCell
         
-        cell.configure(index: indexPath.row)
 
+//        cell.configure(index: indexPath.row)
+        cell.configure( message: allMessages[indexPath.row] )
         return cell
     }
 }
@@ -86,6 +92,7 @@ extension SentMessageListViewController: UITableViewDataSource {
 
 extension SentMessageListViewController: SendingViewControllerDelegate {
     func reloadTable() {
+        self.allMessages = []
         sentMessageList.reloadData()
     }
 }

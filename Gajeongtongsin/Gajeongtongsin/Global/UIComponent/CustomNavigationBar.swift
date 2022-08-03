@@ -14,7 +14,7 @@ class CustomNavigationBar: UIView {
     var title: String = ""
     var imageName: String = ""
     var imageSize: Int
-     
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
@@ -38,6 +38,7 @@ class CustomNavigationBar: UIView {
         super.init(frame: .zero)
         render()
         configUI()
+        self.heightAnchor.constraint(equalToConstant: 50).isActive = true
 
         rightButtonItem.addTarget(self, action: #selector(tapButton), for: .touchUpInside)
     }
@@ -57,9 +58,9 @@ class CustomNavigationBar: UIView {
         addSubview(rightButtonItem)
         rightButtonItem.topAnchor.constraint(equalTo: self.topAnchor, constant: 33).isActive = true
         rightButtonItem.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16).isActive = true
-        
         self.backgroundColor = .white
         self.translatesAutoresizingMaskIntoConstraints = false
+
     }
     
     func configUI() {

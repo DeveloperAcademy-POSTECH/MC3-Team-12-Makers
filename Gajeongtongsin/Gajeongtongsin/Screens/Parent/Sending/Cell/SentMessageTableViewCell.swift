@@ -16,6 +16,7 @@ class SentMessageTableViewCell: BaseTableViewCell {
         return mainTeacher.parentUsers[0]
     }
     
+    private let childName = UserDefaults.standard.string(forKey: "ChildName") ?? ""
     let messageInfo: UILabel = {
        let messageInfo = UILabel()
         messageInfo.translatesAutoresizingMaskIntoConstraints = false
@@ -62,23 +63,26 @@ class SentMessageTableViewCell: BaseTableViewCell {
     override func configUI() {
     }
     
-    func configure(index: Int) {
+    func configure(message: Message){    
+        messageInfo.text = "\(childName) / \(message.type.rawValue) / \(message.expectedDate)"
+        content.text = "\(message.content)"
         
-        func msgType() -> String {
-            switch currentParent.sendingMessages[index].type {
-            case .absence : return "결석"
-            case .earlyLeave : return "조퇴"
-            }
-        }
+//    func configure(index: Int) {
         
-        messageInfo.text = "\(currentParent.childName) / \(msgType()) / \(currentParent.sendingMessages[index].expectedDate)"
-        
-        content.text = "\(currentParent.sendingMessages[index].content)"
+//        func msgType() -> String {
+//            switch currentParent.sendingMessages[index].type {
+//            case .absence : return "결석"
+//            case .earlyLeave : return "조퇴"
+//            }
+//        }
+//        
+//        messageInfo.text = "\(currentParent.childName) / \(msgType()) / \(currentParent.sendingMessages[index].expectedDate)"
+//        
+//        content.text = "\(currentParent.sendingMessages[index].content)"
         
         //완료 여부 알려주는 인디케이터
-        if currentParent.sendingMessages[index].isCompleted {
-            statusIndicator.setTitle("처리완료", for: .normal)
-            statusIndicator.changeState(buttonState: .disabled)
-         }
+        guard message.isCompleted == true else {return} 
+        statusIndicator.setTitle("처리완료", for: .normal)
+        statusIndicator.changeState(buttonState: .disabled)
     }
 }
