@@ -58,7 +58,7 @@ class CustomNavigationBar: UIView {
         addSubview(rightButtonItem)
         rightButtonItem.topAnchor.constraint(equalTo: self.topAnchor, constant: 33).isActive = true
         rightButtonItem.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16).isActive = true
-        self.backgroundColor = .white
+        self.backgroundColor = .Background
         self.translatesAutoresizingMaskIntoConstraints = false
 
     }

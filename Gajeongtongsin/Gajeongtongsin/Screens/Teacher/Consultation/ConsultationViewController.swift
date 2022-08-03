@@ -35,11 +35,6 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
 
-    //displayData에 추가될 데이터 포멧
-    private var calenderData: [TeacherCalenderData] = [
-        TeacherCalenderData(parentIds: 0, calenderIndex: [], cellColor: .green),
-        TeacherCalenderData(parentIds: 1, calenderIndex: [], cellColor: .blue),
-        TeacherCalenderData(parentIds: 2, calenderIndex: [], cellColor: .red)]
         
     private var customNavigationBar: CustomNavigationBar = {
          let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)

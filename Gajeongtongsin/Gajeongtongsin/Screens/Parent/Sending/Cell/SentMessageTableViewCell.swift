@@ -33,13 +33,6 @@ class SentMessageTableViewCell: BaseTableViewCell {
         return content
     }()
     
-    private let checkIndicator: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "questionmark.circle")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
-    }()
-    
     private var statusIndicator: SecondaryButton = {
         let btn = SecondaryButton(buttonTitle: "처리대기", buttonState: .normal)
         return btn
@@ -61,6 +54,7 @@ class SentMessageTableViewCell: BaseTableViewCell {
     }
     
     override func configUI() {
+        self.backgroundColor = .Background
     }
     
     func configure(message: Message){    

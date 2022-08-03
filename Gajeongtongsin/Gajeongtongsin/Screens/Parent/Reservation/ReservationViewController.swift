@@ -18,14 +18,14 @@ class ReservationViewController: BaseViewController {
         return bar
     }()
     
-    private let viewTitle: UILabel = {
-        let label = UILabel()
-        label.text = "예약내역"
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+//    private let viewTitle: UILabel = {
+//        let label = UILabel()
+//        label.text = "예약내역"
+//        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
+//        label.textColor = .black
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
 
     private let noScheduleLabel: UILabel = {
         let label = UILabel()
@@ -37,27 +37,20 @@ class ReservationViewController: BaseViewController {
         return label
     }()
     
-    private let reserveButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
-        button.tintColor = .Action
-        button.showsMenuAsPrimaryAction = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
+//    private let reserveButton: UIButton = {
+//        let button = UIButton()
+//        button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
+//        button.tintColor = .Action
+//        button.showsMenuAsPrimaryAction = true
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        return button
+//    }()
 
-    private let noScheduleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "예정된 상담이 없어요 :)"
-        label.font = UIFont.systemFont(ofSize: 20, weight: .medium)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
     private let reservedScheduleList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.identifier)
+        table.backgroundColor = .Background
         table.rowHeight = 60
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -94,7 +87,7 @@ class ReservationViewController: BaseViewController {
         navBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         view.addSubview(reservedScheduleList)
-        reservedScheduleList.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
+        reservedScheduleList.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 30).isActive = true
         reservedScheduleList.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         reservedScheduleList.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         reservedScheduleList.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -107,8 +100,8 @@ class ReservationViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .Background
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
+//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
+//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
         calendarBtnAct()
     }
     

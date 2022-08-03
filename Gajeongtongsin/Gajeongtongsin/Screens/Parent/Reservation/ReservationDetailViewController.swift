@@ -53,6 +53,7 @@ class ReservationDetailViewController: BaseViewController {
         let content = UITextView()
         content.font = UIFont.systemFont(ofSize: 17)
         content.textColor = .black
+        content.backgroundColor = .Background
         content.isScrollEnabled = true
         content.isEditable = false
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -110,7 +111,7 @@ class ReservationDetailViewController: BaseViewController {
     }
     
     override func configUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .Background
         navigationController?.navigationBar.tintColor = .black
     }
     
@@ -121,16 +122,14 @@ class ReservationDetailViewController: BaseViewController {
         
         let appointment = schedules[row]
         reasonContent.text = appointment.content
-    }
-    
-            //인디케이터
-       if appointment.scheduleList[index.row].isReserved {
-           statusIndicator.setTitle("확정", for: .normal)
-           statusIndicator.changeState(buttonState: .disabled)
-           scheduleTitle.text = scheduleCandidates.text
-           
-           printSchedule(appointment)
-
+        
+        if appointment.scheduleList[row].isReserved {
+            statusIndicator.setTitle("확정", for: .normal)
+            statusIndicator.changeState(buttonState: .disabled)
+            scheduleTitle.text = scheduleCandidates.text
+            
+            printSchedule(appointment)
+        }
     }
     
     func printSchedule(_ appointment:Schedule) {

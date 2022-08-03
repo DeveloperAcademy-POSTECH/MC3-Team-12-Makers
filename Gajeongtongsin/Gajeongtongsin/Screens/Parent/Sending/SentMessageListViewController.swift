@@ -21,6 +21,7 @@ class SentMessageListViewController: BaseViewController {
     private let sentMessageList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(SentMessageTableViewCell.self, forCellReuseIdentifier: SentMessageTableViewCell.identifier)
+        table.backgroundColor = .Background
         table.rowHeight = 100
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -30,6 +31,7 @@ class SentMessageListViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .Background
         sentMessageList.delegate = self
         sentMessageList.dataSource = self
         navBar.delegate = self
@@ -56,14 +58,13 @@ class SentMessageListViewController: BaseViewController {
         navBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
         view.addSubview(sentMessageList)
-        sentMessageList.topAnchor.constraint(equalTo: navBar.bottomAnchor).isActive = true
+        sentMessageList.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 30).isActive = true
         sentMessageList.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         sentMessageList.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         sentMessageList.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
     override func configUI() {
-        view.backgroundColor = .white
     }
 }
 
