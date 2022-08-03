@@ -169,7 +169,7 @@ class ParentsCalenderViewController: BaseViewController {
     }
 
     override func configUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .Background
     }
     
     //캘린더뷰 신청 취소

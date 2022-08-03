@@ -215,9 +215,8 @@ final class FirebaseManager {
 
                 }
                 
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allSchedules)
-                }
+
 
             }
     }
@@ -320,10 +319,7 @@ final class FirebaseManager {
                     }
                     allMessages += parentMessages
                 }
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                     completion(allMessages)
-
-                }
             }
     }
     /// 학부모 1명의 메시지들 가져오기 for 학부모

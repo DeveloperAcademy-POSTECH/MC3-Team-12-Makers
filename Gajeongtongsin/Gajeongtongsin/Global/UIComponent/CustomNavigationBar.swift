@@ -12,6 +12,7 @@ class CustomNavigationBar: UIView {
     // MARK: - Properties
     var delegate: CustomNavigationBarDelegate?
     var title: String = ""
+    var titleSize: CGFloat
     var imageName: String = ""
     var imageSize: Int
     
@@ -24,17 +25,18 @@ class CustomNavigationBar: UIView {
     
     let rightButtonItem : UIButton = {
         let button = UIButton()
-        button.tintColor = .black
+        button.tintColor = .Action
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     
     // MARK: - Init
-    init(title: String, imageName: String, imageSize: Int){
+    init(title: String, titleSize: CGFloat, imageName imageName: String, imageSize: Int){
         self.title = title
         self.imageName = imageName
         self.imageSize = imageSize
+        self.titleSize = titleSize
         super.init(frame: .zero)
         render()
         configUI()
@@ -63,7 +65,9 @@ class CustomNavigationBar: UIView {
     func configUI() {
         let config = UIImage.SymbolConfiguration(pointSize: CGFloat(imageSize), weight: .medium, scale: .default)
         titleLabel.text = title
+        titleLabel.font = UIFont.systemFont(ofSize: titleSize, weight: .bold)
         rightButtonItem.setImage(UIImage(systemName: imageName, withConfiguration: config), for: .normal)
+        
     }
     @objc func tapButton(){
         delegate?.tapButton()

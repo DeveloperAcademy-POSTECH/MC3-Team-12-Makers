@@ -35,8 +35,12 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     private var customNavigationBar: CustomNavigationBar = {
-         let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
-         customNavigationBar.backgroundColor = .white
+        let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정",
+                                                      titleSize: 22,
+                                                      imageName: "bell",
+                                                      imageSize: 20)
+        
+         customNavigationBar.backgroundColor = .Background
          customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
          return customNavigationBar
      }()
@@ -81,19 +85,19 @@ class ConsultationViewController: BaseViewController {
     }()
     
     //상단제목
-    private let viewTitle: UILabel = {
-        let label = UILabel()
-        label.text = "이번주 상담일정"
-        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+//    private let viewTitle: UILabel = {
+//        let label = UILabel()
+//        label.text = "이번주 상담일정"
+//        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+//        label.textColor = .black
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        return label
+//    }()
     
     private let collectionViewTitle: UILabel = {
         let label = UILabel()
         label.text = "대기 중인 예약"
-        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -109,7 +113,7 @@ class ConsultationViewController: BaseViewController {
     private let seeAll: UIButton = {
         let button = UIButton()
         button.setTitle("예약일정 전체보기", for: .normal)
-        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .bold)
         button.setTitleColor(.LightText, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
@@ -133,6 +137,9 @@ class ConsultationViewController: BaseViewController {
             }
         }
     }
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
+    }
     
     //MARK: - Funcs
     
@@ -141,6 +148,7 @@ class ConsultationViewController: BaseViewController {
         parentsCollectionView.dataSource = self
         calenderView.delegate = self
         calenderView.dataSource = self
+        customNavigationBar.delegate = self
     }
     
     func hourLabelMaker() -> [UILabel] {
@@ -313,7 +321,7 @@ class ConsultationViewController: BaseViewController {
     override func render() {
     
         view.addSubview(customNavigationBar)
-        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor,constant: 29).isActive = true
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
@@ -363,7 +371,14 @@ class ConsultationViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .Background
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
+        setupNavigationBackButton()
+    }
+    
+    func setupNavigationBackButton() {
+        let backButton = UIBarButtonItem()
+        backButton.title = ""
+        navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
+        navigationController?.navigationBar.tintColor = .black
     }
     
 }
@@ -534,3 +549,12 @@ extension ConsultationViewController: ParentsCollcetionViewCellDelegate {
     }
 }
 
+
+extension ConsultationViewController : CustomNavigationBarDelegate {
+    func tapButton() {
+        let vc = NotificationViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    
+}
