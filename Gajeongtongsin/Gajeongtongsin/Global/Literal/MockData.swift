@@ -17,7 +17,7 @@ var parent3 = ParentUser(id: "3", sendingMessages: messageList3, childName: "최
 var messageList1 = [
     Message(type: .absence, sentDate: "2022-03-01", expectedDate: "7월21일", content: "김유쓰배아픔", isCompleted: false),
     Message(type: .earlyLeave, sentDate: "2022-03-04", expectedDate: "7월22일", content: "김유쓰놀이공원", isCompleted: false),
-    Message(type: .earlyLeave, sentDate: "2022-03-19", expectedDate: "7월28일", content: "김유쓰할머니댁", isCompleted: false)
+    Message(type: .earlyLeave, sentDate: "2022-03-19", expectedDate: "7월28일", content: "김유쓰할머니댁", isCompleted: true)
 ]
 
 var messageList2 = [

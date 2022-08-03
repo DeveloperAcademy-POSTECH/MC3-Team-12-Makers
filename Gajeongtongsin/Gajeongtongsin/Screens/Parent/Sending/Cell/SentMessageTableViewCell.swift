@@ -76,7 +76,7 @@ class SentMessageTableViewCell: BaseTableViewCell {
         content.text = "\(currentParent.sendingMessages[index].content)"
         
         //완료 여부 알려주는 인디케이터
-        if currentParent.sendingMessages[index].isCompleted == true {
+        if currentParent.sendingMessages[index].isCompleted {
             statusIndicator.setTitle("처리완료", for: .normal)
             statusIndicator.changeState(buttonState: .disabled)
          }
