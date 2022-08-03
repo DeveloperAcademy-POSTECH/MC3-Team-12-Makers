@@ -527,7 +527,7 @@ extension ConsultationViewController: ParentsCollcetionViewCellDelegate {
                 present(alert, animated: true, completion: nil)
     }
     
-    func drowDisplayData(cellSchedulData: [TeacherCalenderData]) {
+    func drawDisplayData(cellSchedulData: [TeacherCalenderData]) {
         self.displayData = cellSchedulData
         calenderView.reloadData()
         parentsCollectionView.reloadData()
