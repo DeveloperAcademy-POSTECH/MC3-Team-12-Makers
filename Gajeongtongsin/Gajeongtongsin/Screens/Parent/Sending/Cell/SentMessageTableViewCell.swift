@@ -39,6 +39,11 @@ class SentMessageTableViewCell: BaseTableViewCell {
         return imageView
     }()
     
+    private var statusIndicator: SecondaryButton = {
+        let btn = SecondaryButton(buttonTitle: "처리대기", buttonState: .normal)
+        return btn
+    }()
+    
     //MARK: - Funcs
     override func render() {
         contentView.addSubview(messageInfo)
@@ -49,9 +54,9 @@ class SentMessageTableViewCell: BaseTableViewCell {
         content.topAnchor.constraint(equalTo: messageInfo.bottomAnchor, constant: 10).isActive = true
         content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
 
-        contentView.addSubview(checkIndicator)
-        checkIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
-        checkIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40).isActive = true
+        contentView.addSubview(statusIndicator)
+        statusIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
+        statusIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40).isActive = true
     }
     
     override func configUI() {
@@ -71,7 +76,9 @@ class SentMessageTableViewCell: BaseTableViewCell {
         content.text = "\(currentParent.sendingMessages[index].content)"
         
         //완료 여부 알려주는 인디케이터
-        guard currentParent.sendingMessages[index].isCompleted == true else {return}
-        checkIndicator.image = UIImage(systemName: "exclamationmark.circle")
+        if currentParent.sendingMessages[index].isCompleted == true {
+            statusIndicator.setTitle("처리완료", for: .normal)
+            statusIndicator.changeState(buttonState: .disabled)
+         }
     }
 }

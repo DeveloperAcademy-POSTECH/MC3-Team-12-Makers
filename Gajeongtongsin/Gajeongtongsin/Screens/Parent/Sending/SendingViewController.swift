@@ -107,8 +107,18 @@ class SendingViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         textFieldForReason.delegate = self
-        self.navigationItem.title = "문자작성"
         textFieldForReason.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.topItem?.title = ""
+        tabBarController?.tabBar.isHidden = true
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        tabBarController?.tabBar.isHidden = false
     }
     
     //MARK: - Funcs

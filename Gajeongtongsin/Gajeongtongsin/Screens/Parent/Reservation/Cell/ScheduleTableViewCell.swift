@@ -49,12 +49,6 @@ class ScheduleTableViewCell: BaseTableViewCell {
         contentView.addSubview(scheduleInfo)
         scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
-
-//        contentView.addSubview(content)
-//        content.topAnchor.constraint(equalTo: scheduleInfo.bottomAnchor, constant: 10).isActive = true
-//        content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
-        
-
     }
     
     override func configUI() {

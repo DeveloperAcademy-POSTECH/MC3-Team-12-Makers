@@ -33,10 +33,8 @@ class ConsultationViewController: BaseViewController {
         return nextWeek
     }
     
-    private var customNavigationBar: CutomNavigationBar = {
-        let customNavigationBar = CutomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
-        customNavigationBar.backgroundColor = .white
-        customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+    private var customNavigationBar: CustomNavigationBar = {
+        let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
         return customNavigationBar
     }()
     //displayData에 추가될 데이터 포멧

@@ -69,6 +69,12 @@ class ReservationDetailViewController: BaseViewController {
         super.viewDidLoad()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.topItem?.title = "전체예약"
+    }
+    
     //MARK: - Funcs
     override func render() {
         view.addSubview(scheduleTitle)
