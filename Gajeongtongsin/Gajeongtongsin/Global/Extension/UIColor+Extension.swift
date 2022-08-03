@@ -33,8 +33,6 @@ extension UIColor {
     static var DarkText: UIColor {
         .load(name: "DarkText")
     }
-    
-
 }
 
 

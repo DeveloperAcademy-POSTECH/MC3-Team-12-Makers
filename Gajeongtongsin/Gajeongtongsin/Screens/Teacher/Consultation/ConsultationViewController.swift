@@ -283,11 +283,21 @@ class ConsultationViewController: BaseViewController {
     lazy var collectionHeight:CGFloat = CGFloat(flowLayout.itemSize.height*1.1)
     
     override func render() {
+    
+        
+
+        view.addSubview(customNavigationBar)
+        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        
         view.addSubview(calenderView)
+
         calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
         calenderView.heightAnchor.constraint(equalToConstant: calenderHeigit).isActive = true
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: calenderSidePadding[0]).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
+
         
         view.addSubview(parentsCollectionView)
         parentsCollectionView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -collectionHeight-100).isActive = true
@@ -296,6 +306,7 @@ class ConsultationViewController: BaseViewController {
         parentsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
 
         view.addSubview(seeAll)
+
         seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
         seeAll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
@@ -321,6 +332,7 @@ class ConsultationViewController: BaseViewController {
             dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
             dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
         }
+
     }
 
     override func configUI() {
