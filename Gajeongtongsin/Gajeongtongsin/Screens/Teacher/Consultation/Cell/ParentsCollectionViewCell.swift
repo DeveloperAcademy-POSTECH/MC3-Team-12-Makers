@@ -93,7 +93,7 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
     }
     
     @objc func scheduleOnTapButton() {
-        delegate?.drowDisplayData(cellSchedulData: cellData)
+        delegate?.drawDisplayData(cellSchedulData: cellData)
     }
     
     override func configUI() {
