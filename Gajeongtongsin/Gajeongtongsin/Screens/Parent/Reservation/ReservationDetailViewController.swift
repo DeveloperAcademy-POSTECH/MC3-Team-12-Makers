@@ -104,7 +104,7 @@ class ReservationDetailViewController: BaseViewController {
     }
     
     override func configUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .Background
         navigationController?.navigationBar.tintColor = .black
     }
     
