@@ -12,7 +12,7 @@ class ConsultationViewController: BaseViewController {
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30)
     private var displayData: [TeacherCalenderData] = []
-    private var cellColor: UIColor = .gray
+    private var cellColor: UIColor = .white
     private var clickedCell: Int?
     private var selectedIndex: Int?
     private var parentId: Int = -1
@@ -50,10 +50,11 @@ class ConsultationViewController: BaseViewController {
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.register(CalenderViewCell.self, forCellWithReuseIdentifier: CalenderViewCell.identifier)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false //필수 !!
-        return collectionView
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.backgroundColor = .gray
+        view.register(CalenderViewCell.self, forCellWithReuseIdentifier: CalenderViewCell.identifier)
+        view.translatesAutoresizingMaskIntoConstraints = false //필수 !!
+        return view
     }()
     
     //학부모 컬렉션뷰 레이아웃
@@ -64,6 +65,7 @@ class ConsultationViewController: BaseViewController {
        layout.itemSize = CGSize(width: 140, height: 150)
        return layout
      }()
+    
     //학부모 컬렉션뷰
     private lazy var parentsCollectionView: UICollectionView = {
       let view = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
@@ -78,11 +80,37 @@ class ConsultationViewController: BaseViewController {
       return view
     }()
     
+    //상단제목
+    private let viewTitle: UILabel = {
+        let label = UILabel()
+        label.text = "이번주 상담일정"
+        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let collectionViewTitle: UILabel = {
+        let label = UILabel()
+        label.text = "대기 중인 예약"
+        label.font = UIFont.systemFont(ofSize: 23, weight: .bold)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    //캘린더 시간 레이블
+    lazy private var hourLabel: [UILabel] = hourLabelMaker()
+    
+    //캘린더 날자 레이블
+    lazy private var dateLabel: [[UILabel]] = dateLabelMaker()
+    
     // 전체 신청내역 보기
     private let seeAll: UIButton = {
         let button = UIButton()
-        button.setTitle("전체보기", for: .normal)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitle("예약일정 전체보기", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        button.setTitleColor(.LightText, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -113,6 +141,42 @@ class ConsultationViewController: BaseViewController {
         parentsCollectionView.dataSource = self
         calenderView.delegate = self
         calenderView.dataSource = self
+    }
+    
+    func hourLabelMaker() -> [UILabel] {
+        var labelList: [UILabel] = []
+        for hour in 14...17 {
+            let label = UILabel()
+            label.text = String(hour)+"h"
+            label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
+            label.textColor = .darkText
+            label.translatesAutoresizingMaskIntoConstraints = false
+            labelList.append(label)
+        }
+        return labelList
+    }
+    //날자 레이블 메이커
+    func dateLabelMaker() -> [[UILabel]] {
+        var labelList: [[UILabel]] = Array(repeating: [], count: 5)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d-EEE"
+        
+        for day in 0..<5 {
+            let dayAdded = (86400 * (2+day-todayOfTheWeek))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
+            oneDayString.forEach {
+                let label = UILabel()
+                label.text = $0
+                label.translatesAutoresizingMaskIntoConstraints = false
+                labelList[day].append(label)
+            }
+            labelList[day][0].font = UIFont.systemFont(ofSize: 17, weight: .regular)
+            labelList[day][0].textColor = .darkText
+            
+            labelList[day][1].font = UIFont.systemFont(ofSize: 14, weight: .regular)
+            labelList[day][1].textColor = .LightText
+        }
+        return labelList
     }
     
     func calenderDataMaker() -> [TeacherCalenderData] {
@@ -170,7 +234,7 @@ class ConsultationViewController: BaseViewController {
                     calenderIndex.append(rowIndex + columnIndex)
 
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
-                    acceptedData[acceptedData.count-1].cellColor = .lightGray
+                    acceptedData[acceptedData.count-1].cellColor = .LightLine
                 }
     
             }
@@ -179,7 +243,7 @@ class ConsultationViewController: BaseViewController {
     }
     
     // FIXME: - 로직 단순화 필요
-    ///모든 신청 예약 데이터를 인덱스로 만들어주는 함수
+    //미확정 예약 데이터를 인덱스로 만들어주는 함수
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
         
@@ -200,7 +264,7 @@ class ConsultationViewController: BaseViewController {
         return calenderData
     }
     
-    ///선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
+    //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
     func dateStringToIndex(parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
@@ -241,6 +305,11 @@ class ConsultationViewController: BaseViewController {
         calenderView.reloadData()
     }
     
+    let calenderTopPadding = CGFloat(200.0)
+    let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
+    let calenderHeigit = CGFloat(300.0)
+    lazy var collectionHeight:CGFloat = CGFloat(flowLayout.itemSize.height*1.1)
+    
     override func render() {
     
         view.addSubview(customNavigationBar)
@@ -249,25 +318,52 @@ class ConsultationViewController: BaseViewController {
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: customNavigationBar.bottomAnchor, constant: 50).isActive = true
-        calenderView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
-        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -50).isActive = true
+
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
+        calenderView.heightAnchor.constraint(equalToConstant: calenderHeigit).isActive = true
+        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: calenderSidePadding[0]).isActive = true
+        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
+
         
         view.addSubview(parentsCollectionView)
-        parentsCollectionView.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 350).isActive = true
-        parentsCollectionView.heightAnchor.constraint(equalToConstant: flowLayout.itemSize.height*1.1).isActive = true
+        parentsCollectionView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -collectionHeight-100).isActive = true
+        parentsCollectionView.heightAnchor.constraint(equalToConstant: collectionHeight).isActive = true
         parentsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
         parentsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
 
         view.addSubview(seeAll)
-        seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 320).isActive = true
-        seeAll.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 50).isActive = true
+
+        seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        seeAll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         
+        view.addSubview(collectionViewTitle)
+        collectionViewTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        
+        for index in 0..<hourLabel.count {
+            view.addSubview(hourLabel[index])
+            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
+            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+            print(index)
+        }
+        
+        let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
+        
+        for index in 0..<dateLabel.count {
+            view.addSubview(dateLabel[index][0])
+            dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            
+            view.addSubview(dateLabel[index][1])
+            dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
+            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+        }
+
     }
 
     override func configUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .Background
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
     }
     
 }
@@ -296,11 +392,11 @@ extension ConsultationViewController: UICollectionViewDelegate {
                 withReuseIdentifier: CalenderViewCell.identifier
                 ,for: indexPath) as? CalenderViewCell else { return UICollectionViewCell() }
             
-            cell.backgroundColor = .gray
+            cell.backgroundColor = .white
             
             displayData.forEach { //[{parentsIds, calenderIdx, cellColor}]
                 if $0.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
-                    cell.backgroundColor = clickedCell == indexPath.item ? .black : $0.cellColor
+                    cell.backgroundColor = clickedCell == indexPath.item ? .Action : $0.cellColor
                 }
             }
             
@@ -398,7 +494,7 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         if collectionView == calenderView {
-            return CGSize(width: (UIScreen.main.bounds.width-100)/5, height: 50)
+            return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: 50)
         } else if collectionView == parentsCollectionView {
             return flowLayout.itemSize
         }

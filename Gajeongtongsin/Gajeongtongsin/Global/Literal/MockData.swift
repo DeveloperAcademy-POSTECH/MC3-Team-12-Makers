@@ -41,9 +41,7 @@ var messageList4 = [
 var scheduleList1 = [
     Schedule(reservedDate: "8월1일",
              scheduleList: [
-                ScheduleInfo(consultingDate: "8월01일", startTime: "14시00분", isReserved: false),
-                ScheduleInfo(consultingDate: "8월01일", startTime: "14시30분", isReserved: false),
-                ScheduleInfo(consultingDate: "8월01일", startTime: "15시00분", isReserved: false)],
+                ScheduleInfo(consultingDate: "8월01일", startTime: "14시00분", isReserved: true)],
              content: "김유쓰영어성적문의")
 ]
 
@@ -76,4 +74,19 @@ var scheduleList4 = [
              content: "허결출결문의제발")
 ]
 
-//var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]
+var notifications: [Notification] = [noti1, noti2, noti3, noti4, noti5, noti6, noti7, noti8, noti9, noti10, noti11]
+
+let noti1 = Notification(id: "1", postId: "11", type: .message, childName: "김유쓰", content: "11")
+let noti2 = Notification(id: "1", postId: "11", type: .message, childName: "김유쓰", content: "22")
+let noti3 = Notification(id: "1", postId: "11", type: .emergency, childName: "김유쓰", content: "아이가실종되었습니다")
+let noti4 = Notification(id: "1", postId: "11", type: .reservation, childName: "김유쓰", content: "44")
+
+let noti5 = Notification(id: "2", postId: "22", type: .message, childName: "부니카", content: "55")
+let noti6 = Notification(id: "2", postId: "22", type: .message, childName: "부니카", content: "66")
+let noti7 = Notification(id: "2", postId: "22", type: .emergency, childName: "부니카", content: "아이가깡패랑싸우고있습니다")
+let noti8 = Notification(id: "2", postId: "22", type: .reservation, childName: "부니카", content: "88")
+
+let noti9 = Notification(id: "3", postId: "33", type: .message, childName: "최히로", content: "99")
+let noti10 = Notification(id: "3", postId: "33", type: .message, childName: "최히로", content: "1010")
+let noti11 = Notification(id: "3", postId: "33", type: .reservation, childName: "최히로", content: "1111")
+

@@ -29,8 +29,8 @@ class CalenderViewCell: BaseCollectionViewCell {
     
     override func configUI() {
         // Override ConfigUI
-        self.backgroundColor = .gray
-        contentView.layer.borderWidth = 0.5
-        contentView.layer.borderColor = .init(gray: 255, alpha: 255)
+//        self.backgroundColor = .gray
+        contentView.layer.borderWidth = 0.7
+        contentView.layer.borderColor = UIColor.LightLine.cgColor
     }
 }
