@@ -74,6 +74,7 @@ class CardCollectionViewCell: BaseCollectionViewCell {
         CardLabel.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
     
     }
+
     
     func configure(buttonTitle:String) {
         ScheduleButton.setTitle(buttonTitle, for: .normal)
