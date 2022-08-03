@@ -312,10 +312,10 @@ class ConsultationViewController: BaseViewController {
     
     override func render() {
     
-        view.addSubview(customNavigationBar)
-        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        view.addSubview(customNavigationBar)
+//        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+//        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         
         view.addSubview(calenderView)
 
@@ -396,7 +396,14 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             displayData.forEach { //[{parentsIds, calenderIdx, cellColor}]
                 if $0.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
-                    cell.backgroundColor = clickedCell == indexPath.item ? .Action : $0.cellColor
+                    if clickedCell == indexPath.item {
+                        cell.getClick(clicked: true)
+                        cell.backgroundColor = .Action
+                    }else {
+                        cell.getClick(clicked: false)
+                        cell.backgroundColor = $0.cellColor
+                    }
+
                 }
             }
             
