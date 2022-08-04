@@ -75,8 +75,6 @@ class ParentsCalenderViewController: BaseViewController {
         return button
     }()
     
-    
-    
     private let noteTitle: UILabel = {
         let label = UILabel()
         label.text = "상담용건"
@@ -122,6 +120,10 @@ class ParentsCalenderViewController: BaseViewController {
     }
         
     //MARK: - Funcs
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.reasonNote.endEditing(true)
+    }
     
     //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
     //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
