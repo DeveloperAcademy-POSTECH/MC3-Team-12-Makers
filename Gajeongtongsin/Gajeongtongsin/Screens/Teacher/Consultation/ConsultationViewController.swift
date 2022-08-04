@@ -23,17 +23,20 @@ class ConsultationViewController: BaseViewController {
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M-dd"
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays+2 { //주말 이틀 추가(weekDays==5)
-//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek +7)) //캘린더뷰가 다음주를 표시하는 경우 +7
+        for dayCount in 0..<weekDays {
+            //let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            //캘린더뷰가 다음주를 표시하는 경우 +7
             let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            nextWeek.append(oneDayString[0]+"월"+oneDayString[1]+"일")
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            nextWeek.append(oneDayString)
         }
         return nextWeek
     }
+    
     private var customNavigationBar: CustomNavigationBar = {
          let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
          customNavigationBar.backgroundColor = .white
@@ -305,7 +308,6 @@ class ConsultationViewController: BaseViewController {
             view.addSubview(hourLabel[index])
             hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-            print(index)
         }
         
         let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
