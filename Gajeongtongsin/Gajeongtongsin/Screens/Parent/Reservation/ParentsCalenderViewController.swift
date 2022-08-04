@@ -15,7 +15,7 @@ class ParentsCalenderViewController: BaseViewController {
     private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
 //    private var consultingDateDate: Date
-    private var consultingDateList: [String] = []
+    private var consultingDateList: String = ""
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
     private var startTime: String = ""
     
@@ -30,13 +30,15 @@ class ParentsCalenderViewController: BaseViewController {
     //TODO: 교사 캘린더뷰에서 같이 쓰는 상수이므로 공용화시킬 수 있음
     var nextWeek: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M-dd"
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays+2 {
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek) + 7)
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            nextWeek.append(oneDayString[0]+"월"+oneDayString[1]+"일")
+        for dayCount in 0..<weekDays {
+//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek+7))
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            nextWeek.append(oneDayString)
         }
         return nextWeek
     }
@@ -168,12 +170,13 @@ class ParentsCalenderViewController: BaseViewController {
     
     func dateIndexToString(index: Int) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM-dd-e-EEEE"
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
         let daysAfterToday = (7+(index%weekDays+2)-todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
         let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
         
-        consultingDateList = formatter.string(from: consultingDateDate).components(separatedBy: "-") //Date -> [String]
-        consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
+        consultingDateList = formatter.string(from: consultingDateDate) //Date -> [String]
+        consultingDate = consultingDateList //[String] -> String
         return consultingDate
     }
     
@@ -263,7 +266,6 @@ class ParentsCalenderViewController: BaseViewController {
             view.addSubview(hourLabel[index])
             hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-            print(index)
         }
         
         let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
