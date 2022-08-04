@@ -170,7 +170,7 @@ final class FirebaseManager {
     /// 학부모 여러명의 예약정보들 가져오기 for 선생님
     func fetchParentsReservations(completion: @escaping (([String:[Schedule]]?) -> Void)) {
         
-        guard let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
+        let teacherUserId = UserDefaults.standard.string(forKey: "TeacherUser") ?? UserDefaults.standard.string(forKey: "HomeroomTeacher")!
         
         var allSchedules: [String:[Schedule]] = [:]
         
