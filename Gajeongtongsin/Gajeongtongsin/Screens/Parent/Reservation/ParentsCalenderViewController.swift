@@ -36,7 +36,7 @@ class ParentsCalenderViewController: BaseViewController {
          
         for dayCount in 0..<weekDays {
 //            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek+7))
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             nextWeek.append(oneDayString)
         }
@@ -44,7 +44,7 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     //모든 예약일정이 저장되는 리스트
-    private lazy var submittedData: [Int] = submittedDataMaker()
+    private lazy var submittedData: [Int] = []
 
     
     // 캘린더뷰
@@ -117,6 +117,7 @@ class ParentsCalenderViewController: BaseViewController {
             if let schedules = schedules {
                 self?.allSchedules = []
                 self?.allSchedules = self!.scheduledParentsListConVerter(schedules)
+                self?.submittedData = self!.submittedDataMaker()
                 self?.calenderView.reloadData()
             }
         }
