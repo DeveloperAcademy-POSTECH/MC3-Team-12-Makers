@@ -12,7 +12,7 @@ class ScheduleTableViewCell: BaseTableViewCell {
     //MARK: - Properties
     static let identifier = "ScheduleTableViewCell"
 
-    private let scheduleInfo: UILabel = {
+    private let scheduleTitle: UILabel = {
         let scheduleInfo = UILabel()
         scheduleInfo.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         scheduleInfo.textColor = UIColor.black
@@ -40,11 +40,10 @@ class ScheduleTableViewCell: BaseTableViewCell {
         statusIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         statusIndicator.widthAnchor.constraint(equalToConstant: 70).isActive = true
         statusIndicator.heightAnchor.constraint(equalToConstant: 20).isActive = true
-
         
-        contentView.addSubview(scheduleInfo)
-        scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
+        contentView.addSubview(scheduleTitle)
+        scheduleTitle.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        scheduleTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
     }
     
     override func configUI() {
@@ -57,12 +56,12 @@ class ScheduleTableViewCell: BaseTableViewCell {
         for i in 0..<appointment.scheduleList.count {
             text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
         }
-        scheduleInfo.text = text
+        scheduleTitle.text = text
     }
 
 
     func configure(_ row: Int,_ schedule: Schedule){
-        scheduleInfo.text = "예약 \(row + 1)"
+        scheduleTitle.text = "예약 \(row + 1)"
         for scheduleInfo in schedule.scheduleList {
             if scheduleInfo.isReserved {
                 statusIndicator.setTitle("확정", for: .normal)
