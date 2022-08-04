@@ -17,11 +17,15 @@ class MessageViewController: BaseViewController {
         let tableView = UITableView(frame: .zero, style: .plain)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(MessageTableViewCell.self, forCellReuseIdentifier: MessageTableViewCell.identifier)
+        tableView.backgroundColor = .Background
         return tableView
     }()
     private var customNavigationBar: CustomNavigationBar = {
-        let customNavigationBar = CustomNavigationBar(title: "수신내역", imageName: "bell", imageSize: 20)
-        customNavigationBar.backgroundColor = .white
+        let customNavigationBar = CustomNavigationBar(title: "수신내역",
+                                                      titleSize: 28,
+                                                      imageName: "bell",
+                                                      imageSize: 20)
+        customNavigationBar.backgroundColor = .Background
         customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
         return customNavigationBar
     }()
@@ -53,10 +57,14 @@ class MessageViewController: BaseViewController {
     }
 
     
+   
+    
+    // MARK: - Funcs
+    
     override func render() {
         
         view.addSubview(customNavigationBar)
-        customNavigationBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor,constant: 29).isActive = true
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
 //        customNavigationBar.heightAnchor.constraint(equalToConstant: 50).isActive = true
@@ -68,18 +76,17 @@ class MessageViewController: BaseViewController {
         tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
-    // MARK: - Funcs
+    
+    override func configUI() {
+        setupNavigationBackButton()
+        view.backgroundColor = .Background
+    }
     
     func setupNavigationBackButton() {
         let backButton = UIBarButtonItem()
         backButton.title = ""
         navigationController?.navigationBar.topItem?.backBarButtonItem = backButton
         navigationController?.navigationBar.tintColor = .black
-    }
-    
-    override func configUI() {
-        setupNavigationBackButton()
-        view.backgroundColor = .systemBackground
     }
 }
 
@@ -163,7 +170,8 @@ func chunkedMessages(messages: [(childName: String, message: Message)]) -> [Mess
 
 extension MessageViewController : CustomNavigationBarDelegate {
     func tapButton() {
-        let vc = NotificationViewController()
-        navigationController?.pushViewController(vc, animated: true)
+            let vc = NotificationViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
-}
+

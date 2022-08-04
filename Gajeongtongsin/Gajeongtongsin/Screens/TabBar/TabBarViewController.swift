@@ -61,8 +61,8 @@ class TabBarViewController: UITabBarController {
                                        tag: 2)
 
         tabBar.tintColor = .Action
-        tabBar.backgroundColor = .white
-        tabBar.layer.borderWidth = 2
+        tabBar.backgroundColor = .Background
+        tabBar.layer.borderWidth = 1
         tabBar.layer.borderColor = UIColor.LightLine.cgColor
         setViewControllers([vc1,vc2,vc3], animated: true)
     }

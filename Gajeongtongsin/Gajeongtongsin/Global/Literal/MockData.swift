@@ -89,4 +89,4 @@ var scheduleList4 = [
 //let noti9 = Notification(id: "3", postId: "33", type: .message, childName: "최히로", content: "99")
 //let noti10 = Notification(id: "3", postId: "33", type: .message, childName: "최히로", content: "1010")
 //let noti11 = Notification(id: "3", postId: "33", type: .reservation, childName: "최히로", content: "1111")
-//
+
