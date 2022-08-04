@@ -11,7 +11,7 @@ class ProfileViewController: BaseViewController {
 
     private let textLabel: UILabel = {
         let label = UILabel()
-        label.text = "프로필 화면 준비중입니다 😎\(UserDefaults.standard.string(forKey: "TeacherUser")?? "")"
+        label.text = "프로필 화면 준비중입니다 😎\(UserDefaults.standard.string(forKey: "TeacherUser") ?? "")"
         label.font = UIFont.systemFont(ofSize: 20)
         label.textColor = .black
         label.translatesAutoresizingMaskIntoConstraints = false
