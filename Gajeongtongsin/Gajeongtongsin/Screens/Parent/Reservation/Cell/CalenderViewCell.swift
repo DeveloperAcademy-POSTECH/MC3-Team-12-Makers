@@ -10,6 +10,17 @@ import UIKit
 class CalenderViewCell: BaseCollectionViewCell {
 
     static let identifier = "CalenderViewCell"
+//    var delegate: CalenderViewCellDelegate?
+    private var isClicked: Bool = false
+
+    private let acceptLable: UILabel = {
+        let label = UILabel()
+        label.text = ""
+        label.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        label.textColor = .white
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
 //MARK: - init
     
@@ -25,12 +36,23 @@ class CalenderViewCell: BaseCollectionViewCell {
     
     override func render() {
         // Override Layout
+        contentView.addSubview(acceptLable)
+            acceptLable.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+            acceptLable.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
     }
     
     override func configUI() {
         // Override ConfigUI
-//        self.backgroundColor = .gray
         contentView.layer.borderWidth = 0.7
         contentView.layer.borderColor = UIColor.LightLine.cgColor
+    }
+    
+    func getClick(clicked: Bool) {
+        if clicked {
+            acceptLable.text = "확정하기"
+        } else {
+            acceptLable.text = ""
+        }
+        
     }
 }
