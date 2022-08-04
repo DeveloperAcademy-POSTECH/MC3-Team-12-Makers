@@ -112,16 +112,31 @@ class ParentsCalenderViewController: BaseViewController {
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
+        
+        FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
+            if let schedules = schedules {
+                self?.allSchedules = []
+                self?.allSchedules = self!.scheduledParentsListConVerter(schedules)
+                self?.calenderView.reloadData()
+            }
+        }
     }
         
     //MARK: - Funcs
     
+    func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
+        var scheduledParentsList: [(String, [Schedule]?)] = []
+        for key in allSchedules.keys {
+                scheduledParentsList.append((key,allSchedules[key]))
+        }
+        return scheduledParentsList
+    }
     //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
     //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
     func dateStringToIndex(parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        let parentSchedules = mainTeacher.parentUsers[parentsIndex].schedules
+        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
         parentSchedules[0].scheduleList.forEach{
             dateString.append($0.consultingDate)
         }
@@ -139,8 +154,7 @@ class ParentsCalenderViewController: BaseViewController {
     //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
     func timeStringToIndex(parentIndex: Int) -> [Int] {
         var startTime:[Int] = []
-        
-        let parentSchedules = mainTeacher.parentUsers[parentIndex].schedules
+        guard let parentSchedules = allSchedules[parentIndex].schedule else { return []}
         parentSchedules[0].scheduleList.forEach{
             let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
             let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
@@ -155,9 +169,10 @@ class ParentsCalenderViewController: BaseViewController {
     func submittedDataMaker() -> [Int] {
     var calenderData: [Int] = []
         
-        for parentsIndex in 0 ..< mainTeacher.parentUsers.count {
-            for scheduleIndex in
-                    0 ..< mainTeacher.parentUsers[parentsIndex].schedules[0].scheduleList.count {
+        for parentsIndex in 0 ..< allSchedules.count {
+            guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
+
+            for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
                 
                     let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
