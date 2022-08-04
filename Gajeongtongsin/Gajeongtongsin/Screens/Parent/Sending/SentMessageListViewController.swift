@@ -21,6 +21,7 @@ class SentMessageListViewController: BaseViewController {
     private let sentMessageList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(SentMessageTableViewCell.self, forCellReuseIdentifier: SentMessageTableViewCell.identifier)
+        table.isUserInteractionEnabled = false
         table.backgroundColor = .Background
         table.rowHeight = 100
         table.translatesAutoresizingMaskIntoConstraints = false
@@ -35,6 +36,7 @@ class SentMessageListViewController: BaseViewController {
         sentMessageList.delegate = self
         sentMessageList.dataSource = self
         navBar.delegate = self
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -65,12 +67,16 @@ class SentMessageListViewController: BaseViewController {
     }
     
     override func configUI() {
+        view.backgroundColor = .Background
     }
 }
 
 //MARK: - Extensions
 
 extension SentMessageListViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: false)
+    }
     
 }
 
