@@ -15,7 +15,7 @@ class ParentsCalenderViewController: BaseViewController {
     private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
 //    private var consultingDateDate: Date
-    private var consultingDateList: [String] = []
+    private var consultingDateList: String = ""
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
     private var startTime: String = ""
 
@@ -81,12 +81,12 @@ class ParentsCalenderViewController: BaseViewController {
     
     func dateIndexToString(index: Int) -> String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMM-dd-e-EEEE"
+        formatter.dateFormat = "M월dd일"
         let daysAfterToday = (7+(index%weekDays+2)-todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
         let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
         
-        consultingDateList = formatter.string(from: consultingDateDate).components(separatedBy: "-") //Date -> [String]
-        consultingDate = consultingDateList[0] + consultingDateList[1] + "일" //[String] -> String
+        consultingDateList = formatter.string(from: consultingDateDate) //Date -> [String]
+        consultingDate = consultingDateList //[String] -> String
         return consultingDate
     }
     
