@@ -13,7 +13,7 @@ class SentMessageListViewController: BaseViewController {
     var allMessages: [Message] = []
     
     private let navBar: CustomNavigationBar = {
-        let bar = CustomNavigationBar(title: "전송내역", imageName: "plus.message", imageSize: 20)
+        let bar = CustomNavigationBar(title: "전송내역", titleSize: 28, imageName: "plus.message", imageSize: 20)
         bar.rightButtonItem.tintColor = .Action
         return bar
     }()

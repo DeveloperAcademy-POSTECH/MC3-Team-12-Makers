@@ -12,7 +12,7 @@ class ReservationViewController: BaseViewController {
     var allSchedules: [Schedule] = []
     
     private let navBar: CustomNavigationBar = {
-        let bar = CustomNavigationBar(title: "예약내역", imageName: "calendar.badge.plus", imageSize: 20)
+        let bar = CustomNavigationBar(title: "예약내역", titleSize: 28, imageName: "calendar.badge.plus", imageSize: 20)
         return bar
     }()
 
