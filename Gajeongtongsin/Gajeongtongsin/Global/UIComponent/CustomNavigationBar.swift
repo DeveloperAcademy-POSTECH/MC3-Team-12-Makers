@@ -32,7 +32,7 @@ class CustomNavigationBar: UIView {
     
     
     // MARK: - Init
-    init(title: String, titleSize: CGFloat, imageName imageName: String, imageSize: Int){
+    init(title: String, titleSize: CGFloat, imageName : String, imageSize: Int){
         self.title = title
         self.imageName = imageName
         self.imageSize = imageSize
