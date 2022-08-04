@@ -89,6 +89,7 @@ class MessageTableViewCell: BaseTableViewCell {
     override func configUI() {
         stateLabel.text = "처리하기"
         stateLabel.textColor = .white
+        contentView.backgroundColor = .Background
     }
 
     

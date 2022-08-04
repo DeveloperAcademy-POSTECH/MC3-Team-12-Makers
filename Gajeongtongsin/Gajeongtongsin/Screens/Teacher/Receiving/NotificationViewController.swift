@@ -26,6 +26,7 @@ class NotificationViewController: BaseViewController {
        let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "알림"
+        label.backgroundColor = .Background
         label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         return label
     }()
@@ -34,7 +35,7 @@ class NotificationViewController: BaseViewController {
         let tableView = UITableView(frame: .zero, style: .grouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.register(NotificationTableViewCell.self, forCellReuseIdentifier: NotificationTableViewCell.identifier)
-        tableView.backgroundColor = .white
+        tableView.backgroundColor = .Background
         tableView.separatorColor = .darkGray
 
 
@@ -46,7 +47,6 @@ class NotificationViewController: BaseViewController {
         super.viewDidLoad()
         tableView.dataSource = self
         tableView.delegate = self
-        view.backgroundColor = .systemBackground
         
         FirebaseManager.shared.fetchNotifications { [weak self] notifications in
             if let notifications = notifications {
@@ -84,6 +84,9 @@ class NotificationViewController: BaseViewController {
         tableView.separatorInset.left = 0
         tableView.separatorColor = .white
 
+    }
+    override func configUI() {
+        view.backgroundColor = .Background
     }
 }
 
