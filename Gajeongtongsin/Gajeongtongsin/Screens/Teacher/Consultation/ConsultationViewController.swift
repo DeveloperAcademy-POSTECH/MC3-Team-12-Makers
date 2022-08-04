@@ -36,7 +36,7 @@ class ConsultationViewController: BaseViewController {
         }
         return nextWeek
     }
-    
+
     private var customNavigationBar: CustomNavigationBar = {
          let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정", imageName: "bell", imageSize: 20)
          customNavigationBar.backgroundColor = .white

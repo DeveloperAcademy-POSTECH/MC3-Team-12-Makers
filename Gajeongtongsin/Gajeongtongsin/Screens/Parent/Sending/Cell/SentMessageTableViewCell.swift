@@ -33,11 +33,9 @@ class SentMessageTableViewCell: BaseTableViewCell {
         return content
     }()
     
-    private let checkIndicator: UIImageView = {
-        let imageView = UIImageView()
-        imageView.image = UIImage(systemName: "questionmark.circle")
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        return imageView
+    private var statusIndicator: SecondaryButton = {
+        let btn = SecondaryButton(buttonTitle: "처리대기", buttonState: .normal)
+        return btn
     }()
     
     //MARK: - Funcs
@@ -50,20 +48,18 @@ class SentMessageTableViewCell: BaseTableViewCell {
         content.topAnchor.constraint(equalTo: messageInfo.bottomAnchor, constant: 10).isActive = true
         content.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 20).isActive = true
 
-        contentView.addSubview(checkIndicator)
-        checkIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
-        checkIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40).isActive = true
+        contentView.addSubview(statusIndicator)
+        statusIndicator.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -30).isActive = true
+        statusIndicator.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 40).isActive = true
     }
     
     override func configUI() {
+        self.backgroundColor = .Background
     }
-
     
-    func configure(message: Message){
-    
+    func configure(message: Message){    
         messageInfo.text = "\(childName) / \(message.type.rawValue) / \(message.expectedDate)"
         content.text = "\(message.content)"
-    
         
 //    func configure(index: Int) {
         
@@ -80,6 +76,7 @@ class SentMessageTableViewCell: BaseTableViewCell {
         
         //완료 여부 알려주는 인디케이터
         guard message.isCompleted == true else {return} 
-        checkIndicator.image = UIImage(systemName: "exclamationmark.circle")
+        statusIndicator.setTitle("처리완료", for: .normal)
+        statusIndicator.changeState(buttonState: .disabled)
     }
 }

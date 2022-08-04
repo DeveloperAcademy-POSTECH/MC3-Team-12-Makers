@@ -9,17 +9,11 @@ import UIKit
 
 class ReservationViewController: BaseViewController {
     //MARK: - Properties
-    //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
-  
     var allSchedules: [Schedule] = []
     
-    private let viewTitle: UILabel = {
-        let label = UILabel()
-        label.text = "예약내역"
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
+    private let navBar: CustomNavigationBar = {
+        let bar = CustomNavigationBar(title: "예약내역", imageName: "calendar.badge.plus", imageSize: 20)
+        return bar
     }()
 
     private let noScheduleLabel: UILabel = {
@@ -32,18 +26,10 @@ class ReservationViewController: BaseViewController {
         return label
     }()
     
-    private let reserveButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
-        button.tintColor = .Action
-        button.showsMenuAsPrimaryAction = true
-        button.translatesAutoresizingMaskIntoConstraints = false
-        return button
-    }()
-    
     private let reservedScheduleList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(ScheduleTableViewCell.self, forCellReuseIdentifier: ScheduleTableViewCell.identifier)
+        table.backgroundColor = .Background
         table.rowHeight = 60
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -54,6 +40,11 @@ class ReservationViewController: BaseViewController {
         super.viewDidLoad()
         reservedScheduleList.delegate = self
         reservedScheduleList.dataSource = self
+
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.topItem?.title = ""
         
         FirebaseManager.shared.fetchParentReservations { [weak self] schedules in
@@ -67,14 +58,15 @@ class ReservationViewController: BaseViewController {
     }
 
     //MARK: - Funcs
-    @objc func onTapButton() {
-        let vc = ParentsCalenderViewController()
-        present(vc, animated: true)
-    }
-    
     override func render() {
+        view.addSubview(navBar)
+        navBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        navBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
         view.addSubview(reservedScheduleList)
-        reservedScheduleList.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        reservedScheduleList.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 30).isActive = true
         reservedScheduleList.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         reservedScheduleList.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         reservedScheduleList.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
@@ -87,12 +79,10 @@ class ReservationViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .Background
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
-      //  scheduleToggle()
         calendarBtnAct()
     }
     
+    //스케줄 없을 시 예약 없다는 문구 표출
     func scheduleToggle() {
         if allSchedules.isEmpty {
             reservedScheduleList.isHidden = true
@@ -106,7 +96,9 @@ class ReservationViewController: BaseViewController {
     func calendarBtnAct() {
         //신청버튼 메뉴에 따라 액션 분리, 긴급신청은 alert 띄워서 사유 작성 후 전송 -> noti 날림
         //TODO: -
-        reserveButton.menu = UIMenu(options: .displayInline, children: [
+        navBar.rightButtonItem.tintColor = .Action
+        navBar.rightButtonItem.showsMenuAsPrimaryAction = true
+        navBar.rightButtonItem.menu = UIMenu(options: .displayInline, children: [
             UIAction(title: "상담예약", handler: { _ in
                 self.present(ParentsCalenderViewController(), animated: true)
             }),
@@ -115,17 +107,22 @@ class ReservationViewController: BaseViewController {
             })
         ])
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        reservedScheduleList.endEditing(true)
+    }
 }
-
 
 //MARK: - Extensions
 
 extension ReservationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let vc = ReservationDetailViewController()
         vc.configure(row: indexPath.row,schedules: allSchedules)
         navigationController?.pushViewController(vc, animated: true)
     }
+    
 }
 
 extension ReservationViewController: UITableViewDataSource {
