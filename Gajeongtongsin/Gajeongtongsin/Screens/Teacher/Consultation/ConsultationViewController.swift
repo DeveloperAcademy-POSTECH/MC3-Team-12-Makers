@@ -27,7 +27,7 @@ class ConsultationViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays { //주말 이틀 추가(weekDays==5)
+        for dayCount in 0..<weekDays {
             //let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
             //캘린더뷰가 다음주를 표시하는 경우 +7
             let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
