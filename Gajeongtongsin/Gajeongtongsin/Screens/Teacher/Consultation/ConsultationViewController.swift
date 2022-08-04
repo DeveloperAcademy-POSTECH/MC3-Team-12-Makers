@@ -215,22 +215,22 @@ class ConsultationViewController: BaseViewController {
     //미확정 예약 데이터를 인덱스로 만들어주는 함수
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [Int] = []
+        var submittedData:[TeacherCalenderData] = []
         
         for parentsIndex in 0 ..< allSchedules.count {
             calenderIndex = []
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
-            for scheduleIndex in
-                    0 ..< parentShedules[0].scheduleList.count {
-                
-                if parentShedules[0].scheduleList[scheduleIndex].isReserved == false {
+            if parentShedules[0].scheduleList[0].isReserved == false {
+                for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
                     let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
                     calenderIndex.append(rowIndex + columnIndex)
                 }
+                submittedData.append(calenderData[parentsIndex])
+                submittedData[submittedData.count-1].calenderIndex = calenderIndex
             }
-            calenderData[parentsIndex].calenderIndex = calenderIndex
         }
-        return calenderData
+        return submittedData
     }
     
     //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수

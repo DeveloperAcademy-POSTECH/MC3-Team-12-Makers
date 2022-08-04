@@ -91,7 +91,7 @@ struct Constants {
         formatter.dateFormat = "d-EEE"
         
         for day in 0..<5 {
-            let dayAdded = (86400 * (2+day-todayOfTheWeek))
+            let dayAdded = (86400 * (2+day-todayOfTheWeek+7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
             oneDayString.forEach {
                 let label = UILabel()
