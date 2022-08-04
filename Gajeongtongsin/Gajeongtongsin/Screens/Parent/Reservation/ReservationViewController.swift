@@ -17,15 +17,6 @@ class ReservationViewController: BaseViewController {
         let bar = CustomNavigationBar(title: "예약내역", imageName: "calendar.badge.plus", imageSize: 20)
         return bar
     }()
-    
-//    private let viewTitle: UILabel = {
-//        let label = UILabel()
-//        label.text = "예약내역"
-//        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-//        label.textColor = .black
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
 
     private let noScheduleLabel: UILabel = {
         let label = UILabel()
@@ -36,16 +27,6 @@ class ReservationViewController: BaseViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
-//    private let reserveButton: UIButton = {
-//        let button = UIButton()
-//        button.setImage(UIImage(systemName: "calendar.badge.plus"), for: .normal)
-//        button.tintColor = .Action
-//        button.showsMenuAsPrimaryAction = true
-//        button.translatesAutoresizingMaskIntoConstraints = false
-//        return button
-//    }()
-
     
     private let reservedScheduleList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
@@ -100,8 +81,6 @@ class ReservationViewController: BaseViewController {
 
     override func configUI() {
         view.backgroundColor = .Background
-//        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
-//        self.navigationItem.rightBarButtonItem = UIBarButtonItem(customView: reserveButton)
         calendarBtnAct()
     }
     
@@ -140,22 +119,12 @@ class ReservationViewController: BaseViewController {
 
 extension ReservationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let vc = ReservationDetailViewController()
         vc.configure(row: indexPath.row,schedules: allSchedules)
         navigationController?.pushViewController(vc, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        tableView.resignFirstResponder()
-    }
-    
-    func tableView(_ tableView: UITableView, didEndEditingRowAt indexPath: IndexPath?) {
-        tableView.resignFirstResponder()
-    }
-    
-    func tableView(_ tableView: UITableView, willDeselectRowAt indexPath: IndexPath) -> IndexPath? {
-        return indexPath
-    }
 }
 
 extension ReservationViewController: UITableViewDataSource {

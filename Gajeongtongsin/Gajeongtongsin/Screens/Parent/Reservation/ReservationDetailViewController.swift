@@ -122,12 +122,12 @@ class ReservationDetailViewController: BaseViewController {
         
         let appointment = schedules[row]
         reasonContent.text = appointment.content
+        printSchedule(appointment)
         
         if appointment.scheduleList[row].isReserved {
             statusIndicator.setTitle("확정", for: .normal)
             statusIndicator.changeState(buttonState: .disabled)
             scheduleTitle.text = scheduleCandidates.text
-            
             printSchedule(appointment)
         }
     }

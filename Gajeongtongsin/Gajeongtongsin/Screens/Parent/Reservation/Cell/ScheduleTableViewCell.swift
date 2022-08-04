@@ -52,14 +52,14 @@ class ScheduleTableViewCell: BaseTableViewCell {
 
     }
     
-//    //예약 확정 시 제목 변경 func
-//    func printSchedule() {
-//        var text = ""
-//        for i in 0..<appointment.scheduleList.count {
-//        text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
-//        }
-//        scheduleInfo.text = text
-//    } 
+    func printSchedule(_ appointment:Schedule) {
+        var text = ""
+        for i in 0..<appointment.scheduleList.count {
+            text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
+        }
+        scheduleInfo.text = text
+    }
+
 
     func configure(_ row: Int,_ schedule: Schedule){
         scheduleInfo.text = "예약 \(row + 1)"
@@ -67,6 +67,7 @@ class ScheduleTableViewCell: BaseTableViewCell {
             if scheduleInfo.isReserved {
                 statusIndicator.setTitle("확정", for: .normal)
                 statusIndicator.changeState(buttonState: .disabled)
+                printSchedule(schedule)
                 break
             }
         }
