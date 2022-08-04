@@ -9,9 +9,6 @@ import UIKit
 
 class UrgentRequestViewController: BaseViewController {
     //MARK: - Properties
-    let textPlaceHolder: String = "정말 급한 상담인지 한 번 더 생각해주세요!\n선생님의 소중한 개인시간일 수 있습니다."
-
-    
     private let cancelBtn: UIButton = {
         let label = UIButton()
         label.setTitle("취소", for: .normal)
@@ -22,7 +19,7 @@ class UrgentRequestViewController: BaseViewController {
     private let submitBtn: UIButton = {
         let label = UIButton()
         label.setTitle("신청", for: .normal)
-        label.setTitleColor(UIColor.black, for: .normal)
+        label.setTitleColor(UIColor.lightGray, for: .normal)
         label.isUserInteractionEnabled = false
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
@@ -43,6 +40,8 @@ class UrgentRequestViewController: BaseViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    private let textPlaceHolder: String = "정말 급한 상담인지 한 번 더 생각해주세요!\n선생님의 소중한 개인시간일 수 있습니다."
     
     private let reasonText: UITextView = {
         let textView = UITextView()

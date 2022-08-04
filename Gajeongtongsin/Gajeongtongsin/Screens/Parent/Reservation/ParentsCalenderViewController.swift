@@ -61,7 +61,7 @@ class ParentsCalenderViewController: BaseViewController {
     private let dismissBtn: UIButton = {
         let button = UIButton()
         button.setTitle("취소", for: .normal)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.setTitleColor(UIColor.Action, for: .normal)
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
@@ -69,12 +69,11 @@ class ParentsCalenderViewController: BaseViewController {
     private let submitBtn: UIButton = {
         let button = UIButton()
         button.setTitle("신청", for: .normal)
-        button.setTitleColor(UIColor.systemBlue, for: .normal)
+        button.setTitleColor(UIColor.lightGray, for: .normal)
+        button.isUserInteractionEnabled = false
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
-    
     
     private let noteTitle: UILabel = {
         let label = UILabel()
@@ -86,16 +85,20 @@ class ParentsCalenderViewController: BaseViewController {
     }()
     
     //사유 입력 text view
+    private let textPlaceHolder: String = "어떤 내용으로 상담을 신청하시나요?"
+    
     private let reasonNote: UITextView = {
-        let note = UITextView()
-        note.text = "어떤 내용으로 상담을 신청하시나요?"
-        note.textColor = .LightText
-        note.font = .systemFont(ofSize: 15)
-        note.clearsOnInsertion = false
-        note.layer.borderWidth = 0.5
-        note.layer.borderColor = UIColor.LightLine.cgColor
-        note.translatesAutoresizingMaskIntoConstraints = false
-        return note
+        let textView = UITextView()
+        textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
+        textView.isEditable = true
+        textView.textColor = .LightText
+        textView.font = .systemFont(ofSize: 15)
+        textView.layer.borderWidth = 1.0
+        textView.layer.borderColor = UIColor.lightGray.withAlphaComponent(0.7).cgColor
+        textView.layer.cornerRadius = 10
+        textView.textContainerInset = UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        textView.translatesAutoresizingMaskIntoConstraints = false
+        return textView
     }()
     
     //캘린더 시간 레이블
@@ -109,6 +112,8 @@ class ParentsCalenderViewController: BaseViewController {
         super.viewDidLoad()
         calenderView.delegate = self
         calenderView.dataSource = self
+        reasonNote.text = textPlaceHolder
+        reasonNote.delegate = self
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
@@ -124,6 +129,9 @@ class ParentsCalenderViewController: BaseViewController {
     }
         
     //MARK: - Funcs
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.reasonNote.endEditing(true)
+    }
     
     func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
@@ -132,7 +140,8 @@ class ParentsCalenderViewController: BaseViewController {
         }
         return scheduledParentsList
     }
-    //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
+
+//선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
     //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
     func dateStringToIndex(parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
@@ -310,8 +319,6 @@ class ParentsCalenderViewController: BaseViewController {
     
 
 //MARK: - Extensions
-
-
 extension ParentsCalenderViewController: UICollectionViewDelegate{
      
     //cell 로드
@@ -372,5 +379,39 @@ extension ParentsCalenderViewController: UICollectionViewDelegateFlowLayout {
     //cell 종간 간격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return CGFloat(0)
+    }
+}
+
+extension ParentsCalenderViewController: UITextViewDelegate {
+    func textViewDidBeginEditing(_ textView: UITextView) {
+        if textView.text == textPlaceHolder {
+            textView.text = nil
+            textView.textColor = .black
+        }
+    }
+    
+    //텍스트뷰 편집 종료 시 내용이 있으면 전송버튼 활성화, 내용이 없으면 플레이스홀더 원복시키고 전송버튼 비활성화 (내용 없이 날아가는 긴급요청 방지)
+    func textViewDidEndEditing(_ textView: UITextView) {
+        if textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            textView.text = textPlaceHolder
+            textView.textColor = .lightGray
+        }
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        if textView.text.isEmpty {
+            textView.text = textPlaceHolder
+            textView.textColor = .lightGray
+            textView.resignFirstResponder()
+            submitBtn.setTitleColor(.black, for: .normal)
+            submitBtn.isUserInteractionEnabled = false
+        } else {
+            if !textView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                submitBtn.setTitleColor(.Action, for: .normal)
+                submitBtn.isUserInteractionEnabled = true
+            }
+           
+        }
+
     }
 }
