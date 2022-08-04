@@ -34,6 +34,7 @@ class ConsultationViewController: BaseViewController {
         }
         return nextWeek
     }
+    
     private var customNavigationBar: CustomNavigationBar = {
         let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정",
                                                       titleSize: 22,
@@ -44,7 +45,6 @@ class ConsultationViewController: BaseViewController {
          customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
          return customNavigationBar
      }()
-    
     
     // FIXME: - 수정이 필요해보임
     private lazy var calenderData: [TeacherCalenderData] = calenderDataMaker()
@@ -83,16 +83,6 @@ class ConsultationViewController: BaseViewController {
       view.translatesAutoresizingMaskIntoConstraints = false
       return view
     }()
-    
-    //상단제목
-//    private let viewTitle: UILabel = {
-//        let label = UILabel()
-//        label.text = "이번주 상담일정"
-//        label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
-//        label.textColor = .black
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        return label
-//    }()
     
     private let collectionViewTitle: UILabel = {
         let label = UILabel()
