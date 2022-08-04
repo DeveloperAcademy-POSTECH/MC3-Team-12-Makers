@@ -10,32 +10,18 @@ import UIKit
 class SentMessageListViewController: BaseViewController {
     //MARK: - Properties
     
-    //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
-//    var currentParent: ParentUser {
-//        return mainTeacher.parentUsers[0]
-//    }
     var allMessages: [Message] = []
-    private let viewTitle: UILabel = {
-        let label = UILabel()
-        label.text = "전송내역"
-        label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
-        label.textColor = .black
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
     
-    private let writeMessageButton: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(systemName: "plus.message"), for: .normal)
-        btn.setTitleColor(UIColor.black, for: .normal)
-        btn.titleLabel?.font = UIFont.systemFont(ofSize: 40, weight: .bold)
-        btn.translatesAutoresizingMaskIntoConstraints = false
-        return btn
+    private let navBar: CustomNavigationBar = {
+        let bar = CustomNavigationBar(title: "전송내역", imageName: "plus.message", imageSize: 20)
+        bar.rightButtonItem.tintColor = .Action
+        return bar
     }()
     
     private let sentMessageList: UITableView = {
         let table = UITableView(frame: .zero, style: .plain)
         table.register(SentMessageTableViewCell.self, forCellReuseIdentifier: SentMessageTableViewCell.identifier)
+        table.backgroundColor = .Background
         table.rowHeight = 100
         table.translatesAutoresizingMaskIntoConstraints = false
         return table
@@ -45,11 +31,14 @@ class SentMessageListViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .Background
         sentMessageList.delegate = self
         sentMessageList.dataSource = self
-
-        navigationBar()
-        writeMessageButton.addTarget(self, action: #selector(writeButton), for: .touchUpInside)
+        navBar.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = true
         
         FirebaseManager.shared.fetchParentMessages { [weak self] messages in
             if let messages = messages {
@@ -62,30 +51,21 @@ class SentMessageListViewController: BaseViewController {
     
     //MARK: - Funcs
     override func render() {
+        view.addSubview(navBar)
+        navBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
+        navBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        navBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        navBar.heightAnchor.constraint(equalToConstant: 100).isActive = true
+        
         view.addSubview(sentMessageList)
-        sentMessageList.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        sentMessageList.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 30).isActive = true
         sentMessageList.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         sentMessageList.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         sentMessageList.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
     }
     
     override func configUI() {
-        view.backgroundColor = .Background
     }
-    
-    func navigationBar() {
-        self.navigationItem.title = ""
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(customView: viewTitle)
-        self.navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "plus.message"), style: .plain, target: self, action: #selector(writeButton))
-    }
-    
-    @objc func writeButton() {
-        let vc = SendingViewController()
-        vc.delegate = self
-        navigationController?.pushViewController(vc, animated: true)
-
-    }
-   
 }
 
 //MARK: - Extensions
@@ -104,7 +84,7 @@ extension SentMessageListViewController: UITableViewDataSource {
         
 
 //        cell.configure(index: indexPath.row)
-        cell.configure( message: allMessages[indexPath.row])
+        cell.configure( message: allMessages[indexPath.row] )
         return cell
     }
 }
@@ -115,5 +95,13 @@ extension SentMessageListViewController: SendingViewControllerDelegate {
     func reloadTable() {
         self.allMessages = []
         sentMessageList.reloadData()
+    }
+}
+
+extension SentMessageListViewController: CustomNavigationBarDelegate {
+    func tapButton() {
+        let vc = SendingViewController()
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
 }

@@ -9,12 +9,6 @@ import UIKit
 
 class ReservationDetailViewController: BaseViewController {
     //MARK: - Properties
-
-    //화면에 뿌려줄 메시지 리스트를 곧바로 'messageList#'으로 지정하지 않고, 부모 유저(여기선 parent1)에 속한 것으로 불러옴
-    var currentParent: ParentUser {
-        return mainTeacher.parentUsers[0]
-    }
-
     private let scheduleTitle: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 28, weight: .bold)
@@ -53,6 +47,7 @@ class ReservationDetailViewController: BaseViewController {
         let content = UITextView()
         content.font = UIFont.systemFont(ofSize: 17)
         content.textColor = .black
+        content.backgroundColor = .Background
         content.isScrollEnabled = true
         content.isEditable = false
         content.translatesAutoresizingMaskIntoConstraints = false
@@ -67,6 +62,12 @@ class ReservationDetailViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.tintColor = .black
+        navigationController?.navigationBar.topItem?.title = "전체예약"
     }
     
     //MARK: - Funcs
@@ -104,7 +105,7 @@ class ReservationDetailViewController: BaseViewController {
     }
     
     override func configUI() {
-        view.backgroundColor = .white
+        view.backgroundColor = .Background
         navigationController?.navigationBar.tintColor = .black
     }
     
@@ -115,13 +116,14 @@ class ReservationDetailViewController: BaseViewController {
         
         let appointment = schedules[row]
         reasonContent.text = appointment.content
-
-        //스케줄 리스트 데이터의 갯수만큼 text 정보를 추가해서 여러 줄로 예약 대기 스케줄 표기
         printSchedule(appointment)
         
-        //인디케이터 디자인 확정 후 변경
-//        guard appointment.scheduleList[index.row].isReserved == true else {return}
-//        checkIndicator.text = "확정"
+        if appointment.scheduleList[row].isReserved {
+            statusIndicator.setTitle("확정", for: .normal)
+            statusIndicator.changeState(buttonState: .disabled)
+            scheduleTitle.text = scheduleCandidates.text
+            printSchedule(appointment)
+        }
     }
     
     func printSchedule(_ appointment:Schedule) {

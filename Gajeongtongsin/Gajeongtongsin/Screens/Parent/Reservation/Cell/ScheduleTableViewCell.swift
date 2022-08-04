@@ -11,8 +11,8 @@ class ScheduleTableViewCell: BaseTableViewCell {
     
     //MARK: - Properties
     static let identifier = "ScheduleTableViewCell"
-    
-    private let scheduleInfo: UILabel = {
+
+    private let scheduleTitle: UILabel = {
         let scheduleInfo = UILabel()
         scheduleInfo.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
         scheduleInfo.textColor = UIColor.black
@@ -40,42 +40,35 @@ class ScheduleTableViewCell: BaseTableViewCell {
         statusIndicator.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
         statusIndicator.widthAnchor.constraint(equalToConstant: 70).isActive = true
         statusIndicator.heightAnchor.constraint(equalToConstant: 20).isActive = true
-
         
-        contentView.addSubview(scheduleInfo)
-        scheduleInfo.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
-        scheduleInfo.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
-        
-
+        contentView.addSubview(scheduleTitle)
+        scheduleTitle.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        scheduleTitle.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 100).isActive = true
     }
     
     override func configUI() {
+        self.backgroundColor = .Background
 
     }
     
+    func printSchedule(_ appointment:Schedule) {
+        var text = ""
+        for i in 0..<appointment.scheduleList.count {
+            text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
+        }
+        scheduleTitle.text = text
+    }
+
+
     func configure(_ row: Int,_ schedule: Schedule){
-        scheduleInfo.text = "예약 \(row + 1)"
+        scheduleTitle.text = "예약 \(row + 1)"
         for scheduleInfo in schedule.scheduleList {
             if scheduleInfo.isReserved {
                 statusIndicator.setTitle("확정", for: .normal)
                 statusIndicator.changeState(buttonState: .disabled)
+                printSchedule(schedule)
                 break
             }
         }
-
     }
-//    func configure(index: IndexPath) {
-//
-//        let appointment: Schedule = currentParent.schedules[index.row]
-//
-//        scheduleInfo.text = "예약 \(index.row + 1)"
-//
-////        //약속시간 중 첫 번째가 교사에 의해 확정되었다고 가정할 때 indicator 변화 확인하기 위한 시험 코드 (추후 삭제)
-////        appointment.scheduleList[0].isReserved = true
-//
-//        //인디케이터 디자인 확정 후 변경
-//               if appointment.scheduleList[index.row].isReserved {
-//            checkIndicator.text = "확정"
-//        }
-//    }
 }

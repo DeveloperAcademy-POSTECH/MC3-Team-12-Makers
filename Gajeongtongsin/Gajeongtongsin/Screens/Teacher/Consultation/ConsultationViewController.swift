@@ -23,18 +23,20 @@ class ConsultationViewController: BaseViewController {
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
         let formatter = DateFormatter()
-        formatter.dateFormat = "M-dd"
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays+2 { //주말 이틀 추가(weekDays==5)
-//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek +7)) //캘린더뷰가 다음주를 표시하는 경우 +7
+        for dayCount in 0..<weekDays {
+            //let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            //캘린더뷰가 다음주를 표시하는 경우 +7
             let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            nextWeek.append(oneDayString[0]+"월"+oneDayString[1]+"일")
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            nextWeek.append(oneDayString)
         }
         return nextWeek
     }
-    
+
     private var customNavigationBar: CustomNavigationBar = {
         let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정",
                                                       titleSize: 22,
@@ -94,10 +96,10 @@ class ConsultationViewController: BaseViewController {
     }()
     
     //캘린더 시간 레이블
-    lazy private var hourLabel: [UILabel] = hourLabelMaker()
+    lazy private var hourLabel: [UILabel] = Constants.hourLabelMaker()
     
     //캘린더 날자 레이블
-    lazy private var dateLabel: [[UILabel]] = dateLabelMaker()
+    lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
     // 전체 신청내역 보기
     private let seeAll: UIButton = {
@@ -141,41 +143,7 @@ class ConsultationViewController: BaseViewController {
         customNavigationBar.delegate = self
     }
     
-    func hourLabelMaker() -> [UILabel] {
-        var labelList: [UILabel] = []
-        for hour in 14...17 {
-            let label = UILabel()
-            label.text = String(hour)+"h"
-            label.font = UIFont.systemFont(ofSize: 14, weight: .regular)
-            label.textColor = .darkText
-            label.translatesAutoresizingMaskIntoConstraints = false
-            labelList.append(label)
-        }
-        return labelList
-    }
-    //날자 레이블 메이커
-    func dateLabelMaker() -> [[UILabel]] {
-        var labelList: [[UILabel]] = Array(repeating: [], count: 5)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d-EEE"
-        
-        for day in 0..<5 {
-            let dayAdded = (86400 * (2+day-todayOfTheWeek))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            oneDayString.forEach {
-                let label = UILabel()
-                label.text = $0
-                label.translatesAutoresizingMaskIntoConstraints = false
-                labelList[day].append(label)
-            }
-            labelList[day][0].font = UIFont.systemFont(ofSize: 17, weight: .regular)
-            labelList[day][0].textColor = .darkText
-            
-            labelList[day][1].font = UIFont.systemFont(ofSize: 14, weight: .regular)
-            labelList[day][1].textColor = .LightText
-        }
-        return labelList
-    }
+    
     
     func calenderDataMaker() -> [TeacherCalenderData] {
         var calenderData: [TeacherCalenderData] = []
@@ -314,6 +282,7 @@ class ConsultationViewController: BaseViewController {
         customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor,constant: 29).isActive = true
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+
         
         view.addSubview(calenderView)
 
@@ -342,7 +311,6 @@ class ConsultationViewController: BaseViewController {
             view.addSubview(hourLabel[index])
             hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-            print(index)
         }
         
         let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
@@ -371,6 +339,10 @@ class ConsultationViewController: BaseViewController {
         navigationController?.navigationBar.tintColor = .black
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        displayData = acceptedData()
+        calenderView.reloadData()
+    }
 }
 
 //MARK: - Extensions
@@ -399,9 +371,15 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             cell.backgroundColor = .white
             
-            displayData.forEach { //[{parentsIds, calenderIdx, cellColor}]
+            displayData.forEach {
                 if $0.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
-                    cell.backgroundColor = clickedCell == indexPath.item ? .Action : $0.cellColor
+                    if clickedCell == indexPath.item {
+                        cell.getClick(clicked: true)
+                        cell.backgroundColor = .Action
+                    }else {
+                        cell.getClick(clicked: false)
+                        cell.backgroundColor = $0.cellColor
+                    }
                 }
             }
             
@@ -439,56 +417,57 @@ extension ConsultationViewController: UICollectionViewDelegate {
     
     //cell 클릭 액션
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        //더블클릭한 경우
-        if indexPath.item == clickedCell {
-            // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
-            //guard var parentSchedules = scheduledParentList[parentId!].schedule else {return}
-            guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return}
-            selectedSchedule.isReserved = true
-            allSchedules[parentId].schedule?[0].scheduleList = []
-            allSchedules[parentId].schedule?[0].scheduleList.append(selectedSchedule)
-            FirebaseManager.shared.uploadConfirmedReservation(childName: allSchedules[parentId].name,
-                                                              reservedSchedule: allSchedules[parentId].schedule?[0],selectedIndex: selectedIndex!)
-            calenderData[parentId].cellColor = .lightGray // 예약확정된 셀은 연회색
-            clickedCell = nil // 선택해제
-            
-            displayData = acceptedData() //수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
-            calenderView.reloadData()
-            
-            //TODO: 확정된 예약에 대해 카드를 어떻게 처리하는지 논의 필요
-//          scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
-            parentsCollectionView.reloadData()
-            return
-        }
-        
-        //예약확정된 슬롯 클릭한 경우
-        //카드의 용건보기 버튼과 동일한 액션
-        acceptedData().forEach {
-            if $0.calenderIndex.contains(indexPath.item) {
-                guard let parentSchedules = allSchedules[$0.parentsIndex].schedule else {return}
-                let alert = UIAlertController(title: "상담용건", message: parentSchedules[0].content, preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-                alert.addAction(cancelAction)
-                present(alert, animated: true, completion: nil)
-                clickedCell = nil
-                return
-            }
-        }
-        //미확정 슬롯 클릭한 경우 (3중 1)
-        //예약 확정 버튼이 클릭한 슬롯에 표시됨
-        displayData.forEach {
-            if $0.calenderIndex.contains(indexPath.item) {
-                selectedIndex = $0.calenderIndex.firstIndex(of: indexPath.item)
-                parentId = $0.parentsIndex
+        if collectionView == calenderView {
+            //더블클릭한 경우
+            if indexPath.item == clickedCell {
+                // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
+                //guard var parentSchedules = scheduledParentList[parentId!].schedule else {return}
+                guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return}
+                selectedSchedule.isReserved = true
+                allSchedules[parentId].schedule?[0].scheduleList = []
+                allSchedules[parentId].schedule?[0].scheduleList.append(selectedSchedule)
+                FirebaseManager.shared.uploadConfirmedReservation(childName: allSchedules[parentId].name,
+                                                                  reservedSchedule: allSchedules[parentId].schedule?[0],selectedIndex: selectedIndex!)
+                calenderData[parentId].cellColor = .lightGray // 예약확정된 셀은 연회색
+                clickedCell = nil // 선택해제
                 
-                clickedCell = indexPath.item
+                displayData = acceptedData() //수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
                 calenderView.reloadData()
+                
+                //TODO: 확정된 예약에 대해 카드를 어떻게 처리하는지 논의 필요
+    //          scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
+                parentsCollectionView.reloadData()
                 return
             }
-            clickedCell = nil // 신청된 슬롯 외 클릭하면 선택해제
+            
+            //예약확정된 슬롯 클릭한 경우
+            //카드의 용건보기 버튼과 동일한 액션
+            acceptedData().forEach {
+                if $0.calenderIndex.contains(indexPath.item) {
+                    guard let parentSchedules = allSchedules[$0.parentsIndex].schedule else {return}
+                    let alert = UIAlertController(title: "상담용건", message: parentSchedules[0].content, preferredStyle: .alert)
+                    let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+                    alert.addAction(cancelAction)
+                    present(alert, animated: true, completion: nil)
+                    clickedCell = nil
+                    return
+                }
+            }
+            //미확정 슬롯 클릭한 경우 (3중 1)
+            //예약 확정 버튼이 클릭한 슬롯에 표시됨
+            displayData.forEach {
+                if $0.calenderIndex.contains(indexPath.item) {
+                    selectedIndex = $0.calenderIndex.firstIndex(of: indexPath.item)
+                    parentId = $0.parentsIndex
+                    
+                    clickedCell = indexPath.item
+                    calenderView.reloadData()
+                    return
+                }
+                clickedCell = nil // 신청된 슬롯 외 클릭하면 선택해제
+            }
+            calenderView.reloadData()
         }
-        calenderView.reloadData()
     }
 }
 

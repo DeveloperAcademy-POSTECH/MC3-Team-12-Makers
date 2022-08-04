@@ -15,15 +15,15 @@ class CustomNavigationBar: UIView {
     var titleSize: CGFloat
     var imageName: String = ""
     var imageSize: Int
-    
-    var titleLabel: UILabel = {
+
+    private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
-    let rightButtonItem : UIButton = {
+    private(set) var rightButtonItem : UIButton = {
         let button = UIButton()
         button.tintColor = .Action
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -60,6 +60,9 @@ class CustomNavigationBar: UIView {
         addSubview(rightButtonItem)
         rightButtonItem.topAnchor.constraint(equalTo: self.topAnchor, constant: 33).isActive = true
         rightButtonItem.trailingAnchor.constraint(equalTo: self.trailingAnchor,constant: -16).isActive = true
+        self.backgroundColor = .Background
+        self.translatesAutoresizingMaskIntoConstraints = false
+
     }
     
     func configUI() {
