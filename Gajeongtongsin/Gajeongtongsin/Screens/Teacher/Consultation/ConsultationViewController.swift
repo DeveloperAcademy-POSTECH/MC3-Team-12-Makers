@@ -205,6 +205,9 @@ class ConsultationViewController: BaseViewController {
                 submittedData.append(calenderData[parentsIndex])
                 submittedData[submittedData.count-1].calenderIndex = calenderIndex
             }
+            else {
+                return acceptedData()
+            }
         }
         return submittedData
     }
@@ -318,6 +321,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             acceptedData().forEach {
                 if $0.calenderIndex.contains(indexPath.item) {
+                    cell.getClick(clicked: false)
                     cell.backgroundColor = $0.cellColor
                 }
             }
@@ -355,7 +359,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             if indexPath.item == clickedCell {
                 // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
                 //guard var parentSchedules = scheduledParentList[parentId!].schedule else {return}
-                guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return}
+                guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return }
                 selectedSchedule.isReserved = true
                 allSchedules[parentId].schedule?[0].scheduleList = []
                 allSchedules[parentId].schedule?[0].scheduleList.append(selectedSchedule)
