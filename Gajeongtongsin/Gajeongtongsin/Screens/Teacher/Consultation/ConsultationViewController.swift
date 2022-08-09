@@ -135,7 +135,7 @@ class ConsultationViewController: BaseViewController {
     
     func getRandomColor() -> [UIColor] { //학부모별 슬롯 색상 자동화
         var colorList: [UIColor] = []
-        for _ in 0..<allSchedules.count {
+        for _ in allSchedules.indices {
             let red:CGFloat = CGFloat(drand48())
             let green:CGFloat = CGFloat(drand48())
             let blue:CGFloat = CGFloat(drand48())
@@ -166,11 +166,11 @@ class ConsultationViewController: BaseViewController {
         var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [Int] = []
 
-        for parentsIndex in 0..<allSchedules.count {
+        for parentsIndex in allSchedules.indices {
             calenderIndex = []
             
             guard let parentSchedules = allSchedules[parentsIndex].schedule else { return [] }
-            for scheduleIndex in 0..<parentSchedules[0].scheduleList.count { //하단 funcs 참고
+            for scheduleIndex in parentSchedules[0].scheduleList.indices { //하단 funcs 참고
                 if parentSchedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
                     
@@ -193,7 +193,7 @@ class ConsultationViewController: BaseViewController {
         var calenderIndex: [Int] = []
         var submittedData:[TeacherCalenderData] = []
         
-        for parentsIndex in 0 ..< allSchedules.count {
+        for parentsIndex in allSchedules.indices {
             calenderIndex = []
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             if parentShedules[0].scheduleList[0].isReserved == false {
@@ -245,13 +245,13 @@ class ConsultationViewController: BaseViewController {
         collectionViewTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
         collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         
-        for index in 0..<hourLabel.count {
+        for index in hourLabel.indices {
             view.addSubview(hourLabel[index])
             hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         }
                 
-        for index in 0..<dateLabel.count {
+        for index in dateLabel.indices {
             view.addSubview(dateLabel[index][0])
             dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
             dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true

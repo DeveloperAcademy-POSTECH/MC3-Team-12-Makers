@@ -85,8 +85,8 @@ struct Constants {
         parentSchedules[0].scheduleList.forEach{
             dateString.append($0.consultingDate)
         }
-        for day in 0..<dateString.count { //String을 Index로 바꿔줌
-            for nextWeekDay in 0..<Constants.nextWeek.count {
+        for day in dateString.indices { //String을 Index로 바꿔줌
+            for nextWeekDay in Constants.nextWeek.indices {
                 if dateString[day] == Constants.nextWeek[nextWeekDay] {
                     dateIndex.append(nextWeekDay)
                 }
@@ -111,7 +111,7 @@ struct Constants {
         let formatter = DateFormatter()
         formatter.dateFormat = "M월dd일"
         formatter.timeZone = TimeZone(identifier: "ko_KR")
-        let daysAfterToday = (7+(index % Constants.weekDays+2) - Constants.todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
+        let daysAfterToday = (2+(index % Constants.weekDays) - Constants.todayOfTheWeek+7) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
         let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((Constants.secondsInDay * daysAfterToday)))
         let consultingDate = formatter.string(from: consultingDateDate)
         return consultingDate

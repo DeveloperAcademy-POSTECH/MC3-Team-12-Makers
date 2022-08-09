@@ -197,13 +197,13 @@ class ParentsCalenderViewController: BaseViewController {
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        for index in 0..<hourLabel.count {
+        for index in hourLabel.indices {
             view.addSubview(hourLabel[index])
             hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         }
         
-        for index in 0..<dateLabel.count {
+        for index in dateLabel.indices {
             view.addSubview(dateLabel[index][0])
             dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
             dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
