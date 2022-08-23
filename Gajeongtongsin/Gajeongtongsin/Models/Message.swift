@@ -22,4 +22,3 @@ enum MessageType: String, Codable {
 }
 
 var messagesWithChildName = mainTeacher.parentUsers.flatMap({$0.getMessagesWithChildName()})
-//var sortedMessages = chunkedMessages(messages: messagesWithChildName.sorted(by: {$0.message.sentDate > $1.message.sentDate}))

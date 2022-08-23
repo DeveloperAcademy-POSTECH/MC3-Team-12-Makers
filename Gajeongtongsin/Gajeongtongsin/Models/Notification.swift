@@ -16,7 +16,7 @@ struct Notification: Codable {
     let childName: String
     let content: String
     let time : String
-    //var time: Date? = Date() //    임시로 옵셔널 및 값 넣음.
+    var isChecked: Bool = false    //알람 누르면 읽음표시
     
 }
 
