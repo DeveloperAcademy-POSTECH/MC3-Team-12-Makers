@@ -108,5 +108,52 @@ struct Constants {
         return labelList
     }
     
+    static func dateStringToIndex(parentsIndex: Int, allSchedules: [(name: String, schedule: [Schedule]?)]) -> [Int] {
+        var dateString: [String] = []
+        var dateIndex: [Int] = []
+        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
+        parentSchedules[0].scheduleList.forEach{
+            dateString.append($0.consultingDate)
+        }
+        for day in 0..<dateString.count { //String을 Index로 바꿔줌
+            for nextWeekDay in 0..<Constants.nextWeek.count {
+                if dateString[day] == Constants.nextWeek[nextWeekDay] {
+                    dateIndex.append(nextWeekDay)
+                }
+            }
+        }
+        return dateIndex
+    }
+    
+    static func timeStringToIndex(parentIndex: Int, allSchedules: [(name: String, schedule: [Schedule]?)]) -> [Int] {
+        var startTime:[Int] = []
+        
+        guard let parentSchedules = allSchedules[parentIndex].schedule else { return [] }
+        parentSchedules[0].scheduleList.forEach{
+            let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
+            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
+            let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
+            startTime.append(hour*2 + minute)
+        }
+        
+        return startTime
+    }
+    
+    //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티
+    static var nextWeek: [String] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
+        var nextWeek = [String]()
+         
+        for dayCount in 0..<weekDays {
+            //let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            //캘린더뷰가 다음주를 표시하는 경우 +7
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            nextWeek.append(oneDayString)
+        }
+        return nextWeek
+    }
     
 }

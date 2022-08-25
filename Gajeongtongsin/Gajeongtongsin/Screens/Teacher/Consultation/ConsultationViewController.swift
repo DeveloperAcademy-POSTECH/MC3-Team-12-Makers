@@ -17,32 +17,13 @@ class ConsultationViewController: BaseViewController {
     private var selectedIndex: Int?
     private var parentId: Int = -1
     private var selectedTableRow:IndexPath?
-    
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
-    
-    //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
-    var nextWeek: [String] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월dd일"
-        formatter.timeZone = TimeZone(identifier: "ko_KR")
-        var nextWeek = [String]()
-         
-        for dayCount in 0..<weekDays {
-            //let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
-            //캘린더뷰가 다음주를 표시하는 경우 +7
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
-            nextWeek.append(oneDayString)
-        }
-        return nextWeek
-    }
 
     private var customNavigationBar: CustomNavigationBar = {
         let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정",
                                                       titleSize: 22,
                                                       imageName: "bell",
                                                       imageSize: 20)
-        
          customNavigationBar.backgroundColor = .Background
          customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
          return customNavigationBar
@@ -95,10 +76,8 @@ class ConsultationViewController: BaseViewController {
         return label
     }()
     
-    //캘린더 시간 레이블
+    //캘린더 레이블
     lazy private var hourLabel: [UILabel] = Constants.hourLabelMaker()
-    
-    //캘린더 날자 레이블
     lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
     // 전체 신청내역 보기
@@ -195,8 +174,9 @@ class ConsultationViewController: BaseViewController {
                 if parentSchedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
                     
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
-                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
+                    //TODO: allSchedules를 매번 전해주는 것 말고 더 좋은 방법이 없을까?
+                    let rowIndex = Constants.timeStringToIndex(parentIndex: parentsIndex, allSchedules: allSchedules)[scheduleIndex] * weekDays
+                    let columnIndex = Constants.dateStringToIndex(parentsIndex: parentsIndex, allSchedules: allSchedules)[scheduleIndex]
                     calenderIndex.append(rowIndex + columnIndex)
 
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
@@ -219,8 +199,8 @@ class ConsultationViewController: BaseViewController {
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             if parentShedules[0].scheduleList[0].isReserved == false {
                 for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
-                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
+                    let rowIndex = Constants.timeStringToIndex(parentIndex: parentsIndex, allSchedules: allSchedules)[scheduleIndex] * weekDays
+                    let columnIndex = Constants.dateStringToIndex(parentsIndex: parentsIndex, allSchedules: allSchedules)[scheduleIndex]
                     calenderIndex.append(rowIndex + columnIndex)
                 }
                 submittedData.append(calenderData[parentsIndex])
@@ -230,38 +210,6 @@ class ConsultationViewController: BaseViewController {
         return submittedData
     }
     
-    //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
-    func dateStringToIndex(parentsIndex: Int) -> [Int] {
-        var dateString: [String] = []
-        var dateIndex: [Int] = []
-        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
-        parentSchedules[0].scheduleList.forEach{
-            dateString.append($0.consultingDate)
-        }
-        for day in 0..<dateString.count { //String을 Index로 바꿔줌
-            for nextWeekDay in 0..<nextWeek.count {
-                if dateString[day] == nextWeek[nextWeekDay] {
-                    dateIndex.append(nextWeekDay)
-                }
-            }
-        }
-        return dateIndex
-    }
-    
-    ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
-    func timeStringToIndex(parentIndex: Int) -> [Int] {
-        var startTime:[Int] = []
-        
-        guard let parentSchedules = allSchedules[parentIndex].schedule else { return [] }
-        parentSchedules[0].scheduleList.forEach{
-            let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
-            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
-            let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
-            startTime.append(hour*2 + minute)
-        }
-        
-        return startTime
-    }
 
     ///버튼 누르면 모든 신청시간 색상별 display
     @objc func seeAllOnTapButton() {
@@ -401,16 +349,13 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             cell.delegate = self //학부모 컬렉션 셀 델리게이트 지정
             
-            var eachCellData: [TeacherCalenderData] = [] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
-            
+            //TODO: 리스트가 아니어도 되므로 수정 필요
+            let eachCellData: [TeacherCalenderData] = [submittedData()[indexPath.item]] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
             let parent = scheduledParentList[indexPath.item]
-            
-            eachCellData.append(submittedData()[indexPath.item]) //각 셀에 해당하는 데이터 배정
-            cell.sendDataToCell(displayData: eachCellData) //셀 내부 함수를 통해 셀에 데이터 넣어줌
-            
             let childName = parent.name
             guard let schedules = parent.schedule else { return UICollectionViewCell()}
-            cell.configure(childName: childName, schedule: schedules[0]) //정보 표시에 필요한 함수
+            
+            cell.configure(childName: childName, schedule: schedules[0], displayData: eachCellData) //정보 표시에 필요한 함수
             return cell
         }
     }

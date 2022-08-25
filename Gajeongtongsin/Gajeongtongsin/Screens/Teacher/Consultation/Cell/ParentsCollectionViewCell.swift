@@ -108,12 +108,9 @@ class ParentsCollectionViewCell: BaseCollectionViewCell {
     }
     
     //delegate에 필요한 함수들, 뷰컨트롤러에서 실행됨
-    func configure(childName: String, schedule: Schedule) { //TODO: 상위 데이터 하나만 받아서 나누는 방법이 있을듯함
+    func configure(childName: String, schedule: Schedule, displayData: [TeacherCalenderData]) { //TODO: 상위 데이터 하나만 받아서 나누는 방법이 있을듯함
         messageInfo.text = "\(childName)"
         content.text = "\(schedule.content)"
-    }
-    
-    func sendDataToCell(displayData: [TeacherCalenderData]) {
-        cellData = displayData //컨트롤러에서 displaydata를 셀에 맞게 만든 후 cellData로 넘겨줌
+        cellData = displayData
     }
 }

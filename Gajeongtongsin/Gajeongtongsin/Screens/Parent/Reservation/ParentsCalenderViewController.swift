@@ -14,38 +14,11 @@ class ParentsCalenderViewController: BaseViewController {
     private var submitIndexList: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
-//    private var consultingDateDate: Date
     private var consultingDateList: String = ""
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
     private var startTime: String = ""
-    
-//    private var panddedCellList: [Int] = mainTeacher.parentUsers.flatMap{
-//        $0.schedules[0].scheduleList.flatMap{
-//            $0.consultingDate
-//        }
-//    }
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
-    
-    //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
-    //TODO: 교사 캘린더뷰에서 같이 쓰는 상수이므로 공용화시킬 수 있음
-    var nextWeek: [String] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월dd일"
-        formatter.timeZone = TimeZone(identifier: "ko_KR")
-        var nextWeek = [String]()
-         
-        for dayCount in 0..<weekDays {
-//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek+7))
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
-            nextWeek.append(oneDayString)
-        }
-        return nextWeek
-    }
-    
-    //모든 예약일정이 저장되는 리스트
     private lazy var submittedData: [Int] = []
-
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -101,10 +74,8 @@ class ParentsCalenderViewController: BaseViewController {
         return textView
     }()
     
-    //캘린더 시간 레이블
+    //캘린더 시간 및 날자 레이블
     lazy private var hourLabel: [UILabel] = Constants.hourLabelMaker()
-    
-    //캘린더 날자 레이블
     lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
     //MARK: - View Life Cycle
@@ -140,40 +111,6 @@ class ParentsCalenderViewController: BaseViewController {
         }
         return scheduledParentsList
     }
-
-//선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
-    //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
-    func dateStringToIndex(parentsIndex: Int) -> [Int] {
-        var dateString: [String] = []
-        var dateIndex: [Int] = []
-        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
-        parentSchedules[0].scheduleList.forEach{
-            dateString.append($0.consultingDate)
-        }
-        for day in 0..<dateString.count { //String을 Index로 바꿔줌
-            for nextWeekDay in 0..<nextWeek.count {
-                if dateString[day] == nextWeek[nextWeekDay] {
-                    dateIndex.append(nextWeekDay)
-                }
-            }
-        }
-        return dateIndex
-    }
-    
-    //선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
-    //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
-    func timeStringToIndex(parentIndex: Int) -> [Int] {
-        var startTime:[Int] = []
-        guard let parentSchedules = allSchedules[parentIndex].schedule else { return []}
-        parentSchedules[0].scheduleList.forEach{
-            let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
-            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
-            let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
-            startTime.append(hour*2 + minute)
-        }
-        
-        return startTime
-    }
     
     //모든 예약일정을 인덱스로 저장해주는 함수, 교사뷰의 동명 함수와 다름!!
     func submittedDataMaker() -> [Int] {
@@ -184,9 +121,9 @@ class ParentsCalenderViewController: BaseViewController {
 
             for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
                 
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
-                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                    calenderData.append(rowIndex + columnIndex)
+                let rowIndex = Constants.timeStringToIndex(parentIndex: parentsIndex, allSchedules: allSchedules)[scheduleIndex] * weekDays
+                let columnIndex = Constants.dateStringToIndex(parentsIndex: parentsIndex, allSchedules: allSchedules)[scheduleIndex]
+                calenderData.append(rowIndex + columnIndex)
             }
             
         }
@@ -328,7 +265,6 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
            for: indexPath) as? CalenderViewCell else {
                return UICollectionViewCell()
            }
-//        cell.backgroundColor = submittedData.conta .white
             if submittedData.contains(indexPath.item) {
                 cell.backgroundColor = .lightGray
             }
