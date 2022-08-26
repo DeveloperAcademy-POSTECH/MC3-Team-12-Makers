@@ -265,6 +265,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
            for: indexPath) as? CalenderViewCell else {
                return UICollectionViewCell()
            }
+//        cell.backgroundColor = submittedData.conta .white
             if submittedData.contains(indexPath.item) {
                 cell.backgroundColor = .lightGray
             }
