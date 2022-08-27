@@ -40,7 +40,7 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     //모든 예약일정이 저장되는 리스트
-    private lazy var submittedData: [Int] = []
+    private lazy var submittedData: [[Int]] = []
 
     
     // 캘린더뷰
@@ -173,17 +173,17 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     //모든 예약일정을 인덱스로 저장해주는 함수, 교사뷰의 동명 함수와 다름!!
-    func submittedDataMaker() -> [Int] {
-    var calenderData: [Int] = []
+    func submittedDataMaker() -> [[Int]] {
+    var calenderData: [[Int]] = []
         
         for parentsIndex in 0 ..< allSchedules.count {
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
 
             for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
                 
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
+                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                    calenderData.append(rowIndex + columnIndex)
+                    calenderData.append([columnIndex, rowIndex])
             }
             
         }
@@ -348,7 +348,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
                return UICollectionViewCell()
            }
 //        cell.backgroundColor = submittedData.conta .white
-            if submittedData.contains(indexPath.item) {
+        if submittedData.contains([indexPath.section, indexPath.item]) {
                 cell.backgroundColor = .lightGray
             }
         
@@ -362,7 +362,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         //선택한 슬롯 개수 카운터
         let truCnt = choicedCells.flatMap{$0}.filter({$0 == true}).count
         
-        if submittedData.contains(indexPath.item) != true {
+        if submittedData.contains([indexPath.section, indexPath.item]) != true {
             //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
             if truCnt<3 && !choicedCells[indexPath.section][indexPath.item] {
                 choicedCells[indexPath.section][indexPath.item].toggle()
