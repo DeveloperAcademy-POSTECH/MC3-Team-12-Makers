@@ -128,7 +128,7 @@ class ReservationDetailViewController: BaseViewController {
     
     func printSchedule(_ appointment:Schedule) {
         var text = ""
-        for i in 0..<appointment.scheduleList.count {
+        for i in appointment.scheduleList.indices {
             text.append(appointment.scheduleList[i].consultingDate + " " + appointment.scheduleList[i].startTime + "\n")
         }
         scheduleCandidates.text = text
