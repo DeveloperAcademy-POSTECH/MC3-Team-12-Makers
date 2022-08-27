@@ -103,7 +103,9 @@ class ReservationViewController: BaseViewController {
                 self.present(ParentsCalenderViewController(), animated: true)
             }),
             UIAction(title: "긴급신청", handler: { _ in
-                self.present(UrgentRequestViewController(), animated: true)
+                let vc = UrgentRequestViewController()
+                vc.delegate = self
+                self.present(vc, animated: true)
             })
         ])
     }
@@ -158,6 +160,6 @@ extension ReservationViewController: UITableViewDataSource {
 
 extension ReservationViewController: UrgentRequestViewControllerDelegate {
     func showToast() {
-        self.showToastHere()
+        showToastHere()
     }
 }

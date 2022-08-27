@@ -120,12 +120,17 @@ class UrgentRequestViewController: BaseViewController {
                                          time: Date().toString())
 
         FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
-        delegate?.showToast()
-        self.dismiss(animated: true)
+        
+        willDismiss()
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.reasonText.endEditing(true)
+    }
+    
+    func willDismiss() {
+        delegate?.showToast()
+        self.dismiss(animated: true)
     }
 }
 
