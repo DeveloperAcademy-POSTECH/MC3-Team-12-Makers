@@ -10,8 +10,9 @@ import UIKit
 class ParentsCalenderViewController: BaseViewController {
     
     //MARK: - Properties
-    private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
-    private var submitIndexList: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
+    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: 6), count:5) //복수선택 및 선택취소를 위한 array
+//    private var choicedCells: [Bool] = Array(repeating: false, count:6) //복수선택 및 선택취소를 위한 array
+    private var submitIndexList: [[Int]] = [[]] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
 //    private var consultingDateDate: Date
@@ -19,11 +20,6 @@ class ParentsCalenderViewController: BaseViewController {
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
     private var startTime: String = ""
     
-//    private var panddedCellList: [Int] = mainTeacher.parentUsers.flatMap{
-//        $0.schedules[0].scheduleList.flatMap{
-//            $0.consultingDate
-//        }
-//    }
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
     
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
@@ -50,9 +46,10 @@ class ParentsCalenderViewController: BaseViewController {
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(CalenderViewCell.self, forCellWithReuseIdentifier: CalenderViewCell.identifier)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false //필수 !!
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
 
@@ -193,20 +190,24 @@ class ParentsCalenderViewController: BaseViewController {
         return calenderData
     }
     
+//    func dateIndexToString(index: Int) -> String {
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "M월dd일"
+//        formatter.timeZone = TimeZone(identifier: "ko_KR")
+//        let daysAfterToday = (7+(index%weekDays+2)-todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
+//        let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
+//
+//        consultingDateList = formatter.string(from: consultingDateDate) //Date -> [String]
+//        consultingDate = consultingDateList //[String] -> String
+//        return consultingDate
+//    }
+    
     func dateIndexToString(index: Int) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월dd일"
-        formatter.timeZone = TimeZone(identifier: "ko_KR")
-        let daysAfterToday = (7+(index%weekDays+2)-todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
-        let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
-        
-        consultingDateList = formatter.string(from: consultingDateDate) //Date -> [String]
-        consultingDate = consultingDateList //[String] -> String
-        return consultingDate
+        return nextWeek[index]
     }
     
     func timeIndexToString(index: Int) -> String {
-        let rowInCalender = index/weekDays
+        let rowInCalender = index
         let hour = String(14 + (rowInCalender)/2) //14시 + @
         let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
         startTime = hour+"시"+minute+"분"
@@ -218,14 +219,19 @@ class ParentsCalenderViewController: BaseViewController {
     @objc func onTapButton() {
         
         appendScheduleList = []
-        submitIndexList = choicedCells.enumerated().compactMap { (idx, element) in element ? idx : nil }
         
-        for index in submitIndexList {
+        for section in 0..<choicedCells.count {
+            let subListInSection = choicedCells[section].enumerated().compactMap { (idx, element) in element ? idx : nil }
+            submitIndexList.append(subListInSection)
+        
+        
+        for index in subListInSection {
             appendScheduleList.append(ScheduleInfo(
 
-                consultingDate: dateIndexToString(index: index),
+                consultingDate: dateIndexToString(index: section),
                 startTime: timeIndexToString(index: index),
                 isReserved: false))
+        }
         }
         // 파이어베이스 예약업로드 & 알림
         let schedule = Schedule(reservedDate: "실시간",     // FIXME: - 수정 필요
@@ -250,7 +256,7 @@ class ParentsCalenderViewController: BaseViewController {
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 
-        choicedCells = Array(repeating: false, count:30)
+        choicedCells = Array(repeating: Array(repeating: false, count: 6), count:5)
         calenderView.reloadData()
         self.dismiss(animated: true)
     }
@@ -319,8 +325,21 @@ class ParentsCalenderViewController: BaseViewController {
     
 
 //MARK: - Extensions
+
+extension ParentsCalenderViewController: UICollectionViewDataSource{
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        5
+    }
+    
+    //캘린더 아이템 수, 5일*6단위 = 30
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        6
+    }
+ }
+
 extension ParentsCalenderViewController: UICollectionViewDelegate{
-     
+    
     //cell 로드
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
            guard let cell = collectionView.dequeueReusableCell(
@@ -341,28 +360,22 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
         
         //선택한 슬롯 개수 카운터
-        let truCnt = choicedCells.filter({$0 == true}).count
+        let truCnt = choicedCells.flatMap{$0}.filter({$0 == true}).count
         
         if submittedData.contains(indexPath.item) != true {
             //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
-            if truCnt<3 && !choicedCells[indexPath.item] {
-                choicedCells[indexPath.item].toggle()
+            if truCnt<3 && !choicedCells[indexPath.section][indexPath.item] {
+                choicedCells[indexPath.section][indexPath.item].toggle()
                 cell?.backgroundColor = .Action
-            }else if truCnt<=3 && choicedCells[indexPath[1]]{
-                choicedCells[indexPath.item].toggle()
+            }else if choicedCells[indexPath.section][indexPath.item]{
+                choicedCells[indexPath.section][indexPath.item].toggle()
                 cell?.backgroundColor = .white
             }
         }
     }
 }
 
-extension ParentsCalenderViewController: UICollectionViewDataSource{
-    
-    //캘린더 아이템 수, 5일*6단위 = 30
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return choicedCells.count
-    }
- }
+
 
 extension ParentsCalenderViewController: UICollectionViewDelegateFlowLayout {
     

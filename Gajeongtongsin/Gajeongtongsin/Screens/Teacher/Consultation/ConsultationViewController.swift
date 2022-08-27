@@ -56,10 +56,11 @@ class ConsultationViewController: BaseViewController {
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.backgroundColor = .gray
         view.register(CalenderViewCell.self, forCellWithReuseIdentifier: CalenderViewCell.identifier)
-        view.translatesAutoresizingMaskIntoConstraints = false //필수 !!
+        view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
     
@@ -185,7 +186,7 @@ class ConsultationViewController: BaseViewController {
     ///예약이 확정된 데이터를 저장. 확정 시에는 submittedData에 있던 3개 스케줄이 지워지고 acceptedData에 확정된 1개의 스케줄만 등록됨
     func acceptedData() -> [TeacherCalenderData] {
         var acceptedData: [TeacherCalenderData] = []
-        var calenderIndex: [Int] = []
+        var calenderIndex: [[Int]] = []
 
         for parentsIndex in 0..<allSchedules.count {
             calenderIndex = []
@@ -195,9 +196,9 @@ class ConsultationViewController: BaseViewController {
                 if parentSchedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
                     
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
+                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                    calenderIndex.append(rowIndex + columnIndex)
+                    calenderIndex.append([columnIndex, rowIndex])
 
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                     acceptedData[acceptedData.count-1].cellColor = .LightLine
@@ -211,7 +212,7 @@ class ConsultationViewController: BaseViewController {
     // FIXME: - 로직 단순화 필요
     //미확정 예약 데이터를 인덱스로 만들어주는 함수
     func submittedData() -> [TeacherCalenderData] {
-        var calenderIndex: [Int] = []
+        var calenderIndex: [[Int]] = []
         var submittedData:[TeacherCalenderData] = []
         
         for parentsIndex in 0 ..< allSchedules.count {
@@ -219,9 +220,9 @@ class ConsultationViewController: BaseViewController {
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             if parentShedules[0].scheduleList[0].isReserved == false {
                 for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex] * weekDays
+                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                    calenderIndex.append(rowIndex + columnIndex)
+                    calenderIndex.append([columnIndex, rowIndex])
                 }
                 submittedData.append(calenderData[parentsIndex])
                 submittedData[submittedData.count-1].calenderIndex = calenderIndex
@@ -238,9 +239,9 @@ class ConsultationViewController: BaseViewController {
         parentSchedules[0].scheduleList.forEach{
             dateString.append($0.consultingDate)
         }
-        for day in 0..<dateString.count { //String을 Index로 바꿔줌
+        for date in 0..<dateString.count { //String을 Index로 바꿔줌
             for nextWeekDay in 0..<nextWeek.count {
-                if dateString[day] == nextWeek[nextWeekDay] {
+                if dateString[date] == nextWeek[nextWeekDay] {
                     dateIndex.append(nextWeekDay)
                 }
             }
@@ -349,10 +350,18 @@ class ConsultationViewController: BaseViewController {
 
 extension ConsultationViewController: UICollectionViewDataSource {
     
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        if collectionView == calenderView {
+            return 5
+        }
+        return 1
+    }
+    
     //캘린더 아이템 수, 5일*6단위 = 30
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
-            return choicedCells.count
+//            return choicedCells.count
+            return 6
         } else {
             return scheduledParentList.count
         }
@@ -372,7 +381,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             cell.backgroundColor = .white
             
             displayData.forEach {
-                if $0.calenderIndex.contains(indexPath.item) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
+                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
                     if clickedCell == indexPath.item {
                         cell.getClick(clicked: true)
                         cell.backgroundColor = .Action
@@ -384,7 +393,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             }
             
             acceptedData().forEach {
-                if $0.calenderIndex.contains(indexPath.item) {
+                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
                     cell.backgroundColor = $0.cellColor
                 }
             }
@@ -443,7 +452,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             //예약확정된 슬롯 클릭한 경우
             //카드의 용건보기 버튼과 동일한 액션
             acceptedData().forEach {
-                if $0.calenderIndex.contains(indexPath.item) {
+                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
                     guard let parentSchedules = allSchedules[$0.parentsIndex].schedule else {return}
                     let alert = UIAlertController(title: "상담용건", message: parentSchedules[0].content, preferredStyle: .alert)
                     let cancelAction = UIAlertAction(title: "취소", style: .cancel)
@@ -456,8 +465,8 @@ extension ConsultationViewController: UICollectionViewDelegate {
             //미확정 슬롯 클릭한 경우 (3중 1)
             //예약 확정 버튼이 클릭한 슬롯에 표시됨
             displayData.forEach {
-                if $0.calenderIndex.contains(indexPath.item) {
-                    selectedIndex = $0.calenderIndex.firstIndex(of: indexPath.item)
+                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
+                    selectedIndex = $0.calenderIndex.firstIndex(of: [indexPath.section, indexPath.item])
                     parentId = $0.parentsIndex
                     
                     clickedCell = indexPath.item
@@ -474,6 +483,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
 
 
 extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
+    
 
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
