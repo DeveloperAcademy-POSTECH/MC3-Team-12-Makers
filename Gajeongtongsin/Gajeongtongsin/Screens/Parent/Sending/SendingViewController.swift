@@ -15,12 +15,8 @@ class SendingViewController: BaseViewController {
     
     //MARK: - Properties
     weak var delegate: SendingViewControllerDelegate?
-    
-//    var currentParent: ParentUser {
-//        return mainTeacher.parentUsers[0]
-//    }
-    
-    //Text Labels (Switch 구문 써서 더 줄일 수 있을지?)
+        
+    //Text Labels
     private let textLabelPurpose: UILabel = {
         let label = UILabel()
         label.text = "용건을 알려주세요"
@@ -223,8 +219,6 @@ class SendingViewController: BaseViewController {
                              isCompleted: false)
         
         FirebaseManager.shared.uploadMessage(message: newMsg)
-        
-   //     mainTeacher.parentUsers[0].sendingMessages.append(newMsg)
         delegate?.reloadTable()
         navigationController?.popViewController(animated: true)
     }

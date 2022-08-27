@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol UrgentRequestViewControllerDelegate: AnyObject {
+    func showToast()
+}
+
 class UrgentRequestViewController: BaseViewController {
     //MARK: - Properties
+    weak var delegate: UrgentRequestViewControllerDelegate?
+    
     private let cancelBtn: UIButton = {
         let label = UIButton()
         label.setTitle("취소", for: .normal)
@@ -114,30 +120,12 @@ class UrgentRequestViewController: BaseViewController {
                                          time: Date().toString())
 
         FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
+        delegate?.showToast()
         self.dismiss(animated: true)
-        showToast(message: "긴급상담신청이 완료되었습니다.\n선생님께서 직접 연락드릴 예정입니다.", font: UIFont.systemFont(ofSize: 15))
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.reasonText.endEditing(true)
-    }
-    
-    func showToast(message : String, font: UIFont) {
-        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 75, y: self.view.frame.size.height-100, width: 150, height: 35))
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.6)
-        toastLabel.textColor = UIColor.white
-        toastLabel.font = font
-        toastLabel.textAlignment = .center;
-        toastLabel.text = message
-        toastLabel.alpha = 1.0
-        toastLabel.layer.cornerRadius = 10;
-        toastLabel.clipsToBounds  =  true
-        self.view.superview?.addSubview(toastLabel)
-        UIView.animate(withDuration: 4.0, delay: 0.1, options: .curveEaseOut, animations: {
-             toastLabel.alpha = 0.0
-        }, completion: {(isCompleted) in
-            toastLabel.removeFromSuperview()
-        })
     }
 }
 
@@ -175,8 +163,6 @@ extension UrgentRequestViewController: UITextViewDelegate {
                 submitBtn.setTitleColor(.Action, for: .normal)
                 submitBtn.isUserInteractionEnabled = true
             }
-           
         }
-
     }
 }
