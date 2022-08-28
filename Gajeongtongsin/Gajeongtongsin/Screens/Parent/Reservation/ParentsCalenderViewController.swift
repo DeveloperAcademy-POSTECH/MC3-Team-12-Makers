@@ -94,6 +94,14 @@ class ParentsCalenderViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.addKeyboardNotification()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.removeKeyboardNotification()
+    }
+    
     //MARK: - Funcs
     
     // 딜리게이트 설정
@@ -180,19 +188,19 @@ class ParentsCalenderViewController: BaseViewController {
         submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
         
         view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.calenderTopPadding).isActive = true
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
         calenderView.heightAnchor.constraint(equalToConstant: Constants.calenderHeigit).isActive = true
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.calenderSidePadding[0]).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.calenderSidePadding[1]).isActive = true
         
         view.addSubview(noteTitle)
-        noteTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        noteTitle.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -250).isActive = true
         noteTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         noteTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         noteTitle.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         view.addSubview(reasonNote)
-        reasonNote.topAnchor.constraint(equalTo: noteTitle.topAnchor, constant: 35).isActive = true
+        reasonNote.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
         reasonNote.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
@@ -221,6 +229,30 @@ class ParentsCalenderViewController: BaseViewController {
     //캘린더뷰 신청 취소
     @objc func cancelSubmit() {
         self.dismiss(animated: true)
+    }
+    
+    func addKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func removeKeyboardNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ noti: NSNotification) {
+        //키보드 높이만큼 화면 올리기
+        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            self.view.frame.origin.y = ( -keyboardHeight + 50)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        //키보드 높이만큼 화면 내리기
+        self.view.frame.origin.y = 0
     }
     
 }
