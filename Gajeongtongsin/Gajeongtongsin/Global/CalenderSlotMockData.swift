@@ -13,7 +13,7 @@ func calenderSlotDataMaker() -> CalenderSlotData {
         for index in 0..<4 {
             blockedSlot[section][index].toggle()
         }
-        for index in 12..<18 {
+        for index in 10..<18 {
             blockedSlot[section][index].toggle()
         }
     }

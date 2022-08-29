@@ -18,8 +18,8 @@ class ConsultationViewController: BaseViewController {
     private var parentId: Int = -1
     private var selectedTableRow:IndexPath?
     private var cellHeight:CGFloat = 50
-    private var startTime = 18
-    private var endTime = 0
+    private var startTime = 4
+    private var endTime = 10
     
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
     
@@ -135,10 +135,12 @@ class ConsultationViewController: BaseViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = true
+        self.calenderView.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        self.calenderView.reloadData()
+        
+        timeResponsiveLabelRander()
     }
     
     //MARK: - Funcs
@@ -315,11 +317,13 @@ class ConsultationViewController: BaseViewController {
         collectionViewTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
         collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         
-        for index in 0..<hourLabel.count {
-            view.addSubview(hourLabel[index])
-            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
-            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        }
+//        let timeInterval = endTime-startTime<=0 ? 4 : endTime-startTime
+//        let timeInterval = (endTime-startTime)/2
+//        for index in 0...timeInterval {
+//            view.addSubview(hourLabel[index])
+//            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: calenderHeigit/CGFloat(timeInterval)*CGFloat(index)).isActive = true
+//            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+//        }
         
         let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
         
@@ -333,6 +337,17 @@ class ConsultationViewController: BaseViewController {
             dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
         }
 
+    }
+    
+    func timeResponsiveLabelRander() {
+                let timeInterval = (endTime-startTime)/2
+        
+        let interval: CGFloat = (endTime-startTime)%2 == 0 ? calenderHeigit/CGFloat(timeInterval) : (calenderHeigit-(calenderHeigit/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
+                for index in 0...timeInterval {
+                    view.addSubview(hourLabel[index])
+                    hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: interval*CGFloat(index)).isActive = true
+                    hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+                }
     }
 
     override func configUI() {
@@ -368,8 +383,9 @@ extension ConsultationViewController: UICollectionViewDataSource {
     //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
-            
-            for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외
+            startTime = 18
+            endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
+            for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
                 endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? 18)+1, endTime)
             }

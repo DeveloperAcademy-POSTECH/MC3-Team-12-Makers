@@ -230,7 +230,6 @@ class ProfileViewController: BaseViewController {
 //            }
 //        }
         
-        print(calenderSlotData)
         choicedCells = Array(repeating: Array(repeating: false, count: 18), count:5)
         calenderView.reloadData()
     }
@@ -252,9 +251,9 @@ class ProfileViewController: BaseViewController {
         submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
         
         
-        for index in 0..<hourLabel.count {
+        for index in 0...9 {
             view.addSubview(hourLabel[index])
-            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
+            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: calenderHeigit/9*CGFloat(index)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         }
         

@@ -74,7 +74,7 @@ struct Constants {
     
     static func hourLabelMaker() -> [UILabel] {
         var labelList: [UILabel] = []
-        for hour in 14...17 {
+        for hour in 12...21 {
             let label = UILabel()
             label.text = String(hour)+"h"
             label.font = UIFont.systemFont(ofSize: 13, weight: .regular)

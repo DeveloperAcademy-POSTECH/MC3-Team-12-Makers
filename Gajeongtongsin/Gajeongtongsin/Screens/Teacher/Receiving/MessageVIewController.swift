@@ -93,11 +93,9 @@ class MessageViewController: BaseViewController {
 extension MessageViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("섹션갯수\(sortedMessages)")
         return sortedMessages.count
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print(sortedMessages[section].count)
         return sortedMessages[section].count
     }
     
