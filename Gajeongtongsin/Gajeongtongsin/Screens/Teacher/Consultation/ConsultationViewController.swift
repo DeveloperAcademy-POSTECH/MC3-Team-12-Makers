@@ -371,10 +371,10 @@ extension ConsultationViewController: UICollectionViewDataSource {
             
             for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
-                endTime = max(calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? 18, endTime)
+                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? 18)+1, endTime)
             }
-            cellHeight = 300/(CGFloat(endTime-startTime-1))
-            return endTime-startTime-1
+            cellHeight = 300.0/(CGFloat(endTime-startTime))
+            return endTime-startTime
         } else {
             return scheduledParentList.count
         }
