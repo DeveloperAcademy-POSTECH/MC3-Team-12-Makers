@@ -17,6 +17,9 @@ class ConsultationViewController: BaseViewController {
     private var selectedIndex: Int?
     private var parentId: Int = -1
     private var selectedTableRow:IndexPath?
+    private var cellHeight:CGFloat = 50
+    private var startTime = 18
+    private var endTime = 0
     
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
     
@@ -134,6 +137,10 @@ class ConsultationViewController: BaseViewController {
         navigationController?.navigationBar.isHidden = true
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        self.calenderView.reloadData()
+    }
+    
     //MARK: - Funcs
     
     func setDelegations(){
@@ -188,7 +195,7 @@ class ConsultationViewController: BaseViewController {
         var acceptedData: [TeacherCalenderData] = []
         var calenderIndex: [[Int]] = []
 
-        for parentsIndex in 0..<allSchedules.count {
+        for parentsIndex in allSchedules.indices {
             calenderIndex = []
             
             guard let parentSchedules = allSchedules[parentsIndex].schedule else { return [] }
@@ -350,18 +357,24 @@ class ConsultationViewController: BaseViewController {
 
 extension ConsultationViewController: UICollectionViewDataSource {
     
+    //섹션 수
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if collectionView == calenderView {
-            return 5
+            return weekDays
         }
         return 1
     }
     
-    //캘린더 아이템 수, 5일*6단위 = 30
+    //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
-//            return choicedCells.count
-            return 6
+            
+            for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외
+                startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
+                endTime = max(calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? 18, endTime)
+            }
+            cellHeight = 300/(CGFloat(endTime-startTime-1))
+            return endTime-startTime-1
         } else {
             return scheduledParentList.count
         }
@@ -380,9 +393,11 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             cell.backgroundColor = .white
             
+            let correctionIndex = indexPath.item+startTime
+            
             displayData.forEach {
-                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
-                    if clickedCell == indexPath.item {
+                if $0.calenderIndex.contains([indexPath.section, correctionIndex]) { //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
+                    if clickedCell == correctionIndex {
                         cell.getClick(clicked: true)
                         cell.backgroundColor = .Action
                     }else {
@@ -391,12 +406,17 @@ extension ConsultationViewController: UICollectionViewDelegate {
                     }
                 }
             }
+            if calenderSlotData.blockedSlot[indexPath.section][correctionIndex] {
+                cell.backgroundColor = .Background
+            }
             
             acceptedData().forEach {
-                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
+                if $0.calenderIndex.contains([indexPath.section, correctionIndex]) {
                     cell.backgroundColor = $0.cellColor
                 }
             }
+            
+            
             return cell
             
         } else {
@@ -488,7 +508,7 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         if collectionView == calenderView {
-            return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: 50)
+            return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: cellHeight)
         } else if collectionView == parentsCollectionView {
             return flowLayout.itemSize
         }

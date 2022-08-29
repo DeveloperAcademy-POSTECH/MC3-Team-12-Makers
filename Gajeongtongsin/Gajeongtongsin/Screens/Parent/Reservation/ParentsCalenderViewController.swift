@@ -190,18 +190,6 @@ class ParentsCalenderViewController: BaseViewController {
         return calenderData
     }
     
-//    func dateIndexToString(index: Int) -> String {
-//        let formatter = DateFormatter()
-//        formatter.dateFormat = "M월dd일"
-//        formatter.timeZone = TimeZone(identifier: "ko_KR")
-//        let daysAfterToday = (7+(index%weekDays+2)-todayOfTheWeek) //+2는 dateFormat 보정(월요일이 2), +7은 다음주 캘린더가 표시되도록
-//        let consultingDateDate = Date(timeIntervalSinceNow: TimeInterval((secondsInDay * daysAfterToday)))
-//
-//        consultingDateList = formatter.string(from: consultingDateDate) //Date -> [String]
-//        consultingDate = consultingDateList //[String] -> String
-//        return consultingDate
-//    }
-    
     func dateIndexToString(index: Int) -> String {
         return nextWeek[index]
     }
@@ -351,6 +339,9 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         if submittedData.contains([indexPath.section, indexPath.item]) {
                 cell.backgroundColor = .lightGray
             }
+        if calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
+            cell.backgroundColor = .Background
+        }
         
         return cell
     }
@@ -362,9 +353,9 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         //선택한 슬롯 개수 카운터
         let truCnt = choicedCells.flatMap{$0}.filter({$0 == true}).count
         
-        if submittedData.contains([indexPath.section, indexPath.item]) != true {
+        if !submittedData.contains([indexPath.section, indexPath.item]) && calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
             //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
-            if truCnt<3 && !choicedCells[indexPath.section][indexPath.item] {
+            if truCnt<3 && !choicedCells[indexPath.section][indexPath.item]{
                 choicedCells[indexPath.section][indexPath.item].toggle()
                 cell?.backgroundColor = .Action
             }else if choicedCells[indexPath.section][indexPath.item]{
