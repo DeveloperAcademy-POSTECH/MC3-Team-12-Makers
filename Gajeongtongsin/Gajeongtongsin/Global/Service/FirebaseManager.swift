@@ -24,11 +24,13 @@ final class FirebaseManager {
     // 파이어베이스업로드 함수
     
     /// 초기 교사 정보 업로드하기 for 선생님
-    func initializeTeacher() {
+    func initializeTeacher(token: String?) {
         guard let teacherUid = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
-        
+        guard let token = token else { return }
+
         let data : [String: Any] = [
-            "id": teacherUid]
+            "id": teacherUid,
+            "token": token]
         
         db.child("TeacherUsers/\(teacherUid)")
             .setValue(data)
@@ -410,6 +412,18 @@ final class FirebaseManager {
                 completion(notificationsList)
             }
 
+    }
+    
+    func fetchTeacherToken(completion: @escaping (String?) -> Void) {
+        guard let teacherUserId = UserDefaults.standard.string(forKey: "HomeroomTeacher") else { completion(nil); return }
+        db.child("TeacherUsers/\(teacherUserId)")
+            .observeSingleEvent(of: .value) { snapshot in
+                guard let dic = snapshot.value as? NSDictionary else { completion(nil); return }
+
+                guard let token = dic["token"] as? String else { completion(nil); return }
+                completion(token)
+            }
+        
     }
     
 }

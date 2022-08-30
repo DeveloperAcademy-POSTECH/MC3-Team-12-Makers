@@ -10,11 +10,11 @@ import UIKit
 class TabBarViewController: UITabBarController {
     
     // MARK: - Properties
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let role : Role
     var vc1: UINavigationController?
     var vc2: UINavigationController?
     var vc3: UINavigationController?
-
   
     // MARK: - Init
     init(role : Role) {
@@ -30,6 +30,8 @@ class TabBarViewController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureTabBar()
+        setToken()
+       
     }
     
   
@@ -65,6 +67,19 @@ class TabBarViewController: UITabBarController {
         tabBar.layer.borderWidth = 1
         tabBar.layer.borderColor = UIColor.LightLine.cgColor
         setViewControllers([vc1,vc2,vc3], animated: true)
+    }
+    
+    func setToken() {
+        if role == .parent {
+            if let token = UserDefaults.standard.string(forKey: "TeacherToken") {
+                appDelegate.teacherToken = token
+                
+            } else {
+                FirebaseManager.shared.fetchTeacherToken { [weak self] token in
+                    self?.appDelegate.teacherToken = token ?? ""
+                }
+            }
+        }
     }
 
 }

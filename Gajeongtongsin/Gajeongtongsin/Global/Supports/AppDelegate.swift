@@ -14,7 +14,8 @@ import FirebaseMessaging
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var userToken: String = ""
-
+    var teacherToken: String = ""
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
 
         FirebaseApp.configure()
@@ -68,7 +69,7 @@ extension AppDelegate: MessagingDelegate {
                 return
             }
             self.userToken = token
-            print("Token: \(token)")
+//            print("Token: \(token)")
         }
     }
 

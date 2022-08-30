@@ -83,7 +83,7 @@ class StartViewController: BaseViewController {
         vc.modalTransitionStyle = .crossDissolve
         vc.modalPresentationStyle = .fullScreen
         // 파이어베이스 선생님 초기화 업로드
-        FirebaseManager.shared.initializeTeacher()
+        FirebaseManager.shared.initializeTeacher(token: appDelegate.userToken)
         present(vc, animated: true)
     }
     

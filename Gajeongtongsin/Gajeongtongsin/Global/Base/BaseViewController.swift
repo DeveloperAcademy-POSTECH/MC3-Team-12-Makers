@@ -8,6 +8,8 @@
 import UIKit
 
 class BaseViewController: UIViewController {
+    // MARK: - Properties
+     let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     // MARK: - View Life Cycle
     override func viewDidLoad() {

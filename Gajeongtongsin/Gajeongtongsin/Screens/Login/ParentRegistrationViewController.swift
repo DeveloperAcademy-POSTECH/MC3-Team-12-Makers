@@ -12,10 +12,13 @@ import SwiftUI
 
 class ParentRegistrationViewController: BaseViewController {
     
+
+    
+    // MARK: - Properties
+    
     var homeroomTeacherUid: String = ""
     var childName: String = ""
     
-    // MARK: - Properties
     private let greetingLabel: UILabel = {
         let label = UILabel()
         label.text = "학부모님, 안녕하세요!"
@@ -102,13 +105,20 @@ class ParentRegistrationViewController: BaseViewController {
         childName = childNameView.getContent() ?? ""
         UserDefaults.standard.set(homeroomTeacherUid, forKey: "HomeroomTeacher")
         UserDefaults.standard.set(childName, forKey: "ChildName")
+        FirebaseManager.shared.fetchTeacherToken { [weak self] token in
+            guard let token = token else { return }
+            UserDefaults.standard.set(token, forKey: "TeacherToken")
+            self?.appDelegate.teacherToken = token
+            
+            let vc = TabBarViewController(role: .parent)
+            vc.modalTransitionStyle = .crossDissolve
+            vc.modalPresentationStyle = .fullScreen
+            self?.present(vc, animated: true)
+        }
         
         FirebaseManager.shared.initializeParent()
         
-        let vc = TabBarViewController(role: .parent)
-        vc.modalTransitionStyle = .crossDissolve
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true)
+      
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -164,3 +174,4 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
     }
     
 }
+
