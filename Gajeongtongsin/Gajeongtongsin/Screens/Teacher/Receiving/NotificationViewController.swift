@@ -20,7 +20,32 @@ class NotificationViewController: BaseViewController {
         allNotifications.filter { $0.type != .emergency }
     }
     
+    var allSectionEmpty: Bool {
+        emergency.isEmpty && normal.isEmpty
+    }
+    
+    var oneSectionEmpty: Bool {
+        emergency.isEmpty || normal.isEmpty
+    }
+    
+    var emergencyOnly: Bool {
+        !emergency.isEmpty && normal.isEmpty
+    }
+    
+    var normalOnly: Bool {
+        !normal.isEmpty && emergency.isEmpty
+    }
+    
     private var allNotifications: [Notification] = []
+    
+    private let emptyLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textAlignment = .center
+        label.text = "도착한 알림이 없습니다 :)"
+        return label
+    }()
     
     private let notificationLabel: UILabel = {
        let label = UILabel()
@@ -38,7 +63,6 @@ class NotificationViewController: BaseViewController {
         tableView.backgroundColor = .Background
         tableView.separatorColor = .darkGray
 
-
         return tableView
     }()
 
@@ -53,8 +77,6 @@ class NotificationViewController: BaseViewController {
                 self?.allNotifications = notifications
                 self?.tableView.reloadData()
             }
-          
-            
         }
     }
     
@@ -69,6 +91,14 @@ class NotificationViewController: BaseViewController {
     
     // MARK: - Funcs
     override func render() {
+        
+        if allNotifications.isEmpty {
+            view.addSubview(emptyLabel)
+            emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+            emptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+            emptyLabel.widthAnchor.constraint(equalToConstant: 300).isActive = true
+            emptyLabel.heightAnchor.constraint(equalToConstant: 200).isActive = true
+        }
 
         view.addSubview(notificationLabel)
         notificationLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 13).isActive = true
@@ -76,14 +106,15 @@ class NotificationViewController: BaseViewController {
         notificationLabel.widthAnchor.constraint(equalToConstant: 343).isActive = true
         notificationLabel.heightAnchor.constraint(equalToConstant: 30).isActive = true
         
-        view.addSubview(tableView)
-        tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 10).isActive = true
-        tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        tableView.separatorInset.left = 0
-        tableView.separatorColor = .white
-
+        if !allNotifications.isEmpty {
+            view.addSubview(tableView)
+            tableView.topAnchor.constraint(equalTo: notificationLabel.bottomAnchor, constant: 10).isActive = true
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+            tableView.separatorInset.left = 0
+            tableView.separatorColor = .white
+        }
     }
     override func configUI() {
         view.backgroundColor = .Background
@@ -93,18 +124,26 @@ class NotificationViewController: BaseViewController {
 extension NotificationViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sections.count
+        
+        if allSectionEmpty {
+            return 0
+        } else if oneSectionEmpty {
+            return 1
+        } else {
+            return sections.count
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let customSectionBar = CustomSectionBar()
-        customSectionBar.configure(section: section)
+        if emergencyOnly {
+            customSectionBar.configure(section: 0)
+        } else if normalOnly {
+            customSectionBar.configure(section: 1)
+        } else {
+            customSectionBar.configure(section: section)
+        }
         return customSectionBar
-    }
-    
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section]
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -122,24 +161,41 @@ extension NotificationViewController: UITableViewDataSource {
    
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return emergency.count
+
+        if emergencyOnly {
+            if section == 0 {
+                return emergency.count
+            }
+        } else if normalOnly {
+            if section == 0 {
+                return normal.count
+            }
         }
         return normal.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: NotificationTableViewCell.identifier, for: indexPath) as? NotificationTableViewCell else { return UITableViewCell()}
-        if indexPath.section == 0 {
-            cell.configure(notification: emergency[indexPath.row])
-
-            cell.backgroundColor = UIColor.Urgent
-
+        
+        if emergencyOnly {
+            if indexPath.section == 0 {
+                cell.configure(notification: emergency[indexPath.row])
+                cell.backgroundColor = UIColor.Urgent
+            }
+        } else if normalOnly {
+            if indexPath.section == 0 {
+                cell.configure(notification: normal[indexPath.row])
+                cell.backgroundColor = UIColor.Confirm
+            }
         } else {
-            cell.configure(notification: normal[indexPath.row])
-            cell.backgroundColor = UIColor.Confirm
+            if indexPath.section == 0 {
+                cell.configure(notification: emergency[indexPath.row])
+                cell.backgroundColor = UIColor.Urgent
+            } else {
+                cell.configure(notification: normal[indexPath.row])
+                cell.backgroundColor = UIColor.Confirm
+            }
         }
-
         return cell
     }
     
@@ -152,14 +208,16 @@ extension NotificationViewController: UITableViewDataSource {
 extension NotificationViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        if indexPath.section == 0 {
-            let currentMessage = emergency[indexPath.row]
-            let alret = UIAlertController(title: "\(currentMessage.childName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
-            let okayAction = UIAlertAction(title: "확인", style: .default)
-            alret.addAction(okayAction)
-            present(alret, animated: true, completion: nil)
+        
+        if !normalOnly {
+            if indexPath.section == 0 {
+                let currentMessage = emergency[indexPath.row]
+                let alret = UIAlertController(title: "\(currentMessage.childName) 긴급상담용건", message: currentMessage.content, preferredStyle: .alert)
+                let okayAction = UIAlertAction(title: "확인", style: .default)
+                alret.addAction(okayAction)
+                present(alret, animated: true, completion: nil)
+            }
         }
+        
     }
-    
-    
 }
