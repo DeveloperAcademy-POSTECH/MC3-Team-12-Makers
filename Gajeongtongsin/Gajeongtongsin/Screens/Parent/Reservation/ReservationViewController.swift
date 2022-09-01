@@ -115,10 +115,10 @@ class ReservationViewController: BaseViewController {
     }
     
     func showToastHere() {
-        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 100, y: self.view.frame.size.height-150, width: 200, height: 50))
+        let toastLabel = UILabel(frame: CGRect(x: self.view.frame.size.width/2 - 150, y: self.view.frame.size.height-180, width: 300, height: 80))
         toastLabel.backgroundColor = .Confirm
         toastLabel.textColor = UIColor.black
-        toastLabel.font = .systemFont(ofSize: 12)
+        toastLabel.font = .systemFont(ofSize: 16)
         toastLabel.textAlignment = .center;
         toastLabel.text = "긴급상담신청이 완료되었습니다.\n선생님이 직접 연락드릴 예정입니다."
         toastLabel.numberOfLines = 0
@@ -126,7 +126,7 @@ class ReservationViewController: BaseViewController {
         toastLabel.layer.cornerRadius = 10
         toastLabel.clipsToBounds  =  true
         self.view.superview?.addSubview(toastLabel)
-        UIView.animate(withDuration: 6.0, delay: 0.1, options: .curveEaseOut, animations: {
+        UIView.animate(withDuration: 3.0, delay: 0.1, options: .curveEaseOut, animations: {
              toastLabel.alpha = 0.0
         }, completion: {(isCompleted) in
             toastLabel.removeFromSuperview()
