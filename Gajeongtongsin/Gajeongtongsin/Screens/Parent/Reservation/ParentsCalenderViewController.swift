@@ -10,7 +10,7 @@ import UIKit
 class ParentsCalenderViewController: BaseViewController {
     
     //MARK: - Properties
-    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: 6), count:5) //복수선택 및 선택취소를 위한 array
+    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: 18), count:5) //복수선택 및 선택취소를 위한 array
 //    private var choicedCells: [Bool] = Array(repeating: false, count:6) //복수선택 및 선택취소를 위한 array
     private var submitIndexList: [[Int]] = [[]] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
@@ -18,9 +18,12 @@ class ParentsCalenderViewController: BaseViewController {
 //    private var consultingDateDate: Date
     private var consultingDateList: String = ""
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
-    private var startTime: String = ""
+//    private var startTime: String = ""
     
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
+    private var startTime: Int = 4
+    private var endTime: Int = 10
+    private var cellHeight: CGFloat = 0
     
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     //TODO: 교사 캘린더뷰에서 같이 쓰는 상수이므로 공용화시킬 수 있음
@@ -195,12 +198,13 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     func timeIndexToString(index: Int) -> String {
-        let rowInCalender = index
-        let hour = String(14 + (rowInCalender)/2) //14시 + @
-        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
-        startTime = hour+"시"+minute+"분"
         
-        return startTime
+        let rowInCalender = index
+        let hour = String(12 + startTime/2 + (rowInCalender)/2) //14시 + @
+        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
+        let time = hour+"시"+minute+"분"
+        
+        return time
     }
     
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
@@ -244,7 +248,7 @@ class ParentsCalenderViewController: BaseViewController {
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 
-        choicedCells = Array(repeating: Array(repeating: false, count: 6), count:5)
+        choicedCells = Array(repeating: Array(repeating: false, count: 18), count:5)
         calenderView.reloadData()
         self.dismiss(animated: true)
     }
@@ -316,13 +320,26 @@ class ParentsCalenderViewController: BaseViewController {
 
 extension ParentsCalenderViewController: UICollectionViewDataSource{
     
+    //섹션 수
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        5
+        if collectionView == calenderView {
+            return weekDays
+        }
+        return 1
     }
     
-    //캘린더 아이템 수, 5일*6단위 = 30
+    //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        6
+        if collectionView == calenderView {
+            startTime = 18
+            endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
+            for section in 0..<weekDays {
+                startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
+                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? 18)+1, endTime)
+            }
+            cellHeight = 300.0/(CGFloat(endTime-startTime))
+        }
+        return endTime-startTime
     }
  }
 
@@ -336,10 +353,12 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
                return UICollectionViewCell()
            }
 //        cell.backgroundColor = submittedData.conta .white
-        if submittedData.contains([indexPath.section, indexPath.item]) {
+        
+        let correctionIndex = indexPath.item+startTime
+        if submittedData.contains([indexPath.section, correctionIndex]) {
                 cell.backgroundColor = .lightGray
             }
-        if calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
+        if calenderSlotData.blockedSlot[indexPath.section][correctionIndex] {
             cell.backgroundColor = .Background
         }
         

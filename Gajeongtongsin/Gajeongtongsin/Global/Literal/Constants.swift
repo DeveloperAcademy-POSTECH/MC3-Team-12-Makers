@@ -76,6 +76,7 @@ struct Constants {
         var labelList: [UILabel] = []
         for hour in 12...21 {
             let label = UILabel()
+            label.tag = hour
             label.text = String(hour)+"h"
             label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
             label.textColor = .darkText
