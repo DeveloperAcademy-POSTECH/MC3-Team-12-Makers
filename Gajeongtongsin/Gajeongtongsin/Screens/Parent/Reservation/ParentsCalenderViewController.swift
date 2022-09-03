@@ -118,6 +118,8 @@ class ParentsCalenderViewController: BaseViewController {
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
         
+        startTime = Gajeongtongsin.startTime()
+        
         FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
             if let schedules = schedules {
                 self?.allSchedules = []
@@ -163,16 +165,17 @@ class ParentsCalenderViewController: BaseViewController {
     //선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
     //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
     func timeStringToIndex(parentIndex: Int) -> [Int] {
-        var startTime:[Int] = []
+        
+        var startTimeList:[Int] = []
         guard let parentSchedules = allSchedules[parentIndex].schedule else { return []}
         parentSchedules[0].scheduleList.forEach{
             let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
-            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
+            let hour = Int(timeList[0])!-(12+startTime/2) // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
             let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
-            startTime.append(hour*2 + minute)
+            startTimeList.append(hour*2 + minute)
         }
         
-        return startTime
+        return startTimeList
     }
     
     //모든 예약일정을 인덱스로 저장해주는 함수, 교사뷰의 동명 함수와 다름!!
@@ -355,7 +358,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
 //        cell.backgroundColor = submittedData.conta .white
         
         let correctionIndex = indexPath.item+startTime
-        if submittedData.contains([indexPath.section, correctionIndex]) {
+        if submittedData.contains([indexPath.section, indexPath.item]) {
                 cell.backgroundColor = .lightGray
             }
         if calenderSlotData.blockedSlot[indexPath.section][correctionIndex] {
