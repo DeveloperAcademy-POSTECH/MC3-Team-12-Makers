@@ -115,10 +115,10 @@ class ConsultationViewController: BaseViewController {
     }()
     
     //캘린더 시간 레이블
-    lazy private var hourLabel: [UILabel] = Constants.hourLabelMaker()
+    private var hourLabel: [UILabel] = Constants.hourLabelMaker()
     
     //캘린더 날자 레이블
-    lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
+    private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
     // 전체 신청내역 보기
     private let seeAll: UIButton = {
