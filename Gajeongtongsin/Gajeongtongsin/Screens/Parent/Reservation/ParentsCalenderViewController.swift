@@ -52,9 +52,8 @@ class ParentsCalenderViewController: BaseViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
-
     
-    // 신청/취소 버튼
+    // 취소 버튼
     private let dismissBtn: UIButton = {
         let button = UIButton()
         button.setTitle("취소", for: .normal)
@@ -62,7 +61,7 @@ class ParentsCalenderViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+    // 신청 버튼
     private let submitBtn: UIButton = {
         let button = UIButton()
         button.setTitle("신청", for: .normal)
@@ -82,8 +81,6 @@ class ParentsCalenderViewController: BaseViewController {
     }()
     
     //사유 입력 text view
-    private let textPlaceHolder: String = "어떤 내용으로 상담을 신청하시나요?"
-    
     private let reasonNote: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
@@ -99,18 +96,16 @@ class ParentsCalenderViewController: BaseViewController {
     }()
     
     //캘린더 시간 레이블
-    lazy private var hourLabel: [UILabel] = Constants.hourLabelMaker()
-    
+     private lazy var hourLabel: [UILabel] = Constants.hourLabelMaker()
     //캘린더 날자 레이블
-    lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
+     private lazy var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        calenderView.delegate = self
-        calenderView.dataSource = self
+        
+        setDelegations()
         reasonNote.text = textPlaceHolder
-        reasonNote.delegate = self
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
@@ -124,8 +119,15 @@ class ParentsCalenderViewController: BaseViewController {
             }
         }
     }
-        
+    
     //MARK: - Funcs
+    
+    // 딜리게이트 설정
+    func setDelegations() {
+        calenderView.delegate = self
+        calenderView.dataSource = self
+        reasonNote.delegate = self
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.reasonNote.endEditing(true)
     }
@@ -133,43 +135,9 @@ class ParentsCalenderViewController: BaseViewController {
     func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
         for key in allSchedules.keys {
-                scheduledParentsList.append((key,allSchedules[key]))
+            scheduledParentsList.append((key,allSchedules[key]))
         }
         return scheduledParentsList
-    }
-
-//선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
-    //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
-    func dateStringToIndex(parentsIndex: Int) -> [Int] {
-        var dateString: [String] = []
-        var dateIndex: [Int] = []
-        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
-        parentSchedules[0].scheduleList.forEach{
-            dateString.append($0.consultingDate)
-        }
-        for day in 0..<dateString.count { //String을 Index로 바꿔줌
-            for nextWeekDay in 0..<nextWeek.count {
-                if dateString[day] == nextWeek[nextWeekDay] {
-                    dateIndex.append(nextWeekDay)
-                }
-            }
-        }
-        return dateIndex
-    }
-    
-    //선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
-    //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
-    func timeStringToIndex(parentIndex: Int) -> [Int] {
-        var startTime:[Int] = []
-        guard let parentSchedules = allSchedules[parentIndex].schedule else { return []}
-        parentSchedules[0].scheduleList.forEach{
-            let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
-            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
-            let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
-            startTime.append(hour*2 + minute)
-        }
-        
-        return startTime
     }
     
     //모든 예약일정을 인덱스로 저장해주는 함수, 교사뷰의 동명 함수와 다름!!
@@ -177,13 +145,14 @@ class ParentsCalenderViewController: BaseViewController {
     var calenderData: [[Int]] = []
         
         for parentsIndex in 0 ..< allSchedules.count {
-            guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
-
-            for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
+            guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
+            
+            for scheduleIndex in 0 ..< parentSchedules[0].scheduleList.count {
                 
                     let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
                     calenderData.append([columnIndex, rowIndex])
+
             }
             
         }
@@ -202,10 +171,8 @@ class ParentsCalenderViewController: BaseViewController {
         
         return startTime
     }
-    
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
-        
         appendScheduleList = []
         
         for section in 0..<choicedCells.count {
@@ -218,6 +185,7 @@ class ParentsCalenderViewController: BaseViewController {
 
                 consultingDate: dateIndexToString(index: section),
                 startTime: timeIndexToString(index: index),
+]
                 isReserved: false))
         }
         }
@@ -230,44 +198,40 @@ class ParentsCalenderViewController: BaseViewController {
         
         let parentUserId = UserDefaults.standard.string(forKey: "ParentUser")!
         let childName = UserDefaults.standard.string(forKey: "ChildName")!
-
+        
         let reservationNoti = Notification(id: parentUserId,
                                            postId: "2", // FIXME: - 수정 필요
                                            type: .reservation,
-                                           childName: childName, 
+                                           childName: childName,
                                            content: reasonNote.text,
                                            time: Date().toString())
         
         FirebaseManager.shared.uploadNotification(notification: reservationNoti)
         
-
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 
         choicedCells = Array(repeating: Array(repeating: false, count: 6), count:5)
+
         calenderView.reloadData()
         self.dismiss(animated: true)
     }
-    let calenderTopPadding = CGFloat(140.0)
-    let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
-    let calenderHeigit = CGFloat(300.0)
+   
     
     override func render() {
         view.addSubview(dismissBtn)
         dismissBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         dismissBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
-
+        
         view.addSubview(submitBtn)
         submitBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
-
+        
         view.addSubview(calenderView)
-
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
-        calenderView.heightAnchor.constraint(equalToConstant: calenderHeigit).isActive = true
-        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: calenderSidePadding[0]).isActive = true
-        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
-
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.calenderTopPadding).isActive = true
+        calenderView.heightAnchor.constraint(equalToConstant: Constants.calenderHeigit).isActive = true
+        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.calenderSidePadding[0]).isActive = true
+        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.calenderSidePadding[1]).isActive = true
         
         view.addSubview(noteTitle)
         noteTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
@@ -281,25 +245,23 @@ class ParentsCalenderViewController: BaseViewController {
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        for index in 0..<hourLabel.count {
+        for index in hourLabel.indices {
             view.addSubview(hourLabel[index])
             hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
             hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         }
         
-        let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
-        
-        for index in 0..<dateLabel.count {
+        for index in dateLabel.indices {
             view.addSubview(dateLabel[index][0])
             dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
             
             view.addSubview(dateLabel[index][1])
             dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
-            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval + Constants.interval/2).isActive = true
         }
     }
-
+    
     override func configUI() {
         view.backgroundColor = .Background
     }
@@ -308,9 +270,9 @@ class ParentsCalenderViewController: BaseViewController {
     @objc func cancelSubmit() {
         self.dismiss(animated: true)
     }
-
-}
     
+}
+
 
 //MARK: - Extensions
 
@@ -341,6 +303,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
             }
         if calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
             cell.backgroundColor = .Background
+
         }
         
         return cell
@@ -372,7 +335,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegateFlowLayout {
     
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-        return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: 50)
+        return CGSize(width: Constants.interval, height: 50)
     }
     
     //cell 횡간 간격
@@ -414,8 +377,8 @@ extension ParentsCalenderViewController: UITextViewDelegate {
                 submitBtn.setTitleColor(.Action, for: .normal)
                 submitBtn.isUserInteractionEnabled = true
             }
-           
+            
         }
-
+        
     }
 }
