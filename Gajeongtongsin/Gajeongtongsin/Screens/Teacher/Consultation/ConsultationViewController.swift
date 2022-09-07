@@ -22,6 +22,7 @@ class ConsultationViewController: BaseViewController {
     private var startTime = 4
     private var endTime = 10
     private lazy var displayWeek: [String] = nextWeek
+    private var displayWeekString: String = "nextWeek"
     
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
     
@@ -33,8 +34,6 @@ class ConsultationViewController: BaseViewController {
         var nextWeek = [String]()
          
         for dayCount in 0..<weekDays {
-            //let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
-            //캘린더뷰가 다음주를 표시하는 경우 +7
             let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             nextWeek.append(oneDayString)
@@ -194,7 +193,7 @@ class ConsultationViewController: BaseViewController {
     func calenderDataMaker() -> [TeacherCalenderData] {
         var calenderData: [TeacherCalenderData] = []
         for parentsIndex in 0..<allSchedules.count {
-            calenderData.append(TeacherCalenderData(parentsIndex: parentsIndex, calenderIndex: [], cellColor: .white))
+            calenderData.append(TeacherCalenderData(parentsIndex: parentsIndex, scheduleWeek: "", calenderIndex: [], cellColor: .white))
             calenderData[parentsIndex].cellColor = getRandomColor()[parentsIndex]
         }
         return calenderData
@@ -259,20 +258,28 @@ class ConsultationViewController: BaseViewController {
     func submittedData() -> [TeacherCalenderData] {
         var calenderIndex: [[Int]] = []
         var submittedData:[TeacherCalenderData] = []
+        var week: String = ""
         
         for parentsIndex in 0 ..< allSchedules.count {
             calenderIndex = []
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             if parentShedules[0].scheduleList[0].isReserved == false {
                 for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
-                    if displayWeek.contains(parentShedules[0].scheduleList[scheduleIndex].consultingDate) {
+                    if thisWeek.contains(parentShedules[0].scheduleList[scheduleIndex].consultingDate) {
                         let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                         let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
                         calenderIndex.append([columnIndex, rowIndex])
+                        week = "thisWeek"
+                    } else {
+                        let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
+                        let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
+                        calenderIndex.append([columnIndex, rowIndex])
+                        week = "nextWeek"
                     }
                 }
                 submittedData.append(calenderData[parentsIndex])
                 submittedData[submittedData.count-1].calenderIndex = calenderIndex
+                submittedData[submittedData.count-1].scheduleWeek = week
             }
         }
         return submittedData
@@ -321,11 +328,25 @@ class ConsultationViewController: BaseViewController {
     
     @objc func plusWeekTapButton() {
         displayWeek = nextWeek
+        displayWeekString = "nextWeek"
+        for day in 0..<dateLabel.count {
+            var date = nextWeek[day].components(separatedBy: "월")
+            date = date[1].components(separatedBy: "일")
+            dateLabel[day][0].text = date[0]
+        }
+        
         calenderView.reloadData()
     }
     
     @objc func minusWeekTapButton() {
         displayWeek = thisWeek
+        displayWeekString = "thisWeek"
+        for day in 0..<dateLabel.count {
+            var date = thisWeek[day].components(separatedBy: "월")
+            date = date[1].components(separatedBy: "일")
+            date = date[0].components(separatedBy: "0")
+            dateLabel[day][0].text = date[1]
+        }
         calenderView.reloadData()
     }
     
@@ -390,32 +411,30 @@ class ConsultationViewController: BaseViewController {
             dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
             dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
         }
+        
+        for index in 0..<9 {
+            view.addSubview(hourLabel[index])
+        }
 
     }
     
-//    func removeLabel() {
-//        let timeInterval = (endTime-startTime)/2
-//        for index in 0...timeInterval {
-//            timeLabel = self.view.viewWithTag(index)
-//        }
-//    }
+
     
     func timeResponsiveLabelRander() {
         let timeInterval = (endTime-startTime)/2
         let interval: CGFloat = (endTime-startTime)%2 == 0 ? calenderHeigit/CGFloat(timeInterval) : (calenderHeigit-(calenderHeigit/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
-
         
-//        var appendTime: CGFloat = 0
-//
-//        if startTime%2 == 1 {
-//            appendTime = calenderHeigit/CGFloat(endTime-startTime)
-//        }
+        let appendTime: Int = 12+startTime/2
         
-        for index in 0...timeInterval {
+        for index in 0..<9 {
+            if index<=timeInterval {
+                hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: interval*CGFloat(index)).isActive = true
+                hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+                hourLabel[index].text = "\(index+appendTime)"+"h"
+            }else {
+                hourLabel[index].text = ""
+            }
             
-            view.addSubview(hourLabel[index])
-            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: interval*CGFloat(index)).isActive = true
-            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         }
     }
 
@@ -452,11 +471,11 @@ extension ConsultationViewController: UICollectionViewDataSource {
     //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
-            startTime = 18
+            startTime = numberOfSlot
             endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
             for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
-                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? 18)+1, endTime)
+                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
             }
             cellHeight = 300.0/(CGFloat(endTime-startTime))
             return endTime-startTime
@@ -479,16 +498,17 @@ extension ConsultationViewController: UICollectionViewDelegate {
             cell.backgroundColor = .white
             
             let correctionIndex = Int(indexPath.item+startTime)
-
             displayData.forEach {
-                if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
-                    //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
-                    if clickedCell == correctionIndex {
-                        cell.getClick(clicked: true)
-                        cell.backgroundColor = .Action
-                    }else {
-                        cell.getClick(clicked: false)
-                        cell.backgroundColor = $0.cellColor
+                if displayWeekString == $0.scheduleWeek {
+                    if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
+                        //calenderIdx와 일치하는 index의 셀은 cellColor으로 display
+                        if clickedCell == correctionIndex {
+                            cell.getClick(clicked: true)
+                            cell.backgroundColor = .Action
+                        }else {
+                            cell.getClick(clicked: false)
+                            cell.backgroundColor = $0.cellColor
+                        }
                     }
                 }
             }

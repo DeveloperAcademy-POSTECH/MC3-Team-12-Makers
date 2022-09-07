@@ -68,7 +68,7 @@ enum ButtonState {
     
 }
 
-
+let numberOfSlot = 18
 
 struct Constants {
     
@@ -87,6 +87,8 @@ struct Constants {
     }
     //날자 레이블 메이커
     static func dateLabelMaker() -> [[UILabel]] {
+        
+//        var dalegate: DateLabelViewDelegate?
         var labelList: [[UILabel]] = Array(repeating: [], count: 5)
         let formatter = DateFormatter()
         formatter.dateFormat = "d-EEE"
@@ -108,6 +110,5 @@ struct Constants {
         }
         return labelList
     }
-    
     
 }
