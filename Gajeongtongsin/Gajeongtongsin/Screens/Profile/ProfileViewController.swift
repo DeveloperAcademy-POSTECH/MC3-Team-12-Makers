@@ -2,48 +2,8 @@
 //  ProfileViewController.swift
 //  Gajeongtongsin
 //
-//  Created by DaeSeong on 2022/07/16.
-//
+//  Created by Beone on 2022/08/29.
 
-//import UIKit
-//
-//class ProfileViewController: BaseViewController {
-//
-////    private let textLabel: UILabel = {
-////        let label = UILabel()
-////        label.text = "프로필 화면 준비중입니다 😎\(UserDefaults.standard.string(forKey: "TeacherUser") ?? "")"
-////        label.font = UIFont.systemFont(ofSize: 20)
-////        label.textColor = .black
-////        label.translatesAutoresizingMaskIntoConstraints = false
-////        return label
-////    }()
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//    }
-//
-//    override func render() {
-////        view.addSubview(textLabel)
-////        textLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-////        textLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-//
-//
-//    }
-//
-//    override func configUI() {
-//        view.backgroundColor = .Background
-//    }
-//
-//
-//
-//}
-
-//
-//  ReservationViewController.swift
-//  Gajeongtongsin
-//
-//  Created by DaeSeong on 2022/07/16.
-//
 
 import UIKit
 
@@ -171,7 +131,7 @@ class ProfileViewController: BaseViewController {
         guard let parentSchedules = allSchedules[parentIndex].schedule else { return []}
         parentSchedules[0].scheduleList.forEach{
             let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
-            let hour = Int(timeList[0])!-14 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
+            let hour = Int(timeList[0])!-12 // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
             let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
             startTime.append(hour*2 + minute)
         }
@@ -204,14 +164,14 @@ class ProfileViewController: BaseViewController {
     
     func timeIndexToString(index: Int) -> String {
         let rowInCalender = index
-        let hour = String(14 + (rowInCalender)/2) //14시 + @
+        let hour = String(12+startIndex/2 + (rowInCalender)/2) //14시 + @
         let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
         startTime = hour+"시"+minute+"분"
         
         return startTime
     }
     
-    //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
+    //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / printㅓㅡㅜㅗㅡㅓㅜㅗㅅ
     @objc func onTapButton() {
         
 //        blockedScheduleList = []
@@ -275,6 +235,15 @@ class ProfileViewController: BaseViewController {
     }
 
 }
+
+func startTime() -> Int {
+    var startTimee = 18
+    for section in 0..<weekDays {
+        startTimee = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTimee)
+    }
+    return startTimee
+}
+let startIndex = startTime()
     
 
 //MARK: - Extensions

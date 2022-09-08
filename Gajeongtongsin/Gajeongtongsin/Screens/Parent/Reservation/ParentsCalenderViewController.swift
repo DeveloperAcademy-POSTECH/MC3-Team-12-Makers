@@ -10,7 +10,7 @@ import UIKit
 class ParentsCalenderViewController: BaseViewController {
     
     //MARK: - Properties
-    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: 6), count:5) //복수선택 및 선택취소를 위한 array
+    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: numberOfSlot), count:5) //복수선택 및 선택취소를 위한 array
 //    private var choicedCells: [Bool] = Array(repeating: false, count:6) //복수선택 및 선택취소를 위한 array
     private var submitIndexList: [[Int]] = [[]] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
@@ -18,9 +18,14 @@ class ParentsCalenderViewController: BaseViewController {
 //    private var consultingDateDate: Date
     private var consultingDateList: String = ""
     private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
-    private var startTime: String = ""
+//    private var startTime: String = ""
     
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
+    private var startTime: Int = 4
+    private var endTime: Int = 10
+    private var cellHeight: CGFloat = 0
+    private lazy var displayWeek: [String] = nextWeek
+    private var displayWeekString: String = "nextWeek"
     
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     //TODO: 교사 캘린더뷰에서 같이 쓰는 상수이므로 공용화시킬 수 있음
@@ -37,6 +42,20 @@ class ParentsCalenderViewController: BaseViewController {
             nextWeek.append(oneDayString)
         }
         return nextWeek
+    }
+    
+    var thisWeek: [String] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
+        var thisWeek = [String]()
+         
+        for dayCount in 0..<weekDays {
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            thisWeek.append(oneDayString)
+        }
+        return thisWeek
     }
     
     //모든 예약일정이 저장되는 리스트
@@ -100,6 +119,24 @@ class ParentsCalenderViewController: BaseViewController {
     //캘린더 날자 레이블
      private lazy var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
+    private let plusWeek: UIButton = {
+        let button = UIButton()
+        button.setTitle(">", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        button.setTitleColor(.LightText, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
+    private let minusWeek: UIButton = {
+        let button = UIButton()
+        button.setTitle("<", for: .normal)
+        button.titleLabel?.font = UIFont.systemFont(ofSize: 13, weight: .bold)
+        button.setTitleColor(.LightText, for: .normal)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -109,6 +146,10 @@ class ParentsCalenderViewController: BaseViewController {
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
+        plusWeek.addTarget(self, action: #selector(plusWeekTapButton), for: .touchUpInside)
+        minusWeek.addTarget(self, action: #selector(minusWeekTapButton), for: .touchUpInside)
+        
+        startTime = Gajeongtongsin.startTime()
         
         FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
             if let schedules = schedules {
@@ -120,6 +161,10 @@ class ParentsCalenderViewController: BaseViewController {
         }
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        timeResponsiveLabelRander()
+    }
+        
     override func viewWillAppear(_ animated: Bool) {
         self.addKeyboardNotification()
     }
@@ -148,6 +193,65 @@ class ParentsCalenderViewController: BaseViewController {
         return scheduledParentsList
     }
     
+    @objc func plusWeekTapButton() {
+        displayWeek = nextWeek
+        displayWeekString = "nextWeek"
+        for day in 0..<dateLabel.count {
+            var date = nextWeek[day].components(separatedBy: "월")
+            date = date[1].components(separatedBy: "일")
+            dateLabel[day][0].text = date[0]
+        }
+        
+        calenderView.reloadData()
+    }
+    
+    @objc func minusWeekTapButton() {
+        displayWeek = thisWeek
+        displayWeekString = "thisWeek"
+        for day in 0..<dateLabel.count {
+            var date = thisWeek[day].components(separatedBy: "월")
+            date = date[1].components(separatedBy: "일")
+            date = date[0].components(separatedBy: "0")
+            dateLabel[day][0].text = date[1]
+        }
+        calenderView.reloadData()
+    }
+
+//선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
+    //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
+    func dateStringToIndex(parentsIndex: Int) -> [Int] {
+        var dateString: [String] = []
+        var dateIndex: [Int] = []
+        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
+        parentSchedules[0].scheduleList.forEach{
+            dateString.append($0.consultingDate)
+        }
+        for day in 0..<dateString.count { //String을 Index로 바꿔줌
+            for nextWeekDay in 0..<nextWeek.count {
+                if dateString[day] == nextWeek[nextWeekDay] {
+                    dateIndex.append(nextWeekDay+5)//임시코드
+                }
+            }
+        }
+        return dateIndex
+    }
+    
+    //선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
+    //TODO: 파베 연결전 교사뷰의 동명 함수와 동일함, 파베 연결된 함수로 공용화
+    func timeStringToIndex(parentIndex: Int) -> [Int] {
+        
+        var startTimeList:[Int] = []
+        guard let parentSchedules = allSchedules[parentIndex].schedule else { return []}
+        parentSchedules[0].scheduleList.forEach{
+            let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
+            let hour = Int(timeList[0])!-(12+startTime/2) // 14, 14, 15, 15, 16, 16 ... -> 0, 0, 1, 1, 2, 2 ...
+            let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30 // 00, 30, 00, 30 ... -> 0, 1, 0, 1, ...
+            startTimeList.append(hour*2 + minute)
+        }
+        
+        return startTimeList
+    }
+    
     //모든 예약일정을 인덱스로 저장해주는 함수, 교사뷰의 동명 함수와 다름!!
     func submittedDataMaker() -> [[Int]] {
     var calenderData: [[Int]] = []
@@ -172,12 +276,13 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     func timeIndexToString(index: Int) -> String {
-        let rowInCalender = index
-        let hour = String(14 + (rowInCalender)/2) //14시 + @
-        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
-        startTime = hour+"시"+minute+"분"
         
-        return startTime
+        let rowInCalender = index
+        let hour = String(12 + startTime/2 + (rowInCalender)/2) //14시 + @
+        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
+        let time = hour+"시"+minute+"분"
+        
+        return time
     }
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
@@ -219,7 +324,7 @@ class ParentsCalenderViewController: BaseViewController {
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 
-        choicedCells = Array(repeating: Array(repeating: false, count: 6), count:5)
+        choicedCells = Array(repeating: Array(repeating: false, count: numberOfSlot), count:5)
 
         calenderView.reloadData()
         self.dismiss(animated: true)
@@ -253,11 +358,14 @@ class ParentsCalenderViewController: BaseViewController {
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
         
-        for index in hourLabel.indices {
-            view.addSubview(hourLabel[index])
-            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: CGFloat(index*100)).isActive = true
-            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        }
+        view.addSubview(plusWeek)
+        plusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+        plusWeek.centerXAnchor.constraint(equalTo: calenderView.trailingAnchor, constant: 0).isActive = true
+        
+        view.addSubview(minusWeek)
+        minusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+        minusWeek.centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: -10).isActive = true
+
         
         for index in dateLabel.indices {
             view.addSubview(dateLabel[index][0])
@@ -267,6 +375,30 @@ class ParentsCalenderViewController: BaseViewController {
             view.addSubview(dateLabel[index][1])
             dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
             dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval + Constants.interval/2).isActive = true
+        }
+        for index in 0..<9 {
+            view.addSubview(hourLabel[index])
+        }
+
+    }
+    
+
+    
+    func timeResponsiveLabelRander() {
+        let timeInterval = (endTime-startTime)/2
+        let interval: CGFloat = (endTime-startTime)%2 == 0 ? calenderHeigit/CGFloat(timeInterval) : (calenderHeigit-(calenderHeigit/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
+        
+        let appendTime: Int = 12+startTime/2
+        
+        for index in 0..<9 {
+            if index<=timeInterval {
+                hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: interval*CGFloat(index)).isActive = true
+                hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+                hourLabel[index].text = "\(index+appendTime)"+"h"
+            }else {
+                hourLabel[index].text = ""
+            }
+            
         }
     }
     
@@ -310,13 +442,23 @@ class ParentsCalenderViewController: BaseViewController {
 
 extension ParentsCalenderViewController: UICollectionViewDataSource{
     
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        5
+    //섹션 수
+    func numberOfSections(in collectionView: UICollectionView) -> Int{
+        return weekDays
     }
     
-    //캘린더 아이템 수, 5일*6단위 = 30
+    //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        6
+        if collectionView == calenderView {
+            startTime = numberOfSlot
+            endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
+            for section in 0..<weekDays {
+                startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
+                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
+            }
+            cellHeight = 300.0/(CGFloat(endTime-startTime))
+        }
+        return endTime-startTime
     }
  }
 
@@ -329,11 +471,16 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
            for: indexPath) as? CalenderViewCell else {
                return UICollectionViewCell()
            }
-//        cell.backgroundColor = submittedData.conta .white
-        if submittedData.contains([indexPath.section, indexPath.item]) {
-                cell.backgroundColor = .lightGray
-            }
-        if calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
+        cell.backgroundColor = .white
+        
+        let correctionIndex = indexPath.item+startTime
+        if displayWeekString == "thisWeek" && submittedData.contains([indexPath.section, indexPath.item]) {
+            cell.backgroundColor = .lightGray
+        }
+        if displayWeekString == "nextWeek" && submittedData.contains([indexPath.section+5, indexPath.item]) {
+            cell.backgroundColor = .lightGray
+        }
+        if calenderSlotData.blockedSlot[indexPath.section][correctionIndex] {
             cell.backgroundColor = .Background
 
         }
@@ -351,10 +498,10 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         if !submittedData.contains([indexPath.section, indexPath.item]) && calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
             //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
             if truCnt<3 && !choicedCells[indexPath.section][indexPath.item]{
-                choicedCells[indexPath.section][indexPath.item].toggle()
+                choicedCells[indexPath.section][indexPath.item] = true
                 cell?.backgroundColor = .Action
             }else if choicedCells[indexPath.section][indexPath.item]{
-                choicedCells[indexPath.section][indexPath.item].toggle()
+                choicedCells[indexPath.section][indexPath.item] = false
                 cell?.backgroundColor = .white
             }
         }
