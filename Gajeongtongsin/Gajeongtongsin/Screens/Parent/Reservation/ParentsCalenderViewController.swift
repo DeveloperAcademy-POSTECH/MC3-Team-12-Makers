@@ -10,17 +10,43 @@ import UIKit
 class ParentsCalenderViewController: BaseViewController {
     
     //MARK: - Properties
-    private var choicedCells: [Bool] = Array(repeating: false, count:30) //복수선택 및 선택취소를 위한 array
-    private var submitIndexList: [Int] = [] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
+    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: 6), count:5) //복수선택 및 선택취소를 위한 array
+//    private var choicedCells: [Bool] = Array(repeating: false, count:6) //복수선택 및 선택취소를 위한 array
+    private var submitIndexList: [[Int]] = [[]] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
     private var subDate: [String] = []
+//    private var consultingDateDate: Date
+    private var consultingDateList: String = ""
+    private var consultingDate: String = "" //consultingDateDate -> consultingDateList -> consultingDate 순으로 탑다운
+    private var startTime: String = ""
+    
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
-    private var submittedData: [Int] = []     //모든 예약일정이 저장되는 리스트
-    private let textPlaceHolder: String = "어떤 내용으로 상담을 신청하시나요?"
+    
+    //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
+    //TODO: 교사 캘린더뷰에서 같이 쓰는 상수이므로 공용화시킬 수 있음
+    var nextWeek: [String] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
+        var nextWeek = [String]()
+         
+        for dayCount in 0..<weekDays {
+//            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek+7))
+            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            nextWeek.append(oneDayString)
+        }
+        return nextWeek
+    }
+    
+    //모든 예약일정이 저장되는 리스트
+    private lazy var submittedData: [[Int]] = []
+
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
         let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         collectionView.register(CalenderViewCell.self, forCellWithReuseIdentifier: CalenderViewCell.identifier)
         collectionView.translatesAutoresizingMaskIntoConstraints = false
@@ -94,6 +120,14 @@ class ParentsCalenderViewController: BaseViewController {
         }
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.addKeyboardNotification()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.removeKeyboardNotification()
+    }
+    
     //MARK: - Funcs
     
     // 딜리게이트 설정
@@ -115,34 +149,53 @@ class ParentsCalenderViewController: BaseViewController {
     }
     
     //모든 예약일정을 인덱스로 저장해주는 함수, 교사뷰의 동명 함수와 다름!!
-    func submittedDataMaker() -> [Int] {
-        var calenderData: [Int] = []
+    func submittedDataMaker() -> [[Int]] {
+    var calenderData: [[Int]] = []
         
         for parentsIndex in 0 ..< allSchedules.count {
             guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
             
             for scheduleIndex in 0 ..< parentSchedules[0].scheduleList.count {
                 
-                let rowIndex = Constants.timeStringToIndex(selected: parentSchedules)[scheduleIndex] * Constants.weekDays
-                let columnIndex = Constants.dateStringToIndex(selected: parentSchedules)[scheduleIndex]
-                calenderData.append(rowIndex + columnIndex)
+                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
+                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
+                    calenderData.append([columnIndex, rowIndex])
+
             }
             
         }
         return calenderData
     }
     
+    func dateIndexToString(index: Int) -> String {
+        return nextWeek[index]
+    }
+    
+    func timeIndexToString(index: Int) -> String {
+        let rowInCalender = index
+        let hour = String(14 + (rowInCalender)/2) //14시 + @
+        let minute: String = (rowInCalender) % 2 == 0 ? "00" : "30" //짝수줄은 정각, 홀수줄은 30분
+        startTime = hour+"시"+minute+"분"
+        
+        return startTime
+    }
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
         appendScheduleList = []
-        submitIndexList = choicedCells.enumerated().compactMap { (idx, element) in element ? idx : nil }
         
-        for index in submitIndexList {
+        for section in 0..<choicedCells.count {
+            let subListInSection = choicedCells[section].enumerated().compactMap { (idx, element) in element ? idx : nil }
+            submitIndexList.append(subListInSection)
+        
+        
+        for index in subListInSection {
             appendScheduleList.append(ScheduleInfo(
-                
-                consultingDate: Constants.dateIndexToString(index: index),
-                startTime: Constants.timeIndexToString(index: index),
+
+                consultingDate: dateIndexToString(index: section),
+                startTime: timeIndexToString(index: index),
+]
                 isReserved: false))
+        }
         }
         // 파이어베이스 예약업로드 & 알림
         let schedule = Schedule(reservedDate: "실시간",     // FIXME: - 수정 필요
@@ -164,7 +217,10 @@ class ParentsCalenderViewController: BaseViewController {
         FirebaseManager.shared.uploadNotification(notification: reservationNoti)
         
         //TODO : - parentList index를 id 받아서 넣어주어야 함
-        choicedCells = Array(repeating: false, count:30)
+        
+
+        choicedCells = Array(repeating: Array(repeating: false, count: 6), count:5)
+
         calenderView.reloadData()
         self.dismiss(animated: true)
     }
@@ -180,19 +236,19 @@ class ParentsCalenderViewController: BaseViewController {
         submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
         
         view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: Constants.calenderTopPadding).isActive = true
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
         calenderView.heightAnchor.constraint(equalToConstant: Constants.calenderHeigit).isActive = true
         calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.calenderSidePadding[0]).isActive = true
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.calenderSidePadding[1]).isActive = true
         
         view.addSubview(noteTitle)
-        noteTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        noteTitle.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -250).isActive = true
         noteTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         noteTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         noteTitle.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         view.addSubview(reasonNote)
-        reasonNote.topAnchor.constraint(equalTo: noteTitle.topAnchor, constant: 35).isActive = true
+        reasonNote.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
         reasonNote.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
@@ -223,22 +279,63 @@ class ParentsCalenderViewController: BaseViewController {
         self.dismiss(animated: true)
     }
     
+    func addKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func removeKeyboardNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ noti: NSNotification) {
+        //키보드 높이만큼 화면 올리기
+        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            self.view.frame.origin.y = ( -keyboardHeight + 50)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        //키보드 높이만큼 화면 내리기
+        self.view.frame.origin.y = 0
+    }
+    
 }
 
 
 //MARK: - Extensions
+
+extension ParentsCalenderViewController: UICollectionViewDataSource{
+    
+    func numberOfSections(in collectionView: UICollectionView) -> Int {
+        5
+    }
+    
+    //캘린더 아이템 수, 5일*6단위 = 30
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        6
+    }
+ }
+
 extension ParentsCalenderViewController: UICollectionViewDelegate{
     
     //cell 로드
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: CalenderViewCell.identifier ,
-            for: indexPath) as? CalenderViewCell else {
-            return UICollectionViewCell()
-        }
-        //        cell.backgroundColor = submittedData.conta .white
-        if submittedData.contains(indexPath.item) {
-            cell.backgroundColor = .lightGray
+           guard let cell = collectionView.dequeueReusableCell(
+           withReuseIdentifier: CalenderViewCell.identifier ,
+           for: indexPath) as? CalenderViewCell else {
+               return UICollectionViewCell()
+           }
+//        cell.backgroundColor = submittedData.conta .white
+        if submittedData.contains([indexPath.section, indexPath.item]) {
+                cell.backgroundColor = .lightGray
+            }
+        if calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
+            cell.backgroundColor = .Background
+
         }
         
         return cell
@@ -249,28 +346,22 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         let cell = collectionView.cellForItem(at: indexPath) as? CalenderViewCell
         
         //선택한 슬롯 개수 카운터
-        let truCnt = choicedCells.filter({$0 == true}).count
+        let truCnt = choicedCells.flatMap{$0}.filter({$0 == true}).count
         
-        if submittedData.contains(indexPath.item) != true {
+        if !submittedData.contains([indexPath.section, indexPath.item]) && calenderSlotData.blockedSlot[indexPath.section][indexPath.item] {
             //갯수 3개로 제한 및 선택 토글  +섹션 나눠서 인덱싱 편하게 하기?
-            if truCnt<3 && !choicedCells[indexPath.item] {
-                choicedCells[indexPath.item].toggle()
+            if truCnt<3 && !choicedCells[indexPath.section][indexPath.item]{
+                choicedCells[indexPath.section][indexPath.item].toggle()
                 cell?.backgroundColor = .Action
-            }else if truCnt<=3 && choicedCells[indexPath[1]]{
-                choicedCells[indexPath.item].toggle()
+            }else if choicedCells[indexPath.section][indexPath.item]{
+                choicedCells[indexPath.section][indexPath.item].toggle()
                 cell?.backgroundColor = .white
             }
         }
     }
 }
 
-extension ParentsCalenderViewController: UICollectionViewDataSource{
-    
-    //캘린더 아이템 수, 5일*6단위 = 30
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return choicedCells.count
-    }
-}
+
 
 extension ParentsCalenderViewController: UICollectionViewDelegateFlowLayout {
     

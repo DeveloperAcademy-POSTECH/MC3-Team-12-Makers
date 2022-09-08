@@ -14,6 +14,8 @@
 		04610D952886A28C00CCCB2D /* CalenderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04610D942886A28C00CCCB2D /* CalenderViewCell.swift */; };
 		046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 046BFDF52890DD8000591577 /* CalenderTabelViewCell.swift */; };
 		04797679288E7855009C0826 /* TeacherCalenderData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04797678288E7855009C0826 /* TeacherCalenderData.swift */; };
+		04A0370128BC9D87007A73C8 /* CalenderSlotData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A0370028BC9D87007A73C8 /* CalenderSlotData.swift */; };
+		04A0370328BC9EDC007A73C8 /* CalenderSlotMockData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04A0370228BC9EDC007A73C8 /* CalenderSlotMockData.swift */; };
 		35171CFE28828C930059F297 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35171CFD28828C930059F297 /* AppDelegate.swift */; };
 		35171D0028828C930059F297 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35171CFF28828C930059F297 /* SceneDelegate.swift */; };
 		35171D0728828C930059F297 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 35171D0628828C930059F297 /* Assets.xcassets */; };
@@ -81,6 +83,8 @@
 		04610D942886A28C00CCCB2D /* CalenderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderViewCell.swift; sourceTree = "<group>"; };
 		046BFDF52890DD8000591577 /* CalenderTabelViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderTabelViewCell.swift; sourceTree = "<group>"; };
 		04797678288E7855009C0826 /* TeacherCalenderData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TeacherCalenderData.swift; sourceTree = "<group>"; };
+		04A0370028BC9D87007A73C8 /* CalenderSlotData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderSlotData.swift; sourceTree = "<group>"; };
+		04A0370228BC9EDC007A73C8 /* CalenderSlotMockData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderSlotMockData.swift; sourceTree = "<group>"; };
 		35171CFA28828C930059F297 /* Gajeongtongsin.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gajeongtongsin.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		35171CFD28828C930059F297 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		35171CFF28828C930059F297 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -187,6 +191,7 @@
 			isa = PBXGroup;
 			children = (
 				04797678288E7855009C0826 /* TeacherCalenderData.swift */,
+				04A0370028BC9D87007A73C8 /* CalenderSlotData.swift */,
 				C0DFFBFC2885DC86009A1563 /* ParentUser.swift */,
 				C0DFFC022885DE32009A1563 /* Message.swift */,
 				C0DFFC042885DF05009A1563 /* Schedule.swift */,
@@ -208,6 +213,7 @@
 				35171D1628828EE60059F297 /* Supports */,
 				35171D1528828E990059F297 /* Resources */,
 				35171D1428828E950059F297 /* Service */,
+				04A0370228BC9EDC007A73C8 /* CalenderSlotMockData.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -585,6 +591,7 @@
 				C0DFFC072885DFEB009A1563 /* ScheduleInfo.swift in Sources */,
 				3595839E28829D80002B6873 /* ProfileViewController.swift in Sources */,
 				8C7C924E2892D75E00C878AF /* UrgentRequestViewController.swift in Sources */,
+				04A0370128BC9D87007A73C8 /* CalenderSlotData.swift in Sources */,
 				C054017D288D04F6002BF33B /* NotificationViewController.swift in Sources */,
 				046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */,
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
@@ -594,6 +601,7 @@
 				040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */,
 				C01FA468289406C700A1E4DB /* String+Extension.swift in Sources */,
 				359583A228829D93002B6873 /* TestK.swift in Sources */,
+				04A0370328BC9EDC007A73C8 /* CalenderSlotMockData.swift in Sources */,
 				8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */,
 				C0B4A4322890E8B9001DC86C /* CutomNavigationBarDelegate.swift in Sources */,
 				356B77E5289457A3001D2F6C /* ParentRegistrationViewController.swift in Sources */,
