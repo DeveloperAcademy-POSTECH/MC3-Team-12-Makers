@@ -31,9 +31,9 @@ class ProfileViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays {
+        for dayCount in 0..<Constants.weekDays {
 //            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek+7))
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek + 7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             nextWeek.append(oneDayString)
         }
@@ -238,7 +238,7 @@ class ProfileViewController: BaseViewController {
 
 func startTime() -> Int {
     var startTimee = 18
-    for section in 0..<weekDays {
+    for section in 0..<Constants.weekDays {
         startTimee = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTimee)
     }
     return startTimee
@@ -251,7 +251,7 @@ let startIndex = startTime()
 extension ProfileViewController: UICollectionViewDataSource{
     
     func numberOfSections(in collectionView: UICollectionView) -> Int {
-        weekDays
+        Constants.weekDays
     }
     
     //캘린더 아이템 수, 5일*6단위 = 30

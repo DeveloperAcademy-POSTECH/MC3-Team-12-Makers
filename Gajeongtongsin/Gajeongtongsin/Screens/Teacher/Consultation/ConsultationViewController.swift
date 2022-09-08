@@ -33,8 +33,8 @@ class ConsultationViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays {
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
+        for dayCount in 0..<Constants.weekDays {
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek + 7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             nextWeek.append(oneDayString)
         }
@@ -47,8 +47,8 @@ class ConsultationViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var thisWeek = [String]()
          
-        for dayCount in 0..<weekDays {
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+        for dayCount in 0..<Constants.weekDays {
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             thisWeek.append(oneDayString)
         }
@@ -594,7 +594,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
     }
 }
 
-
+}
 
 extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     

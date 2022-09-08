@@ -8,8 +8,8 @@
 import Foundation
 
 func calenderSlotDataMaker() -> CalenderSlotData {
-    var blockedSlot: [[Bool]] =  Array(repeating: Array(repeating: false, count: numberOfSlot), count:weekDays)
-    for section in 0..<weekDays {
+    var blockedSlot: [[Bool]] =  Array(repeating: Array(repeating: false, count: numberOfSlot), count:Constants.weekDays)
+    for section in 0..<Constants.weekDays {
         for index in 0..<4 {
             blockedSlot[section][index].toggle()
         }
