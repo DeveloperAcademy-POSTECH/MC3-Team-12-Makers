@@ -157,9 +157,9 @@ class ConsultationViewController: BaseViewController {
         FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
             if let schedules = schedules {
                 self?.allSchedules = []
-                self?.scheduledParentList = []
+//                self?.scheduledParentList = []
                 self?.allSchedules = self!.scheduledParentsListConVerter(schedules)
-                self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
+//                self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
                 self?.parentsCollectionView.reloadData()
                 self?.calenderView.reloadData()
             }
@@ -294,8 +294,9 @@ class ConsultationViewController: BaseViewController {
                 if dateString[date] == nextWeek[nextWeekDay] {
                     dateIndex.append(nextWeekDay)
                 }
+            }
+            return submittedData
         }
-        return submittedData
     }
     
     ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
@@ -443,6 +444,7 @@ class ConsultationViewController: BaseViewController {
     }
 }
 
+
 //MARK: - Extensions
 
 extension ConsultationViewController: UICollectionViewDataSource {
@@ -450,7 +452,7 @@ extension ConsultationViewController: UICollectionViewDataSource {
     //섹션 수
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if collectionView == calenderView {
-            return weekDays
+            return Constants.weekDays
         }
         return 1
     }
@@ -460,7 +462,7 @@ extension ConsultationViewController: UICollectionViewDataSource {
         if collectionView == calenderView {
             startTime = numberOfSlot
             endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
-            for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
+            for section in 0..<Constants.weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
                 endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
             }
@@ -594,7 +596,6 @@ extension ConsultationViewController: UICollectionViewDelegate {
     }
 }
 
-}
 
 extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     
