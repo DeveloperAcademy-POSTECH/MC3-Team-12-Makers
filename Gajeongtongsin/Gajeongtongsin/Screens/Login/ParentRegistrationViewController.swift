@@ -119,7 +119,7 @@ class ParentRegistrationViewController: BaseViewController {
         homeroomTeacherUid = invitationCodeView.getTextField().text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         childName = childNameView.getTextField().text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
-        if homeroomTeacherUid.count >= MAX_LENGTH && !childName.isEmpty{
+        if homeroomTeacherUid.count >= Constants.MAX_LENGTH && !childName.isEmpty{
             registrationButton.isUserInteractionEnabled = true
             registrationButton.backgroundColor = .Action
         } else {
@@ -143,7 +143,7 @@ extension ParentRegistrationViewController : UITextFieldDelegate {
                 }
             }
             // 글자수 6글자를 넘어가면 입력제한
-            return homeroomTeacherUid.count >= MAX_LENGTH ? false : true
+            return homeroomTeacherUid.count >= Constants.MAX_LENGTH ? false : true
             
             
         } else {

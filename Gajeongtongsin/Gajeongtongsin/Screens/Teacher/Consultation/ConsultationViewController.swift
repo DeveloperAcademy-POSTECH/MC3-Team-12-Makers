@@ -55,21 +55,17 @@ class ConsultationViewController: BaseViewController {
         return thisWeek
     }
 
+
+    // 커스텀 네비게이션바
     private var customNavigationBar: CustomNavigationBar = {
         let customNavigationBar = CustomNavigationBar(title: "이번주 상담일정",
                                                       titleSize: 22,
                                                       imageName: "bell",
                                                       imageSize: 20)
-        
          customNavigationBar.backgroundColor = .Background
          customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
          return customNavigationBar
      }()
-    
-    // FIXME: - 수정이 필요해보임
-    private lazy var calenderData: [TeacherCalenderData] = calenderDataMaker()
-
-    private var scheduledParentList: [(name: String, schedule: [Schedule]?)] = []
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -188,8 +184,6 @@ class ConsultationViewController: BaseViewController {
         customNavigationBar.delegate = self
     }
     
-    
-    
     func calenderDataMaker() -> [TeacherCalenderData] {
         var calenderData: [TeacherCalenderData] = []
         for parentsIndex in 0..<allSchedules.count {
@@ -201,7 +195,7 @@ class ConsultationViewController: BaseViewController {
     
     func getRandomColor() -> [UIColor] { //학부모별 슬롯 색상 자동화
         var colorList: [UIColor] = []
-        for _ in 0..<allSchedules.count {
+        for _ in allSchedules.indices {
             let red:CGFloat = CGFloat(drand48())
             let green:CGFloat = CGFloat(drand48())
             let blue:CGFloat = CGFloat(drand48())
@@ -236,13 +230,14 @@ class ConsultationViewController: BaseViewController {
             calenderIndex = []
             
             guard let parentSchedules = allSchedules[parentsIndex].schedule else { return [] }
-            for scheduleIndex in 0..<parentSchedules[0].scheduleList.count { //하단 funcs 참고
+            for scheduleIndex in parentSchedules[0].scheduleList.indices { //하단 funcs 참고
                 if parentSchedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
                     
                     let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
                     calenderIndex.append([columnIndex, rowIndex])
+
 
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                     acceptedData[acceptedData.count-1].cellColor = .LightLine
@@ -260,7 +255,7 @@ class ConsultationViewController: BaseViewController {
         var submittedData:[TeacherCalenderData] = []
         var week: String = ""
         
-        for parentsIndex in 0 ..< allSchedules.count {
+        for parentsIndex in allSchedules.indices {
             calenderIndex = []
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             if parentShedules[0].scheduleList[0].isReserved == false {
@@ -276,6 +271,7 @@ class ConsultationViewController: BaseViewController {
                         calenderIndex.append([columnIndex, rowIndex])
                         week = "nextWeek"
                     }
+
                 }
                 submittedData.append(calenderData[parentsIndex])
                 submittedData[submittedData.count-1].calenderIndex = calenderIndex
@@ -298,9 +294,8 @@ class ConsultationViewController: BaseViewController {
                 if dateString[date] == nextWeek[nextWeekDay] {
                     dateIndex.append(nextWeekDay)
                 }
-            }
         }
-        return dateIndex
+        return submittedData
     }
     
     ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
@@ -322,7 +317,6 @@ class ConsultationViewController: BaseViewController {
     @objc func seeAllOnTapButton() {
         displayData = acceptedData()
         displayData += submittedData()
-        
         calenderView.reloadData()
     }
     
@@ -355,13 +349,12 @@ class ConsultationViewController: BaseViewController {
     let calenderHeigit = CGFloat(300.0)
     lazy var collectionHeight:CGFloat = CGFloat(flowLayout.itemSize.height*1.1)
     
+
     override func render() {
-    
         view.addSubview(customNavigationBar)
         customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor,constant: 29).isActive = true
         customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-
         
         view.addSubview(calenderView)
         calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
@@ -370,6 +363,7 @@ class ConsultationViewController: BaseViewController {
         calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
 
         
+
         view.addSubview(parentsCollectionView)
         parentsCollectionView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -collectionHeight-100).isActive = true
         parentsCollectionView.heightAnchor.constraint(equalToConstant: collectionHeight).isActive = true
@@ -391,25 +385,18 @@ class ConsultationViewController: BaseViewController {
         view.addSubview(collectionViewTitle)
         collectionViewTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
         collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        
-//        let timeInterval = endTime-startTime<=0 ? 4 : endTime-startTime
-//        let timeInterval = (endTime-startTime)/2
-//        for index in 0...timeInterval {
-//            view.addSubview(hourLabel[index])
-//            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: calenderHeigit/CGFloat(timeInterval)*CGFloat(index)).isActive = true
-//            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-//        }
+ 
         
         let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
         
         for index in 0..<dateLabel.count {
             view.addSubview(dateLabel[index][0])
             dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
             
             view.addSubview(dateLabel[index][1])
             dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
-            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
         }
         
         for index in 0..<9 {
@@ -558,7 +545,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             if indexPath.item == clickedCell {
                 // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
                 //guard var parentSchedules = scheduledParentList[parentId!].schedule else {return}
-                guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return}
+                guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return }
                 selectedSchedule.isReserved = true
                 allSchedules[parentId].schedule?[0].scheduleList = []
                 allSchedules[parentId].schedule?[0].scheduleList.append(selectedSchedule)

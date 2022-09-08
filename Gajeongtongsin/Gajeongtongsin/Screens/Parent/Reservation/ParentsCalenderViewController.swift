@@ -71,9 +71,8 @@ class ParentsCalenderViewController: BaseViewController {
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         return collectionView
     }()
-
     
-    // 신청/취소 버튼
+    // 취소 버튼
     private let dismissBtn: UIButton = {
         let button = UIButton()
         button.setTitle("취소", for: .normal)
@@ -81,7 +80,7 @@ class ParentsCalenderViewController: BaseViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
-    
+    // 신청 버튼
     private let submitBtn: UIButton = {
         let button = UIButton()
         button.setTitle("신청", for: .normal)
@@ -101,8 +100,6 @@ class ParentsCalenderViewController: BaseViewController {
     }()
     
     //사유 입력 text view
-    private let textPlaceHolder: String = "어떤 내용으로 상담을 신청하시나요?"
-    
     private let reasonNote: UITextView = {
         let textView = UITextView()
         textView.font = UIFont.systemFont(ofSize: 18, weight: .regular)
@@ -118,10 +115,9 @@ class ParentsCalenderViewController: BaseViewController {
     }()
     
     //캘린더 시간 레이블
-    lazy private var hourLabel: [UILabel] = Constants.hourLabelMaker()
-    
+     private lazy var hourLabel: [UILabel] = Constants.hourLabelMaker()
     //캘린더 날자 레이블
-    lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
+     private lazy var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
     private let plusWeek: UIButton = {
         let button = UIButton()
@@ -144,10 +140,9 @@ class ParentsCalenderViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        calenderView.delegate = self
-        calenderView.dataSource = self
+        
+        setDelegations()
         reasonNote.text = textPlaceHolder
-        reasonNote.delegate = self
         
         submitBtn.addTarget(self, action: #selector(onTapButton), for: .touchUpInside)
         dismissBtn.addTarget(self, action: #selector(cancelSubmit), for: .touchUpInside)
@@ -170,7 +165,22 @@ class ParentsCalenderViewController: BaseViewController {
         timeResponsiveLabelRander()
     }
         
+    override func viewWillAppear(_ animated: Bool) {
+        self.addKeyboardNotification()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        self.removeKeyboardNotification()
+    }
+    
     //MARK: - Funcs
+    
+    // 딜리게이트 설정
+    func setDelegations() {
+        calenderView.delegate = self
+        calenderView.dataSource = self
+        reasonNote.delegate = self
+    }
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.reasonNote.endEditing(true)
     }
@@ -178,7 +188,7 @@ class ParentsCalenderViewController: BaseViewController {
     func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
         for key in allSchedules.keys {
-                scheduledParentsList.append((key,allSchedules[key]))
+            scheduledParentsList.append((key,allSchedules[key]))
         }
         return scheduledParentsList
     }
@@ -247,13 +257,14 @@ class ParentsCalenderViewController: BaseViewController {
     var calenderData: [[Int]] = []
         
         for parentsIndex in 0 ..< allSchedules.count {
-            guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
-
-            for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
+            guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
+            
+            for scheduleIndex in 0 ..< parentSchedules[0].scheduleList.count {
                 
                     let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
                     let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
                     calenderData.append([columnIndex, rowIndex])
+
             }
             
         }
@@ -273,10 +284,8 @@ class ParentsCalenderViewController: BaseViewController {
         
         return time
     }
-    
     //신청하기 누르면 리로드 & 신청요일, 시간 mackdata에 추가 / print
     @objc func onTapButton() {
-        
         appendScheduleList = []
         
         for section in 0..<choicedCells.count {
@@ -289,6 +298,7 @@ class ParentsCalenderViewController: BaseViewController {
 
                 consultingDate: dateIndexToString(index: section),
                 startTime: timeIndexToString(index: index),
+]
                 isReserved: false))
         }
         }
@@ -301,53 +311,49 @@ class ParentsCalenderViewController: BaseViewController {
         
         let parentUserId = UserDefaults.standard.string(forKey: "ParentUser")!
         let childName = UserDefaults.standard.string(forKey: "ChildName")!
-
+        
         let reservationNoti = Notification(id: parentUserId,
                                            postId: "2", // FIXME: - 수정 필요
                                            type: .reservation,
-                                           childName: childName, 
+                                           childName: childName,
                                            content: reasonNote.text,
                                            time: Date().toString())
         
         FirebaseManager.shared.uploadNotification(notification: reservationNoti)
         
-
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 
         choicedCells = Array(repeating: Array(repeating: false, count: numberOfSlot), count:5)
+
         calenderView.reloadData()
         self.dismiss(animated: true)
     }
-    let calenderTopPadding = CGFloat(140.0)
-    let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
-    let calenderHeigit = CGFloat(300.0)
+   
     
     override func render() {
         view.addSubview(dismissBtn)
         dismissBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         dismissBtn.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30).isActive = true
-
+        
         view.addSubview(submitBtn)
         submitBtn.topAnchor.constraint(equalTo: view.topAnchor, constant: 20).isActive = true
         submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
-
+        
         view.addSubview(calenderView)
-
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
-        calenderView.heightAnchor.constraint(equalToConstant: calenderHeigit).isActive = true
-        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: calenderSidePadding[0]).isActive = true
-        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
-
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: 150).isActive = true
+        calenderView.heightAnchor.constraint(equalToConstant: Constants.calenderHeigit).isActive = true
+        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.calenderSidePadding[0]).isActive = true
+        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.calenderSidePadding[1]).isActive = true
         
         view.addSubview(noteTitle)
-        noteTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        noteTitle.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -250).isActive = true
         noteTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         noteTitle.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         noteTitle.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         view.addSubview(reasonNote)
-        reasonNote.topAnchor.constraint(equalTo: noteTitle.topAnchor, constant: 35).isActive = true
+        reasonNote.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -110).isActive = true
         reasonNote.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
         reasonNote.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
         reasonNote.heightAnchor.constraint(equalToConstant: 100).isActive = true
@@ -359,17 +365,16 @@ class ParentsCalenderViewController: BaseViewController {
         view.addSubview(minusWeek)
         minusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
         minusWeek.centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: -10).isActive = true
+
         
-        let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
-        
-        for index in 0..<dateLabel.count {
+        for index in dateLabel.indices {
             view.addSubview(dateLabel[index][0])
             dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
             
             view.addSubview(dateLabel[index][1])
             dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
-            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval + Constants.interval/2).isActive = true
         }
         for index in 0..<9 {
             view.addSubview(hourLabel[index])
@@ -396,7 +401,7 @@ class ParentsCalenderViewController: BaseViewController {
             
         }
     }
-
+    
     override func configUI() {
         view.backgroundColor = .Background
     }
@@ -405,9 +410,33 @@ class ParentsCalenderViewController: BaseViewController {
     @objc func cancelSubmit() {
         self.dismiss(animated: true)
     }
-
-}
     
+    func addKeyboardNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(_:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(_:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    func removeKeyboardNotification() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    @objc func keyboardWillShow(_ noti: NSNotification) {
+        //키보드 높이만큼 화면 올리기
+        if let keyboardFrame: NSValue = noti.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            let keyboardHeight = keyboardRectangle.height
+            self.view.frame.origin.y = ( -keyboardHeight + 50)
+        }
+    }
+    
+    @objc func keyboardWillHide(_ noti: NSNotification){
+        //키보드 높이만큼 화면 내리기
+        self.view.frame.origin.y = 0
+    }
+    
+}
+
 
 //MARK: - Extensions
 
@@ -453,6 +482,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegate{
         }
         if calenderSlotData.blockedSlot[indexPath.section][correctionIndex] {
             cell.backgroundColor = .Background
+
         }
         
         return cell
@@ -484,7 +514,7 @@ extension ParentsCalenderViewController: UICollectionViewDelegateFlowLayout {
     
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-        return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: 50)
+        return CGSize(width: Constants.interval, height: 50)
     }
     
     //cell 횡간 간격
@@ -526,8 +556,8 @@ extension ParentsCalenderViewController: UITextViewDelegate {
                 submitBtn.setTitleColor(.Action, for: .normal)
                 submitBtn.isUserInteractionEnabled = true
             }
-           
+            
         }
-
+        
     }
 }
