@@ -89,6 +89,45 @@ struct Constants {
         let startTime = hour+"시"+minute+"분"
         return startTime
     }
+    
+    static func hourLabelMaker() -> [UILabel] {
+        var labelList: [UILabel] = []
+        for hour in 12...21 {
+            let label = UILabel()
+            label.tag = hour
+            label.text = String(hour)+"h"
+            label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+            label.textColor = .darkText
+            label.translatesAutoresizingMaskIntoConstraints = false
+            labelList.append(label)
+        }
+        return labelList
+    }
+    //날자 레이블 메이커
+    static func dateLabelMaker() -> [[UILabel]] {
+        
+//        var dalegate: DateLabelViewDelegate?
+        var labelList: [[UILabel]] = Array(repeating: [], count: 5)
+        let formatter = DateFormatter()
+        formatter.dateFormat = "d-EEE"
+        
+        for day in 0..<5 {
+            let dayAdded = (86400 * (2+day-Constants.todayOfTheWeek+7))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
+            oneDayString.forEach {
+                let label = UILabel()
+                label.text = $0
+                label.translatesAutoresizingMaskIntoConstraints = false
+                labelList[day].append(label)
+            }
+            labelList[day][0].font = UIFont.systemFont(ofSize: 18, weight: .regular)
+            labelList[day][0].textColor = .darkText
+            
+            labelList[day][1].font = UIFont.systemFont(ofSize: 13, weight: .regular)
+            labelList[day][1].textColor = .LightText
+        }
+        return labelList
+    }
 }
 
 // MARK: - Enumerations
@@ -139,46 +178,46 @@ enum ButtonState {
 
 let numberOfSlot = 18
 
-struct Constants {
-    
-    static func hourLabelMaker() -> [UILabel] {
-        var labelList: [UILabel] = []
-        for hour in 12...21 {
-            let label = UILabel()
-            label.tag = hour
-            label.text = String(hour)+"h"
-            label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-            label.textColor = .darkText
-            label.translatesAutoresizingMaskIntoConstraints = false
-            labelList.append(label)
-        }
-        return labelList
-    }
-    //날자 레이블 메이커
-    static func dateLabelMaker() -> [[UILabel]] {
-        
-//        var dalegate: DateLabelViewDelegate?
-        var labelList: [[UILabel]] = Array(repeating: [], count: 5)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d-EEE"
-        
-        for day in 0..<5 {
-            let dayAdded = (86400 * (2+day-Constants.todayOfTheWeek+7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            oneDayString.forEach {
-                let label = UILabel()
-                label.text = $0
-                label.translatesAutoresizingMaskIntoConstraints = false
-                labelList[day].append(label)
-            }
-            labelList[day][0].font = UIFont.systemFont(ofSize: 18, weight: .regular)
-            labelList[day][0].textColor = .darkText
-            
-            labelList[day][1].font = UIFont.systemFont(ofSize: 13, weight: .regular)
-            labelList[day][1].textColor = .LightText
-        }
-        return labelList
-    }
-    
-    
-}
+//struct Constants {
+//
+//    static func hourLabelMaker() -> [UILabel] {
+//        var labelList: [UILabel] = []
+//        for hour in 12...21 {
+//            let label = UILabel()
+//            label.tag = hour
+//            label.text = String(hour)+"h"
+//            label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+//            label.textColor = .darkText
+//            label.translatesAutoresizingMaskIntoConstraints = false
+//            labelList.append(label)
+//        }
+//        return labelList
+//    }
+//    //날자 레이블 메이커
+//    static func dateLabelMaker() -> [[UILabel]] {
+//
+////        var dalegate: DateLabelViewDelegate?
+//        var labelList: [[UILabel]] = Array(repeating: [], count: 5)
+//        let formatter = DateFormatter()
+//        formatter.dateFormat = "d-EEE"
+//
+//        for day in 0..<5 {
+//            let dayAdded = (86400 * (2+day-Constants.todayOfTheWeek+7))
+//            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
+//            oneDayString.forEach {
+//                let label = UILabel()
+//                label.text = $0
+//                label.translatesAutoresizingMaskIntoConstraints = false
+//                labelList[day].append(label)
+//            }
+//            labelList[day][0].font = UIFont.systemFont(ofSize: 18, weight: .regular)
+//            labelList[day][0].textColor = .darkText
+//
+//            labelList[day][1].font = UIFont.systemFont(ofSize: 13, weight: .regular)
+//            labelList[day][1].textColor = .LightText
+//        }
+//        return labelList
+//    }
+//
+//
+//}
