@@ -121,8 +121,8 @@ class UrgentRequestViewController: BaseViewController {
 
         FirebaseManager.shared.uploadNotification(notification: emergencyNoti)
         PushNotificationManager.sendPushNotification(to: appDelegate.teacherToken, title: "학부모 긴급 알림입니다.", body: emergencyContent)
-        self.dismiss(animated: true)
-        showToast(message: "긴급상담신청이 완료되었습니다.\n선생님께서 직접 연락드릴 예정입니다.", font: UIFont.systemFont(ofSize: 15))
+//        self.dismiss(animated: true)
+//        showToast(message: "긴급상담신청이 완료되었습니다.\n선생님께서 직접 연락드릴 예정입니다.", font: UIFont.systemFont(ofSize: 15))
         
         willDismiss()
     }

@@ -27,6 +27,8 @@ class ParentsCalenderViewController: BaseViewController {
     private lazy var displayWeek: [String] = nextWeek
     private var displayWeekString: String = "nextWeek"
     
+    private let textPlaceHolder: String = "어떤 내용으로 상담을 신청하시나요?"
+    
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     //TODO: 교사 캘린더뷰에서 같이 쓰는 상수이므로 공용화시킬 수 있음
     var nextWeek: [String] {
