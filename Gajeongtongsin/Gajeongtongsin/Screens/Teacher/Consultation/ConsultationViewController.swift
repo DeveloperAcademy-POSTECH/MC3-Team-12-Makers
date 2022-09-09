@@ -23,8 +23,10 @@ class ConsultationViewController: BaseViewController {
     private var endTime = 10
     private lazy var displayWeek: [String] = nextWeek
     private var displayWeekString: String = "nextWeek"
+//    private var scheduledParentsList = scheduledParentsListMaker(ConsultationViewController)
     
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
+    private lazy var calenderData: [TeacherCalenderData] = calenderDataMaker()
     
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     var nextWeek: [String] {
@@ -33,8 +35,8 @@ class ConsultationViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays {
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
+        for dayCount in 0..<Constants.weekDays {
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek + 7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             nextWeek.append(oneDayString)
         }
@@ -47,8 +49,8 @@ class ConsultationViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var thisWeek = [String]()
          
-        for dayCount in 0..<weekDays {
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+        for dayCount in 0..<Constants.weekDays {
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             thisWeek.append(oneDayString)
         }
@@ -157,9 +159,9 @@ class ConsultationViewController: BaseViewController {
         FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
             if let schedules = schedules {
                 self?.allSchedules = []
-                self?.scheduledParentList = []
+//                self?.scheduledParentList = []
                 self?.allSchedules = self!.scheduledParentsListConVerter(schedules)
-                self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
+//                self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
                 self?.parentsCollectionView.reloadData()
                 self?.calenderView.reloadData()
             }
@@ -294,8 +296,9 @@ class ConsultationViewController: BaseViewController {
                 if dateString[date] == nextWeek[nextWeekDay] {
                     dateIndex.append(nextWeekDay)
                 }
+            }
         }
-        return submittedData
+        return dateIndex
     }
     
     ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
@@ -387,8 +390,7 @@ class ConsultationViewController: BaseViewController {
         collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
  
         
-        let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
-        
+
         for index in 0..<dateLabel.count {
             view.addSubview(dateLabel[index][0])
             dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
@@ -450,7 +452,7 @@ extension ConsultationViewController: UICollectionViewDataSource {
     //섹션 수
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         if collectionView == calenderView {
-            return weekDays
+            return Constants.weekDays
         }
         return 1
     }
@@ -460,14 +462,14 @@ extension ConsultationViewController: UICollectionViewDataSource {
         if collectionView == calenderView {
             startTime = numberOfSlot
             endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
-            for section in 0..<weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
+            for section in 0..<Constants.weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
                 endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
             }
             cellHeight = 300.0/(CGFloat(endTime-startTime))
             return endTime-startTime
         } else {
-            return scheduledParentList.count
+            return allSchedules.count
         }
     }
  }
@@ -525,7 +527,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             var eachCellData: [TeacherCalenderData] = [] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
             
-            let parent = scheduledParentList[indexPath.item]
+            let parent = allSchedules[indexPath.item]
             
             eachCellData.append(submittedData()[indexPath.item]) //각 셀에 해당하는 데이터 배정
             cell.sendDataToCell(displayData: eachCellData) //셀 내부 함수를 통해 셀에 데이터 넣어줌

@@ -35,9 +35,9 @@ class ParentsCalenderViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var nextWeek = [String]()
          
-        for dayCount in 0..<weekDays {
+        for dayCount in 0..<Constants.weekDays {
 //            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek+7))
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek + 7))
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek + 7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             nextWeek.append(oneDayString)
         }
@@ -50,8 +50,8 @@ class ParentsCalenderViewController: BaseViewController {
         formatter.timeZone = TimeZone(identifier: "ko_KR")
         var thisWeek = [String]()
          
-        for dayCount in 0..<weekDays {
-            let dayAdded = (86400 * (2+dayCount-todayOfTheWeek))
+        for dayCount in 0..<Constants.weekDays {
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
             thisWeek.append(oneDayString)
         }
@@ -298,7 +298,6 @@ class ParentsCalenderViewController: BaseViewController {
 
                 consultingDate: dateIndexToString(index: section),
                 startTime: timeIndexToString(index: index),
-]
                 isReserved: false))
         }
         }
@@ -386,7 +385,7 @@ class ParentsCalenderViewController: BaseViewController {
     
     func timeResponsiveLabelRander() {
         let timeInterval = (endTime-startTime)/2
-        let interval: CGFloat = (endTime-startTime)%2 == 0 ? calenderHeigit/CGFloat(timeInterval) : (calenderHeigit-(calenderHeigit/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
+        let interval: CGFloat = (endTime-startTime)%2 == 0 ? 300/CGFloat(timeInterval) : (300-(300/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
         
         let appendTime: Int = 12+startTime/2
         
@@ -444,7 +443,7 @@ extension ParentsCalenderViewController: UICollectionViewDataSource{
     
     //섹션 수
     func numberOfSections(in collectionView: UICollectionView) -> Int{
-        return weekDays
+        return Constants.weekDays
     }
     
     //섹션 내 아이템 수
@@ -452,7 +451,7 @@ extension ParentsCalenderViewController: UICollectionViewDataSource{
         if collectionView == calenderView {
             startTime = numberOfSlot
             endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
-            for section in 0..<weekDays {
+            for section in 0..<Constants.weekDays {
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
                 endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
             }

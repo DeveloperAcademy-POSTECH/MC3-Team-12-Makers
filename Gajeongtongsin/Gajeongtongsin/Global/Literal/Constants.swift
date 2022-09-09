@@ -26,42 +26,7 @@ struct Constants {
     }
     
     // MARK: - Funcs
-    static func hourLabelMaker() -> [UILabel] {
-        var labelList: [UILabel] = []
-        for hour in 14...17 {
-            let label = UILabel()
-            label.text = String(hour)+"h"
-            label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-            label.textColor = .darkText
-            label.translatesAutoresizingMaskIntoConstraints = false
-            labelList.append(label)
-        }
-        return labelList
-    }
-    //날자 레이블 메이커
-    static func dateLabelMaker() -> [[UILabel]] {
-        var labelList: [[UILabel]] = Array(repeating: [], count: 5)
-        let formatter = DateFormatter()
-        formatter.dateFormat = "d-EEE"
-        
-        for day in 0..<5 {
-            let dayAdded = (86400 * (2+day-todayOfTheWeek+7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
-            oneDayString.forEach {
-                let label = UILabel()
-                label.text = $0
-                label.translatesAutoresizingMaskIntoConstraints = false
-                labelList[day].append(label)
-            }
-            labelList[day][0].font = UIFont.systemFont(ofSize: 18, weight: .regular)
-            labelList[day][0].textColor = .darkText
-            
-            labelList[day][1].font = UIFont.systemFont(ofSize: 13, weight: .regular)
-            labelList[day][1].textColor = .LightText
-        }
-        return labelList
-    }
-    
+
     //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
     static var nextWeek: [String] {
         let formatter = DateFormatter()
@@ -198,7 +163,7 @@ struct Constants {
         formatter.dateFormat = "d-EEE"
         
         for day in 0..<5 {
-            let dayAdded = (86400 * (2+day-todayOfTheWeek+7))
+            let dayAdded = (86400 * (2+day-Constants.todayOfTheWeek+7))
             let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded))).components(separatedBy: "-")
             oneDayString.forEach {
                 let label = UILabel()
@@ -214,5 +179,6 @@ struct Constants {
         }
         return labelList
     }
+    
     
 }
