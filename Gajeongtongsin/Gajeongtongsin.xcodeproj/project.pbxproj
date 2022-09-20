@@ -48,6 +48,7 @@
 		35AA44B5288F8609000573B8 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 35AA44B4288F8609000573B8 /* GoogleService-Info.plist */; };
 		35AA44B8288F87AA000573B8 /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 35AA44B7288F87AA000573B8 /* FirebaseDatabase */; };
 		35AA44BB288FD985000573B8 /* FirebaseDatabaseSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 35AA44BA288FD985000573B8 /* FirebaseDatabaseSwift */; };
+		35B436BC28CB6F9F00F4D74C /* ParentProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35B436BB28CB6F9F00F4D74C /* ParentProfileViewController.swift */; };
 		35F956E428BD8E6F00B9A165 /* FirebaseMessaging in Frameworks */ = {isa = PBXBuildFile; productRef = 35F956E328BD8E6F00B9A165 /* FirebaseMessaging */; };
 		35F956E628BD8F4300B9A165 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35F956E528BD8F4300B9A165 /* PushNotificationManager.swift */; };
 		8C3DD251288A63CF00A3E9C6 /* SentMessageListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */; };
@@ -118,6 +119,7 @@
 		359583A328829D99002B6873 /* TestU.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestU.swift; sourceTree = "<group>"; };
 		359583A72882A6F7002B6873 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		35AA44B4288F8609000573B8 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		35B436BB28CB6F9F00F4D74C /* ParentProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentProfileViewController.swift; sourceTree = "<group>"; };
 		35F956E528BD8F4300B9A165 /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
 		35F956E728BD94E400B9A165 /* Gajeongtongsin.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Gajeongtongsin.entitlements; sourceTree = "<group>"; };
 		8C3DD250288A63CF00A3E9C6 /* SentMessageListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SentMessageListViewController.swift; sourceTree = "<group>"; };
@@ -477,6 +479,7 @@
 				359583A028829D87002B6873 /* Component */,
 				3595839F28829D84002B6873 /* Cell */,
 				3595839D28829D80002B6873 /* ProfileViewController.swift */,
+				35B436BB28CB6F9F00F4D74C /* ParentProfileViewController.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -599,6 +602,7 @@
 				046BFDF62890DD8000591577 /* CalenderTabelViewCell.swift in Sources */,
 				C056F6AD288B0A770070EED5 /* MessageVIewController.swift in Sources */,
 				040612A428941EE800791763 /* ParentsCollectionViewCell.swift in Sources */,
+				35B436BC28CB6F9F00F4D74C /* ParentProfileViewController.swift in Sources */,
 				C0B4A4302890E7AA001DC86C /* CustomNavigationBar.swift in Sources */,
 				35171CFE28828C930059F297 /* AppDelegate.swift in Sources */,
 				040612A628941F2800791763 /* ParentsCollcetionViewCellDelegate.swift in Sources */,

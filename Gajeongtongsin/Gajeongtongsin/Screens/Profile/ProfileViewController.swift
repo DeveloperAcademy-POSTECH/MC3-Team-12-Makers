@@ -7,6 +7,13 @@
 
 import UIKit
 
+
+private enum Size {
+    static let calenderTopPadding = CGFloat(140.0)
+    static let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
+    static let calenderHeigit = CGFloat(550.0)
+}
+
 class ProfileViewController: BaseViewController {
     
     //MARK: - Properties
@@ -71,6 +78,14 @@ class ProfileViewController: BaseViewController {
     //캘린더 날자 레이블
     lazy private var dateLabel: [[UILabel]] = Constants.dateLabelMaker()
     
+    private let textLabel: UILabel = {
+        let label = UILabel()
+        label.text = "선생님의 고유코드: \(UserDefaults.standard.string(forKey: "TeacherUser") ?? "")"
+        label.font = UIFont.systemFont(ofSize: 15)
+        label.textColor = .black
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -96,6 +111,47 @@ class ProfileViewController: BaseViewController {
         
     //MARK: - Funcs
 
+    override func render() {
+
+        
+        
+        view.addSubview(calenderView)
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: Size.calenderTopPadding).isActive = true
+        calenderView.heightAnchor.constraint(equalToConstant: Size.calenderHeigit).isActive = true
+        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Size.calenderSidePadding[0]).isActive = true
+        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Size.calenderSidePadding[1]).isActive = true
+
+      
+        view.addSubview(submitBtn)
+        submitBtn.topAnchor.constraint(equalTo: calenderView.bottomAnchor, constant: 20).isActive = true
+        submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
+        
+        view.addSubview(textLabel)
+        textLabel.topAnchor.constraint(equalTo: calenderView.bottomAnchor, constant: 20).isActive = true
+        textLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        
+        for index in 0...9 {
+            view.addSubview(hourLabel[index])
+            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: Size.calenderHeigit/9*CGFloat(index)).isActive = true
+            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+        }
+        
+        let interval = CGFloat((UIScreen.main.bounds.width-(Size.calenderSidePadding[0]+Size.calenderSidePadding[1]))/5)
+        
+        for index in 0..<dateLabel.count {
+            view.addSubview(dateLabel[index][0])
+            dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+            
+            view.addSubview(dateLabel[index][1])
+            dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
+            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
+        }
+    }
+
+    override func configUI() {
+        view.backgroundColor = .Background
+    }
     
     func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
@@ -193,46 +249,6 @@ class ProfileViewController: BaseViewController {
         choicedCells = Array(repeating: Array(repeating: false, count: 18), count:5)
         calenderView.reloadData()
     }
-    let calenderTopPadding = CGFloat(140.0)
-    let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
-    let calenderHeigit = CGFloat(550.0)
-    
-    override func render() {
-
-        view.addSubview(calenderView)
-
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
-        calenderView.heightAnchor.constraint(equalToConstant: calenderHeigit).isActive = true
-        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: calenderSidePadding[0]).isActive = true
-        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
-
-        view.addSubview(submitBtn)
-        submitBtn.topAnchor.constraint(equalTo: calenderView.bottomAnchor, constant: 20).isActive = true
-        submitBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30).isActive = true
-        
-        
-        for index in 0...9 {
-            view.addSubview(hourLabel[index])
-            hourLabel[index].centerYAnchor.constraint(equalTo: calenderView.topAnchor, constant: calenderHeigit/9*CGFloat(index)).isActive = true
-            hourLabel[index].leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
-        }
-        
-        let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
-        
-        for index in 0..<dateLabel.count {
-            view.addSubview(dateLabel[index][0])
-            dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
-            
-            view.addSubview(dateLabel[index][1])
-            dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
-            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*interval+interval/2).isActive = true
-        }
-    }
-
-    override func configUI() {
-        view.backgroundColor = .Background
-    }
 
 }
 
@@ -306,7 +322,7 @@ extension ProfileViewController: UICollectionViewDelegateFlowLayout {
     
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
-        return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: 550/18)
+        return CGSize(width: (UIScreen.main.bounds.width-(Size.calenderSidePadding[0]+Size.calenderSidePadding[1]))/5, height: 550/18)
     }
     
     //cell 횡간 간격

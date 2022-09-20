@@ -41,7 +41,7 @@ class TabBarViewController: UITabBarController {
         case .parent:
              vc1 =  UINavigationController(rootViewController: ReservationViewController())
              vc2 =  UINavigationController(rootViewController: SentMessageListViewController())
-             vc3 =  UINavigationController(rootViewController: ProfileViewController())
+             vc3 =  UINavigationController(rootViewController: ParentProfileViewController())
         case .teacher:
              vc1 =  UINavigationController(rootViewController: ConsultationViewController())
              vc2 =  UINavigationController(rootViewController: MessageViewController())
