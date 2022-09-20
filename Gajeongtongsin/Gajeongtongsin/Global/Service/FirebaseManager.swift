@@ -143,7 +143,7 @@ final class FirebaseManager {
     }
     
     /// 선생님 확정된 예약 업로드하기
-    func uploadConfirmedReservation(childName: String,reservedSchedule: Schedule?,selectedIndex: Int){
+    func uploadConfirmedReservation(childName: String,reservedSchedule: Schedule?){
         guard let teacherUid = UserDefaults.standard.string(forKey: "TeacherUser") else {return}
         guard let reservedSchedule = reservedSchedule else { return }
 

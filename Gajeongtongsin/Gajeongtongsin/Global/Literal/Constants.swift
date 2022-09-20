@@ -42,7 +42,20 @@ struct Constants {
         }
         return nextWeek
     }
-    
+
+    static var thisWeek: [String] {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "M월dd일"
+        formatter.timeZone = TimeZone(identifier: "ko_KR")
+        var thisWeek = [String]()
+
+        for dayCount in 0..<Constants.weekDays {
+            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek))
+            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
+            thisWeek.append(oneDayString)
+        }
+        return thisWeek
+    }
     //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
     static func dateStringToIndex(selected parentSchedules : [Schedule]) -> [Int] {
         var dateString: [String] = []

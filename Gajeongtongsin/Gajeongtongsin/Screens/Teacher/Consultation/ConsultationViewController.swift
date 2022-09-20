@@ -8,55 +8,32 @@
 import UIKit
 import SwiftUI
 
+
+private enum Size {
+    static let calenderTopPadding = CGFloat(200.0)
+    static let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
+    static let calenderHeigit = CGFloat(300.0)
+}
+
 class ConsultationViewController: BaseViewController {
     
     //MARK: - Properties
     private var choicedCells: [Bool] = Array(repeating: false, count:30)
     private var displayData: [TeacherCalenderData] = []
     private var cellColor: UIColor = .white
-    private var clickedCell: Int?
+    private var clickedCell: [Int]?
     private var selectedIndex: Int?
     private var parentId: Int = -1
-    private var selectedTableRow:IndexPath?
     private var cellHeight:CGFloat = 50
     private var startTime = 4
     private var endTime = 10
-    private lazy var displayWeek: [String] = nextWeek
+    private lazy var displayWeek: [String] = Constants.nextWeek
     private var displayWeekString: String = "nextWeek"
-//    private var scheduledParentsList = scheduledParentsListMaker(ConsultationViewController)
-    
     private var allSchedules: [(name: String, schedule: [Schedule]?)] = []
     private lazy var calenderData: [TeacherCalenderData] = calenderDataMaker()
-    
-    //다음 일주일의 날짜 리스트를 저장하는 연산 프로퍼티, 아래의 dayIndex 함수에 사용함
-    var nextWeek: [String] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월dd일"
-        formatter.timeZone = TimeZone(identifier: "ko_KR")
-        var nextWeek = [String]()
-         
-        for dayCount in 0..<Constants.weekDays {
-            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek + 7))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
-            nextWeek.append(oneDayString)
-        }
-        return nextWeek
-    }
-    
-    var thisWeek: [String] {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "M월dd일"
-        formatter.timeZone = TimeZone(identifier: "ko_KR")
-        var thisWeek = [String]()
-         
-        for dayCount in 0..<Constants.weekDays {
-            let dayAdded = (86400 * (2+dayCount-Constants.todayOfTheWeek))
-            let oneDayString = formatter.string(from: Date(timeIntervalSinceNow: TimeInterval(dayAdded)))
-            thisWeek.append(oneDayString)
-        }
-        return thisWeek
-    }
 
+    lazy var collectionHeight:CGFloat = CGFloat(flowLayout.itemSize.height*1.1)
+    private var scheduledParentList: [(name: String, schedule: [Schedule]?)] = []
 
     // 커스텀 네비게이션바
     private var customNavigationBar: CustomNavigationBar = {
@@ -64,10 +41,10 @@ class ConsultationViewController: BaseViewController {
                                                       titleSize: 22,
                                                       imageName: "bell",
                                                       imageSize: 20)
-         customNavigationBar.backgroundColor = .Background
-         customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
-         return customNavigationBar
-     }()
+        customNavigationBar.backgroundColor = .Background
+        customNavigationBar.translatesAutoresizingMaskIntoConstraints = false
+        return customNavigationBar
+    }()
     
     // 캘린더뷰
     private let calenderView:  UICollectionView = {
@@ -82,25 +59,25 @@ class ConsultationViewController: BaseViewController {
     
     //학부모 컬렉션뷰 레이아웃
     private let flowLayout: UICollectionViewFlowLayout = {
-       let layout = UICollectionViewFlowLayout()
-       layout.scrollDirection = .horizontal
-       layout.minimumInteritemSpacing = 8.0
-       layout.itemSize = CGSize(width: 140, height: 150)
-       return layout
-     }()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumInteritemSpacing = 8.0
+        layout.itemSize = CGSize(width: 140, height: 150)
+        return layout
+    }()
     
     //학부모 컬렉션뷰
     private lazy var parentsCollectionView: UICollectionView = {
-      let view = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
-      view.isScrollEnabled = true
-      view.showsHorizontalScrollIndicator = false
-      view.showsVerticalScrollIndicator = true
-      view.contentInset = .zero
-      view.backgroundColor = .clear
-      view.clipsToBounds = true
-      view.register(ParentsCollectionViewCell.self, forCellWithReuseIdentifier: ParentsCollectionViewCell.identifier)
-      view.translatesAutoresizingMaskIntoConstraints = false
-      return view
+        let view = UICollectionView(frame: .zero, collectionViewLayout: self.flowLayout)
+        view.isScrollEnabled = true
+        view.showsHorizontalScrollIndicator = false
+        view.showsVerticalScrollIndicator = true
+        view.contentInset = .zero
+        view.backgroundColor = .clear
+        view.clipsToBounds = true
+        view.register(ParentsCollectionViewCell.self, forCellWithReuseIdentifier: ParentsCollectionViewCell.identifier)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
     }()
     
     private let collectionViewTitle: UILabel = {
@@ -149,19 +126,16 @@ class ConsultationViewController: BaseViewController {
     //MARK: - View Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-//        calenderDataMaker()
         setDelegations()
-        seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
-        
-        plusWeek.addTarget(self, action: #selector(plusWeekTapButton), for: .touchUpInside)
-        minusWeek.addTarget(self, action: #selector(minusWeekTapButton), for: .touchUpInside)
+        addTagets()
 
         FirebaseManager.shared.fetchParentsReservations { [weak self] schedules in
             if let schedules = schedules {
                 self?.allSchedules = []
-//                self?.scheduledParentList = []
+                self?.scheduledParentList = []
                 self?.allSchedules = self!.scheduledParentsListConVerter(schedules)
-//                self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
+                self?.scheduledParentList = self!.scheduledParentsListMaker(schedules)
+
                 self?.parentsCollectionView.reloadData()
                 self?.calenderView.reloadData()
             }
@@ -175,17 +149,77 @@ class ConsultationViewController: BaseViewController {
     override func viewDidAppear(_ animated: Bool) {
         timeResponsiveLabelRander()
     }
-    
+
+    override func render() {
+        view.addSubview(customNavigationBar)
+        customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor,constant: 29).isActive = true
+        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+
+        view.addSubview(calenderView)
+        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: Size.calenderTopPadding).isActive = true
+        calenderView.heightAnchor.constraint(equalToConstant: Size.calenderHeigit).isActive = true
+        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Size.calenderSidePadding[0]).isActive = true
+        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Size.calenderSidePadding[1]).isActive = true
+
+        view.addSubview(parentsCollectionView)
+        parentsCollectionView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -collectionHeight-100).isActive = true
+        parentsCollectionView.heightAnchor.constraint(equalToConstant: collectionHeight).isActive = true
+        parentsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
+        parentsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
+
+        view.addSubview(seeAll)
+        seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        seeAll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
+
+        view.addSubview(plusWeek)
+        plusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+        plusWeek.centerXAnchor.constraint(equalTo: calenderView.trailingAnchor, constant: 0).isActive = true
+
+        view.addSubview(minusWeek)
+        minusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+        minusWeek.centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: -10).isActive = true
+
+        view.addSubview(collectionViewTitle)
+        collectionViewTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
+        collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
+
+        for index in 0..<dateLabel.count {
+            view.addSubview(dateLabel[index][0])
+            dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
+            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
+
+            view.addSubview(dateLabel[index][1])
+            dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
+            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
+        }
+
+        for index in 0..<9 {
+            view.addSubview(hourLabel[index])
+        }
+
+    }
+
+    override func configUI() {
+        view.backgroundColor = .Background
+        setupNavigationBackButton()
+    }
     //MARK: - Funcs
     
-    func setDelegations(){
+    private func setDelegations() {
         parentsCollectionView.delegate = self
         parentsCollectionView.dataSource = self
         calenderView.delegate = self
         calenderView.dataSource = self
         customNavigationBar.delegate = self
     }
-    
+
+    private func addTagets() {
+        seeAll.addTarget(self, action: #selector(seeAllOnTapButton), for: .touchUpInside)
+        plusWeek.addTarget(self, action: #selector(plusWeekTapButton), for: .touchUpInside)
+        minusWeek.addTarget(self, action: #selector(minusWeekTapButton), for: .touchUpInside)
+    }
+    // 미확ㅈ
     func calenderDataMaker() -> [TeacherCalenderData] {
         var calenderData: [TeacherCalenderData] = []
         for parentsIndex in 0..<allSchedules.count {
@@ -209,42 +243,40 @@ class ConsultationViewController: BaseViewController {
     func scheduledParentsListConVerter(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
         var scheduledParentsList: [(String, [Schedule]?)] = []
         for key in allSchedules.keys {
-                scheduledParentsList.append((key,allSchedules[key]))
+            scheduledParentsList.append((key,allSchedules[key]))
         }
         return scheduledParentsList
     }
     
-    func scheduledParentsListMaker(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
-        var scheduledParentsList: [(String, [Schedule]?)] = []
-        for key in allSchedules.keys {
-            if allSchedules[key]?[0].scheduleList[0].isReserved == false {
-                scheduledParentsList.append((key,allSchedules[key]))
+        func scheduledParentsListMaker(_ allSchedules: [String:[Schedule]]) -> [(String, [Schedule]?)] {
+            var scheduledParentsList: [(String, [Schedule]?)] = []
+            for key in allSchedules.keys {
+                if allSchedules[key]?[0].scheduleList[0].isReserved == false {
+                    scheduledParentsList.append((key,allSchedules[key]))
+                }
             }
+            return scheduledParentsList
         }
-        return scheduledParentsList
-    }
     ///예약이 확정된 데이터를 저장. 확정 시에는 submittedData에 있던 3개 스케줄이 지워지고 acceptedData에 확정된 1개의 스케줄만 등록됨
     func acceptedData() -> [TeacherCalenderData] {
         var acceptedData: [TeacherCalenderData] = []
-        var calenderIndex: [[Int]] = []
 
         for parentsIndex in allSchedules.indices {
-            calenderIndex = []
-            
+            var calenderIndex: [[Int]] = []
+
             guard let parentSchedules = allSchedules[parentsIndex].schedule else { return [] }
             for scheduleIndex in parentSchedules[0].scheduleList.indices { //하단 funcs 참고
                 if parentSchedules[0].scheduleList[scheduleIndex].isReserved {
                     acceptedData.append(calenderData[parentsIndex])
                     
-                    let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
-                    let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                    calenderIndex.append([columnIndex, rowIndex])
 
+                    let dateTimeIndex = dateTimeStringToIndex(scheduleIndex, from: parentsIndex)
+                    calenderIndex.append(dateTimeIndex)
+//                    calenderSlotData.blockedSlot[dateTimeIndex[0]][dateTimeIndex[1]+startTime] = true
 
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                     acceptedData[acceptedData.count-1].cellColor = .LightLine
                 }
-    
             }
         }
         return acceptedData
@@ -253,24 +285,22 @@ class ConsultationViewController: BaseViewController {
     // FIXME: - 로직 단순화 필요
     //미확정 예약 데이터를 인덱스로 만들어주는 함수
     func submittedData() -> [TeacherCalenderData] {
-        var calenderIndex: [[Int]] = []
         var submittedData:[TeacherCalenderData] = []
         var week: String = ""
-        
+
         for parentsIndex in allSchedules.indices {
-            calenderIndex = []
+            var calenderIndex: [[Int]] = []
             guard let parentShedules = allSchedules[parentsIndex].schedule else { return []}
             if parentShedules[0].scheduleList[0].isReserved == false {
                 for scheduleIndex in 0 ..< parentShedules[0].scheduleList.count {
-                    if thisWeek.contains(parentShedules[0].scheduleList[scheduleIndex].consultingDate) {
-                        let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
-                        let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                        calenderIndex.append([columnIndex, rowIndex])
+                    let dateTimeIndex = dateTimeStringToIndex(scheduleIndex, from: parentsIndex)
+                    calenderIndex.append(dateTimeIndex)
+
+                    let consultingDate = parentShedules[0].scheduleList[scheduleIndex].consultingDate
+
+                    if Constants.thisWeek.contains(consultingDate) {
                         week = "thisWeek"
                     } else {
-                        let rowIndex = timeStringToIndex(parentIndex: parentsIndex)[scheduleIndex]
-                        let columnIndex = dateStringToIndex(parentsIndex: parentsIndex)[scheduleIndex]
-                        calenderIndex.append([columnIndex, rowIndex])
                         week = "nextWeek"
                     }
 
@@ -279,42 +309,38 @@ class ConsultationViewController: BaseViewController {
                 submittedData[submittedData.count-1].calenderIndex = calenderIndex
                 submittedData[submittedData.count-1].scheduleWeek = week
             }
+//            else {
+//                return acceptedData()
+//            }
         }
         return submittedData
     }
     
     //선택한 학부모의 신청 요일(날자)를 정수(인덱스) 리스트로 반환해주는 함수
-    func dateStringToIndex(parentsIndex: Int) -> [Int] {
+    ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
+    func dateTimeStringToIndex(_ scheduleIndex: Int, from parentsIndex: Int) -> [Int] {
         var dateString: [String] = []
         var dateIndex: [Int] = []
-        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return []}
+        var time: [Int] = []
+
+        guard let parentSchedules = allSchedules[parentsIndex].schedule else { return [] }
         parentSchedules[0].scheduleList.forEach{
             dateString.append($0.consultingDate)
-        }
-        for date in 0..<dateString.count { //String을 Index로 바꿔줌
-            for nextWeekDay in 0..<nextWeek.count {
-                if dateString[date] == nextWeek[nextWeekDay] {
-                    dateIndex.append(nextWeekDay)
-                }
-            }
-        }
-        return dateIndex
-    }
-    
-    ///선택한 학부모의 신청 시간을 정수(인덱스) 리스트로 반환해주는 함수
-    func timeStringToIndex(parentIndex: Int) -> [Int] {
-        var time: [Int] = []
-        
-        guard let parentSchedules = allSchedules[parentIndex].schedule else { return [] }
-        parentSchedules[0].scheduleList.forEach{
             let timeList = $0.startTime.components(separatedBy: "시")  //[14, 00], [14, 30], [15, 00], ...
             let hour = Int(timeList[0])!-(12+startTime/2)
             let minute = Int(timeList[1].replacingOccurrences(of: "분", with: ""))!/30
             time.append(hour*2 + minute)
         }
-        
-        return time
+        for date in 0..<dateString.count { //String을 Index로 바꿔줌
+            for nextWeekDay in 0..<Constants.nextWeek.count {
+                if dateString[date] == Constants.nextWeek[nextWeekDay] {
+                    dateIndex.append(nextWeekDay)
+                }
+            }
+        }
+        return [dateIndex[scheduleIndex],time[scheduleIndex]]
     }
+
 
     ///버튼 누르면 모든 신청시간 색상별 display
     @objc func seeAllOnTapButton() {
@@ -324,94 +350,32 @@ class ConsultationViewController: BaseViewController {
     }
     
     @objc func plusWeekTapButton() {
-        displayWeek = nextWeek
+        displayWeek = Constants.nextWeek
         displayWeekString = "nextWeek"
         for day in 0..<dateLabel.count {
-            var date = nextWeek[day].components(separatedBy: "월")
+            var date = Constants.nextWeek[day].components(separatedBy: "월")
             date = date[1].components(separatedBy: "일")
             dateLabel[day][0].text = date[0]
         }
-        
         calenderView.reloadData()
     }
     
     @objc func minusWeekTapButton() {
-        displayWeek = thisWeek
+        displayWeek = Constants.thisWeek
         displayWeekString = "thisWeek"
         for day in 0..<dateLabel.count {
-            var date = thisWeek[day].components(separatedBy: "월")
+            var date = Constants.thisWeek[day].components(separatedBy: "월")
             date = date[1].components(separatedBy: "일")
             date = date[0].components(separatedBy: "0")
             dateLabel[day][0].text = date[1]
         }
         calenderView.reloadData()
     }
-    
-    let calenderTopPadding = CGFloat(200.0)
-    let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
-    let calenderHeigit = CGFloat(300.0)
-    lazy var collectionHeight:CGFloat = CGFloat(flowLayout.itemSize.height*1.1)
-    
-
-    override func render() {
-        view.addSubview(customNavigationBar)
-        customNavigationBar.topAnchor.constraint(equalTo: view.topAnchor,constant: 29).isActive = true
-        customNavigationBar.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        customNavigationBar.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        
-        view.addSubview(calenderView)
-        calenderView.topAnchor.constraint(equalTo: view.topAnchor, constant: calenderTopPadding).isActive = true
-        calenderView.heightAnchor.constraint(equalToConstant: calenderHeigit).isActive = true
-        calenderView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: calenderSidePadding[0]).isActive = true
-        calenderView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -calenderSidePadding[1]).isActive = true
-
-        
-
-        view.addSubview(parentsCollectionView)
-        parentsCollectionView.topAnchor.constraint(equalTo: view.bottomAnchor, constant: -collectionHeight-100).isActive = true
-        parentsCollectionView.heightAnchor.constraint(equalToConstant: collectionHeight).isActive = true
-        parentsCollectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 0).isActive = true
-        parentsCollectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: 0).isActive = true
-
-        view.addSubview(seeAll)
-        seeAll.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
-        seeAll.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        
-        view.addSubview(plusWeek)
-        plusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-        plusWeek.centerXAnchor.constraint(equalTo: calenderView.trailingAnchor, constant: 0).isActive = true
-        
-        view.addSubview(minusWeek)
-        minusWeek.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-        minusWeek.centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: -10).isActive = true
-        
-        view.addSubview(collectionViewTitle)
-        collectionViewTitle.topAnchor.constraint(equalTo: calenderView.topAnchor, constant: 330).isActive = true
-        collectionViewTitle.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20).isActive = true
- 
-        
-
-        for index in 0..<dateLabel.count {
-            view.addSubview(dateLabel[index][0])
-            dateLabel[index][0].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -70).isActive = true
-            dateLabel[index][0].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
-            
-            view.addSubview(dateLabel[index][1])
-            dateLabel[index][1].topAnchor.constraint(equalTo: calenderView.topAnchor, constant: -40).isActive = true
-            dateLabel[index][1].centerXAnchor.constraint(equalTo: calenderView.leadingAnchor, constant: CGFloat(index)*Constants.interval+Constants.interval/2).isActive = true
-        }
-        
-        for index in 0..<9 {
-            view.addSubview(hourLabel[index])
-        }
-
-    }
-    
 
     
     func timeResponsiveLabelRander() {
         let timeInterval = (endTime-startTime)/2
-        let interval: CGFloat = (endTime-startTime)%2 == 0 ? calenderHeigit/CGFloat(timeInterval) : (calenderHeigit-(calenderHeigit/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
+        let interval: CGFloat = (endTime-startTime)%2 == 0 ? Size.calenderHeigit/CGFloat(timeInterval) : (Size.calenderHeigit-(Size.calenderHeigit/CGFloat(endTime-startTime)))/CGFloat(timeInterval)
         
         let appendTime: Int = 12+startTime/2
         
@@ -427,10 +391,6 @@ class ConsultationViewController: BaseViewController {
         }
     }
 
-    override func configUI() {
-        view.backgroundColor = .Background
-        setupNavigationBackButton()
-    }
     
     func setupNavigationBackButton() {
         let backButton = UIBarButtonItem()
@@ -472,21 +432,24 @@ extension ConsultationViewController: UICollectionViewDataSource {
             return allSchedules.count
         }
     }
- }
+}
 
 extension ConsultationViewController: UICollectionViewDelegate {
-   
+
     //cell 로드
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         if collectionView == calenderView {
+            //캘린더 뷰
             guard let cell = collectionView.dequeueReusableCell(
                 withReuseIdentifier: CalenderViewCell.identifier
                 ,for: indexPath) as? CalenderViewCell else { return UICollectionViewCell() }
             
             cell.backgroundColor = .white
-            
-            let correctionIndex = Int(indexPath.item+startTime)
+
+
+            let correctionIndex = [indexPath.section, Int(indexPath.item+startTime)]
+
             displayData.forEach {
                 if displayWeekString == $0.scheduleWeek {
                     if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
@@ -501,36 +464,40 @@ extension ConsultationViewController: UICollectionViewDelegate {
                     }
                 }
             }
-            if calenderSlotData.blockedSlot[indexPath.section][correctionIndex] {
+            if calenderSlotData.blockedSlot[indexPath.section][correctionIndex[1]] {
                 cell.backgroundColor = .Background
             }
             
             acceptedData().forEach {
-                if $0.calenderIndex.contains([indexPath.section, correctionIndex]) {
-                    cell.backgroundColor = $0.cellColor
+                if $0.calenderIndex.contains([indexPath.section, correctionIndex[1]-startTime]) {
+                    cell.backgroundColor = .lightGray
                 }
+                cell.getClick(clicked: false)
+
             }
             
             
             return cell
             
         } else {
-            
-            
+            // 예약카드 뷰
             guard let cell = collectionView.dequeueReusableCell(
-            withReuseIdentifier: ParentsCollectionViewCell.identifier ,
-            for: indexPath) as? ParentsCollectionViewCell else {
+                withReuseIdentifier: ParentsCollectionViewCell.identifier ,
+                for: indexPath) as? ParentsCollectionViewCell else {
                 return UICollectionViewCell()
             }
             
             cell.delegate = self //학부모 컬렉션 셀 델리게이트 지정
             
-            var eachCellData: [TeacherCalenderData] = [] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
+            var tempCellData: [TeacherCalenderData] = [] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
             
             let parent = allSchedules[indexPath.item]
-            
-            eachCellData.append(submittedData()[indexPath.item]) //각 셀에 해당하는 데이터 배정
-            cell.sendDataToCell(displayData: eachCellData) //셀 내부 함수를 통해 셀에 데이터 넣어줌
+
+            let submiitedData = submittedData()
+            if !submiitedData.isEmpty {
+            tempCellData.append(submittedData()[indexPath.item]) //각 셀에 해당하는 데이터 배정
+            }
+            cell.sendDataToCell(displayData: tempCellData) //셀 내부 함수를 통해 셀에 데이터 넣어줌
             
             let childName = parent.name
             guard let schedules = parent.schedule else { return UICollectionViewCell()}
@@ -542,9 +509,10 @@ extension ConsultationViewController: UICollectionViewDelegate {
     //cell 클릭 액션
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if collectionView == calenderView {
-            print(displayData)
+            print("섹션은 바로 \(indexPath.section)")
+
             //더블클릭한 경우
-            if indexPath.item == clickedCell {
+            if [indexPath.section,indexPath.item + startTime ] == clickedCell {
                 // 확정된 스케줄 이외 다른 스케줄 모두 삭제 및 isResulved = true 로 변환
                 //guard var parentSchedules = scheduledParentList[parentId!].schedule else {return}
                 guard var selectedSchedule = allSchedules[parentId].schedule?[0].scheduleList[selectedIndex!] else { return }
@@ -552,19 +520,19 @@ extension ConsultationViewController: UICollectionViewDelegate {
                 allSchedules[parentId].schedule?[0].scheduleList = []
                 allSchedules[parentId].schedule?[0].scheduleList.append(selectedSchedule)
                 FirebaseManager.shared.uploadConfirmedReservation(childName: allSchedules[parentId].name,
-                                                                  reservedSchedule: allSchedules[parentId].schedule?[0],selectedIndex: selectedIndex!)
+                                                                  reservedSchedule: allSchedules[parentId].schedule?[0])
                 calenderData[parentId].cellColor = .lightGray // 예약확정된 셀은 연회색
+//                calenderSlotData.blockedSlot[indexPath.section][indexPath.item+startTime] = true
                 clickedCell = nil // 선택해제
-                
                 displayData = acceptedData() //수정된 스케줄 데이터 다시 불러오고 확정된 스케줄만 다시 그려줌
                 calenderView.reloadData()
-                
+
                 //TODO: 확정된 예약에 대해 카드를 어떻게 처리하는지 논의 필요
-    //          scheduledParentsList.remove(at: parentId!) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
+                          scheduledParentList.remove(at: parentId) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
                 parentsCollectionView.reloadData()
                 return
             }
-            
+
             //예약확정된 슬롯 클릭한 경우
             //카드의 용건보기 버튼과 동일한 액션
             acceptedData().forEach {
@@ -583,14 +551,19 @@ extension ConsultationViewController: UICollectionViewDelegate {
             displayData.forEach {
                 if $0.calenderIndex.contains([indexPath.section, indexPath.item]) {
                     selectedIndex = $0.calenderIndex.firstIndex(of: [indexPath.section, indexPath.item])
+    //                selectedIndex = indexPath.section*Constants.weekDays + indexPath.item
                     parentId = $0.parentsIndex
                     
-                    clickedCell = indexPath.item
+                    clickedCell = [indexPath.section,indexPath.item + startTime]
+                   // clickedCell = selectedIndex
                     calenderView.reloadData()
                     return
                 }
                 clickedCell = nil // 신청된 슬롯 외 클릭하면 선택해제
             }
+
+
+
             calenderView.reloadData()
         }
     }
@@ -604,7 +577,7 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     //cell 사이즈
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize{
         if collectionView == calenderView {
-            return CGSize(width: (UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5, height: cellHeight)
+            return CGSize(width: (UIScreen.main.bounds.width-(Size.calenderSidePadding[0]+Size.calenderSidePadding[1]))/5, height: cellHeight)
         } else if collectionView == parentsCollectionView {
             return flowLayout.itemSize
         }
@@ -614,7 +587,7 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
     //cell 횡간 간격
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat{
         if collectionView == calenderView {
-        return CGFloat(0)
+            return CGFloat(0)
         } else {return 30}
     }
     
@@ -631,10 +604,10 @@ extension ConsultationViewController: UICollectionViewDelegateFlowLayout {
 //버튼 델리게이트
 extension ConsultationViewController: ParentsCollcetionViewCellDelegate {
     func present(message: String ) {
-                let alert = UIAlertController(title: "상담용건", message: message, preferredStyle: .alert)
-                let cancelAction = UIAlertAction(title: "취소", style: .cancel)
-                alert.addAction(cancelAction)
-                present(alert, animated: true, completion: nil)
+        let alert = UIAlertController(title: "상담용건", message: message, preferredStyle: .alert)
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel)
+        alert.addAction(cancelAction)
+        present(alert, animated: true, completion: nil)
     }
     
     func drawDisplayData(cellSchedulData: [TeacherCalenderData]) {
