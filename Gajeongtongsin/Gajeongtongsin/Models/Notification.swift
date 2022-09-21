@@ -16,7 +16,7 @@ struct Notification: Codable {
     let childName: String
     let content: String
     let time : String
-    var isChecked: Bool = false    //알람 누르면 읽음표시
+  //  var isChecked: Bool = false    //알람 누르면 읽음표시
     
 }
 
