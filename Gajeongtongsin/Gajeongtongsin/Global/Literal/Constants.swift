@@ -15,6 +15,8 @@ struct Constants {
     static let calenderTopPadding = CGFloat(200.0)
     static let calenderSidePadding = [CGFloat(50.0),CGFloat(20.0)]
     static let calenderHeigit = CGFloat(300.0)
+    static let numberOfSlot = 18
+
     static let interval = CGFloat((UIScreen.main.bounds.width-(calenderSidePadding[0]+calenderSidePadding[1]))/5)
     static var todayOfTheWeek: Int{
         let formatter = DateFormatter()
@@ -189,7 +191,6 @@ enum ButtonState {
     
 }
 
-let numberOfSlot = 18
 
 //struct Constants {
 //

@@ -10,7 +10,7 @@ import UIKit
 class ParentsCalenderViewController: BaseViewController {
     
     //MARK: - Properties
-    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: numberOfSlot), count:5) //복수선택 및 선택취소를 위한 array
+    private var choicedCells: [[Bool]] = Array(repeating: Array(repeating: false, count: Constants.numberOfSlot), count:5) //복수선택 및 선택취소를 위한 array
 //    private var choicedCells: [Bool] = Array(repeating: false, count:6) //복수선택 및 선택취소를 위한 array
     private var submitIndexList: [[Int]] = [[]] //신청버튼 클릭 후 신청내역 인덱스가 저장되는 리스트
     private var appendScheduleList: [ScheduleInfo] = []
@@ -325,7 +325,7 @@ class ParentsCalenderViewController: BaseViewController {
         //TODO : - parentList index를 id 받아서 넣어주어야 함
         
 
-        choicedCells = Array(repeating: Array(repeating: false, count: numberOfSlot), count:5)
+        choicedCells = Array(repeating: Array(repeating: false, count: Constants.numberOfSlot), count:5)
 
         calenderView.reloadData()
         self.dismiss(animated: true)
@@ -451,11 +451,11 @@ extension ParentsCalenderViewController: UICollectionViewDataSource{
     //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
-            startTime = numberOfSlot
+            startTime = Constants.numberOfSlot
             endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
             for section in 0..<Constants.weekDays {
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
-                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
+                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? Constants.numberOfSlot)+1, endTime)
             }
             cellHeight = 300.0/(CGFloat(endTime-startTime))
         }

@@ -272,7 +272,7 @@ class ConsultationViewController: BaseViewController {
 
                     let dateTimeIndex = dateTimeStringToIndex(scheduleIndex, from: parentsIndex)
                     calenderIndex.append(dateTimeIndex)
-//                    calenderSlotData.blockedSlot[dateTimeIndex[0]][dateTimeIndex[1]+startTime] = true
+
 
                     acceptedData[acceptedData.count-1].calenderIndex = calenderIndex
                     acceptedData[acceptedData.count-1].cellColor = .LightLine
@@ -420,16 +420,17 @@ extension ConsultationViewController: UICollectionViewDataSource {
     //섹션 내 아이템 수
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == calenderView {
-            startTime = numberOfSlot
+            startTime = Constants.numberOfSlot
             endTime = 0 //min, max 돌아가기 오류 보정을 위한 초기화
             for section in 0..<Constants.weekDays { //해당 이전/이후 시간 중 모든 요일이 블락된 경우는 제외하기 위해 섹션별 최소/최대 비교
                 startTime = min(calenderSlotData.blockedSlot[section].firstIndex(of: false) ?? 0, startTime)
-                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? numberOfSlot)+1, endTime)
+                endTime = max((calenderSlotData.blockedSlot[section].lastIndex(of: false) ?? Constants.numberOfSlot)+1, endTime)
             }
             cellHeight = 300.0/(CGFloat(endTime-startTime))
             return endTime-startTime
         } else {
-            return allSchedules.count
+         //   return allSchedules.count
+            return scheduledParentList.count
         }
     }
 }
@@ -491,7 +492,7 @@ extension ConsultationViewController: UICollectionViewDelegate {
             
             var tempCellData: [TeacherCalenderData] = [] //셀에 넣어줄 예약 데이터를 잠시 넣을 리스트
             
-            let parent = allSchedules[indexPath.item]
+            let parent = scheduledParentList[indexPath.item]
 
             let submiitedData = submittedData()
             if !submiitedData.isEmpty {
@@ -528,7 +529,8 @@ extension ConsultationViewController: UICollectionViewDelegate {
                 calenderView.reloadData()
 
                 //TODO: 확정된 예약에 대해 카드를 어떻게 처리하는지 논의 필요
-                          scheduledParentList.remove(at: parentId) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
+                        scheduledParentList.remove(at: parentId) //학부모 리스트에서 확정된 데이터 인덱스를 삭제한 후 다시 그려줌
+
                 parentsCollectionView.reloadData()
                 return
             }
